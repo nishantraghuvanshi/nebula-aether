@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  nats:
+    image: nats:2.9
+    ports:
+      - "4222:4222" # Client port
+      - "8222:8222" # HTTP management port
+    command: "-js -m 8222" # Enable JetStream and HTTP monitoring on 8222
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    environment:
+      - POSTGRES_USER=aether
+      - POSTGRES_PASSWORD=aether
+      - POSTGRES_DB=aether
+    ports:
+      - "5432:5432
+    volumes:
+      - aether_db_data:/var/lib/postgresql/data
+
+volumes:
+  aether_db_data:
+
