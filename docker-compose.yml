@@ -14,7 +14,7 @@ services:
       - POSTGRES_PASSWORD=aether
       - POSTGRES_DB=aether
     ports:
-      - "5432:5432
+      - "5432:5432"
     volumes:
       - aether_db_data:/var/lib/postgresql/data
 
