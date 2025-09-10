@@ -7,6 +7,36 @@ export default function Dashboard() {
   const [state, setState] = useState<any>({ cluster_state: {}, carbon_intensity: 0, anomalies: {} });
   const [connectionStatus, setConnectionStatus] = useState('Connecting');
   const [isClient, setIsClient] = useState(false);
+  const [jobForm, setJobForm] = useState({ id: '', type: 'training' });
+  const [submitStatus, setSubmitStatus] = useState('');
+
+  const submitJob = async (e: any) => {
+    e.preventDefault();
+    setSubmitStatus('Submitting...');
+    
+    try {
+      const response = await fetch('http://localhost:8080/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jobForm),
+      });
+      
+      if (response.ok) {
+        setSubmitStatus('Job submitted successfully!');
+        setJobForm({ id: '', type: 'training' });
+        setTimeout(() => setSubmitStatus(''), 3000);
+      } else {
+        const error = await response.text();
+        setSubmitStatus(`Error: ${error}`);
+        setTimeout(() => setSubmitStatus(''), 5000);
+      }
+    } catch (error) {
+      setSubmitStatus(`Error: ${error}`);
+      setTimeout(() => setSubmitStatus(''), 5000);
+    }
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -63,6 +93,59 @@ export default function Dashboard() {
       </div>
 
       <p>Carbon Intensity: {state.carbon_intensity.toFixed(0)} gCO2/kWh</p>
+
+      {/* Job Submission Form */}
+      <div style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+        <h3 style={{ marginTop: 0, color: '#333' }}>Submit GPU Job</h3>
+        <form onSubmit={submitJob} style={{ display: 'flex', gap: '1rem', alignItems: 'end', flexWrap: 'wrap' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#333' }}>Job ID:</label>
+            <input
+              type="text"
+              value={jobForm.id}
+              onChange={(e) => setJobForm({ ...jobForm, id: e.target.value })}
+              placeholder="e.g., training-job-001"
+              required
+              style={{ padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', minWidth: '200px' }}
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#333' }}>Job Type:</label>
+            <select
+              value={jobForm.type}
+              onChange={(e) => setJobForm({ ...jobForm, type: e.target.value })}
+              style={{ padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
+            >
+              <option value="training">Training</option>
+              <option value="inference">Inference</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            Submit Job
+          </button>
+        </form>
+        {submitStatus && (
+          <p style={{ 
+            marginTop: '1rem', 
+            padding: '0.5rem', 
+            backgroundColor: submitStatus.includes('Error') ? '#f8d7da' : '#d4edda',
+            color: submitStatus.includes('Error') ? '#721c24' : '#155724',
+            borderRadius: '4px'
+          }}>
+            {submitStatus}
+          </p>
+        )}
+      </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
         {Object.keys(state.cluster_state).length === 0 ? (

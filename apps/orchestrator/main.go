@@ -239,6 +239,30 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// CORS middleware
+func corsMiddleware(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next(w, r)
+	}
+}
+
+// CORS handler for OPTIONS requests
+func corsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	w.WriteHeader(http.StatusOK)
+}
+
 // The HTTP handler for submitting jobs
 func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -352,7 +376,14 @@ func main() {
 
 	// Start the HTTP server in a separate goroutine
 	go func() {
-		http.HandleFunc("/submit", handleSubmit)
+		// Handle OPTIONS requests for CORS preflight
+		http.HandleFunc("/submit", func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == "OPTIONS" {
+				corsHandler(w, r)
+				return
+			}
+			corsMiddleware(handleSubmit)(w, r)
+		})
 		http.HandleFunc("/graphql", graphqlHandler) // Add the WebSocket handler
 		log.Println("API server listening on :8080")
 		if err := http.ListenAndServe(":8080", nil); err != nil {
