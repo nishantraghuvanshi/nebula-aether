@@ -56,14 +56,16 @@ A comprehensive GPU telemetry collection and AI-powered job scheduling system bu
   - Synthetic data generation for training
 
 #### 4. **Next.js Dashboard** (`apps/dashboard/`)
-- **Purpose**: Real-time monitoring and visualization
+- **Purpose**: Real-time monitoring and job submission interface
 - **Technology**: Next.js with TypeScript
 - **Features**:
-  - Multi-GPU visualization
+  - Multi-GPU visualization with dynamic cards
   - Real-time telemetry display
-  - Anomaly detection alerts
+  - Anomaly detection alerts with visual indicators
   - Carbon intensity monitoring
-  - WebSocket-based updates
+  - Interactive job submission form
+  - WebSocket-based real-time updates
+  - CORS-enabled API integration
 
 #### 5. **Infrastructure**
 - **NATS**: High-performance message broker for telemetry
@@ -126,11 +128,60 @@ cd nebula/project
 ./stop.sh
 ```
 
-### Testing
+### Testing and Job Submission
 ```bash
 # Comprehensive system test
 ./test.sh
+
+# Submit jobs via command line
+./submit_job.sh [job_id] [job_type]
+./submit_job.sh --batch training 5    # Submit 5 training jobs
+./submit_job.sh --status              # Check system status
+./submit_job.sh --help                # Show usage help
 ```
+
+### Script Details
+
+#### **setup.sh** - Complete System Setup
+- Installs system dependencies (Docker, Conda, Go, Node.js, Rust)
+- Sets up infrastructure (NATS, TimescaleDB)
+- Creates Conda environment and installs Python dependencies
+- Trains AI model with synthetic data
+- Starts all services and verifies functionality
+- **Usage**: `./setup.sh` (first time only)
+
+#### **restart.sh** - Quick Service Restart
+- Stops existing services gracefully
+- Starts infrastructure containers
+- Restarts all application services
+- Verifies service health
+- **Usage**: `./restart.sh` (for existing setups)
+
+#### **stop.sh** - Graceful Shutdown
+- Stops all running services
+- Stops Docker containers
+- Optionally cleans log files
+- **Usage**: `./stop.sh`
+
+#### **test.sh** - Comprehensive Testing
+- Tests service health endpoints
+- Validates API functionality
+- Tests job submission and AI predictions
+- Verifies WebSocket connections
+- Tests database connectivity
+- Performance and error handling tests
+- **Usage**: `./test.sh`
+
+#### **submit_job.sh** - Command Line Job Submission
+- Submit individual jobs with custom IDs
+- Batch job submission for testing
+- System status checking
+- Color-coded output with error handling
+- CORS-compatible with orchestrator
+- **Usage**: 
+  - `./submit_job.sh` (auto-generated ID)
+  - `./submit_job.sh my-job-001 training`
+  - `./submit_job.sh --batch inference 10`
 
 ## 📈 Telemetry Data
 
@@ -170,12 +221,14 @@ cd nebula/project
 - `NATS_URL`: NATS connection string (default: nats://localhost:4222)
 - `DATABASE_URL`: PostgreSQL connection string
 - `AI_CORE_URL`: AI Core API endpoint (default: http://localhost:8000)
+- `ORCHESTRATOR_URL`: Orchestrator API endpoint (default: http://localhost:8080)
 
 ### Customization Points
 - **Anomaly Detection**: Modify thresholds in `orchestrator/main.go`
 - **Telemetry Frequency**: Adjust interval in `agent/src/main.rs`
 - **Dashboard Styling**: Update `dashboard/app/page.tsx`
 - **AI Model**: Retrain with new data in `ai-core/train.py`
+- **CORS Settings**: Configure in `orchestrator/main.go` corsMiddleware function
 
 ## 🐛 Troubleshooting
 
@@ -184,6 +237,9 @@ cd nebula/project
 2. **Port conflicts**: Check what's using ports 3000, 8000, 8080
 3. **Conda environment**: Recreate with `conda env remove -n aether-ai`
 4. **Database connection**: Restart TimescaleDB container
+5. **CORS errors**: Ensure orchestrator is running with updated CORS middleware
+6. **Job submission fails**: Check orchestrator logs and verify API endpoints
+7. **Dashboard not updating**: Verify WebSocket connection and orchestrator status
 
 ### Logs
 - AI Core: `aether/apps/ai-core/ai-core.log`
@@ -194,16 +250,59 @@ cd nebula/project
 ## 📁 Project Structure
 
 ```
-aether/
-├── apps/
-│   ├── agent/           # Rust telemetry agent
-│   ├── orchestrator/    # Go coordination service
-│   ├── ai-core/         # Python AI/ML service
-│   └── dashboard/       # Next.js monitoring UI
-├── docker-compose.yml   # Infrastructure services
-├── package.json         # Dashboard dependencies
-└── README.md           # This file
+project/
+├── aether/
+│   ├── apps/
+│   │   ├── agent/           # Rust telemetry agent
+│   │   ├── orchestrator/    # Go coordination service
+│   │   ├── ai-core/         # Python AI/ML service
+│   │   └── dashboard/       # Next.js monitoring UI
+│   ├── docker-compose.yml   # Infrastructure services
+│   ├── package.json         # Dashboard dependencies
+│   └── README.md           # This file
+├── setup.sh                 # Complete system setup script
+├── restart.sh               # Quick service restart script
+├── stop.sh                  # Graceful shutdown script
+├── test.sh                  # Comprehensive testing script
+├── submit_job.sh            # Command-line job submission
+├── ABSTRACT.md              # Technical project abstract
+└── aether.pids              # Process ID tracking (auto-generated)
 ```
+
+## 🎯 Key Features
+
+### ✅ **Multi-GPU Support**
+- Dynamic GPU detection and individual telemetry streams
+- Concurrent state management across multiple GPUs
+- Scalable architecture supporting unlimited GPU nodes
+
+### ✅ **AI-Powered Scheduling**
+- XGBoost-based machine learning model for optimal job placement
+- Real-time GPU candidate evaluation
+- Intelligent resource allocation based on telemetry data
+
+### ✅ **Real-time Monitoring**
+- Live dashboard with WebSocket updates
+- Anomaly detection with visual indicators
+- Carbon intensity tracking
+- Multi-GPU visualization with dynamic cards
+
+### ✅ **Comprehensive Tooling**
+- One-command setup with `setup.sh`
+- Automated testing with `test.sh`
+- Command-line job submission with `submit_job.sh`
+- Graceful service management with `restart.sh` and `stop.sh`
+
+### ✅ **Cross-Platform Compatibility**
+- NVML integration for NVIDIA GPUs on Linux/Windows
+- Mock simulation system for macOS development
+- Docker containerization for consistent deployment
+
+### ✅ **Production Ready**
+- CORS-enabled API endpoints
+- Comprehensive error handling and logging
+- Time-series optimized database storage
+- High-performance message queuing with NATS
 
 ---
 
