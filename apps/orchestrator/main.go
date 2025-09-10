@@ -5,8 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"math/rand"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -17,10 +17,17 @@ import (
 
 // This struct must match the Rust agent's GpuTelemetry struct
 type GpuTelemetry struct {
-	GpuName       string `json:"gpu_name"`
-	TemperatureC  uint32 `json:"temperature_c"`
-	MemoryUsedMb  uint64 `json:"memory_used_mb"`
-	MemoryTotalMb uint64 `json:"memory_total_mb"`
+	GpuName                     string `json:"gpu_name"`
+	UtilizationGpu              uint32 `json:"utilization_gpu"`
+	UtilizationMemoryController uint32 `json:"utilization_memory_controller"`
+	PerformanceState            string `json:"performance_state"`
+	ClockGpuMhz                 uint32 `json:"clock_gpu_mhz"`
+	ClockMemMhz                 uint32 `json:"clock_mem_mhz"`
+	MemoryUsedMb                uint64 `json:"memory_used_mb"`
+	MemoryTotalMb               uint64 `json:"memory_total_mb"`
+	TemperatureC                uint32 `json:"temperature_c"`
+	PowerDrawW                  uint32 `json:"power_draw_w"`
+	ThrottlingReasons           string `json:"throttling_reasons"`
 }
 
 // Job struct to define a workload
@@ -31,22 +38,57 @@ type Job struct {
 
 // Represents the current state of a GPU, which we'll send to the AI
 type GpuState struct {
-	Temp    uint32 `json:"gpu_temp"`
-	MemUsed uint64 `json:"gpu_mem_used"`
+	Temp              uint32 `json:"gpu_temp"`
+	MemUsed           uint64 `json:"gpu_mem_used"`
+	UtilizationGpu    uint32 `json:"utilization_gpu"`
+	PowerDrawW        uint32 `json:"power_draw_w"`
+	ThrottlingReasons string `json:"throttling_reasons"`
+}
+
+// Candidate sent to AI Core with ID
+type GpuCandidate struct {
+	GpuID             string `json:"gpu_id"`
+	Temp              uint32 `json:"gpu_temp"`
+	MemUsed           uint64 `json:"gpu_mem_used"`
+	UtilizationGpu    uint32 `json:"utilization_gpu"`
+	PowerDrawW        uint32 `json:"power_draw_w"`
+	ThrottlingReasons string `json:"throttling_reasons"`
 }
 
 // PredictionRequest matches the Python API's expected input
 type PredictionRequest struct {
-	GpuTemp         uint32  `json:"gpu_temp"`
-	GpuMemUsed      uint64  `json:"gpu_mem_used"`
-	JobType         string  `json:"job_type"`
-	CarbonIntensity float64 `json:"carbon_intensity"`
+	Candidates []GpuCandidate `json:"candidates"`
+	JobType    string         `json:"job_type"`
 }
 
 // PredictionResponse matches the Python API's output
 type PredictionResponse struct {
-	IsGoodPlacement bool   `json:"is_good_placement"`
-	Reason          string `json:"reason"`
+	BestGpuID string `json:"best_gpu_id"`
+}
+
+// DashboardUpdate packages full cluster info for the dashboard
+type DashboardUpdate struct {
+	ClusterState    map[string]GpuState `json:"cluster_state"`
+	CarbonIntensity float64             `json:"carbon_intensity"`
+	Anomalies       map[string]bool     `json:"anomalies"`
+}
+
+// mockCarbonIntensity returns a placeholder carbon intensity value
+func mockCarbonIntensity() float64 {
+	// Simple oscillating mock between 100-500
+	return 100 + float64(time.Now().Unix()%400)
+}
+
+// checkAllAnomalies flags GPUs with simple heuristics
+func checkAllAnomalies(state map[string]GpuState) map[string]bool {
+	out := make(map[string]bool, len(state))
+	for id, s := range state {
+		// Example heuristic: high temp or throttling string not empty
+		isHot := s.Temp >= 85
+		throttling := s.ThrottlingReasons != "" && s.ThrottlingReasons != "None" && s.ThrottlingReasons != "[]"
+		out[id] = isHot || throttling
+	}
+	return out
 }
 
 // WebSocket upgrader for dashboard connections
@@ -58,43 +100,50 @@ var upgrader = websocket.Upgrader{
 
 // Global variables to hold the current state
 var (
-	jobQueue       = make([]Job, 0)
-	queueMux       = &sync.Mutex{}
-	latestGpuState = GpuState{}
-	gpuStateMux    = &sync.RWMutex{}
+	jobQueue        = make([]Job, 0)
+	queueMux        = &sync.Mutex{}
+	clusterState    = make(map[string]GpuState)
+	clusterStateMux = &sync.RWMutex{}
+	latestGpuState  = GpuState{}
+	gpuStateMux     = &sync.RWMutex{}
 )
 
-// askAICore sends the current state to the Python AI service and gets a recommendation
-func askAICore(gpuState GpuState, job Job) (bool, string, error) {
-	// The URL of our Python AI service
+// askAICoreCandidates sends all GPU candidates to the AI service and gets the best GPU ID
+func askAICoreCandidates(cluster map[string]GpuState, job Job) (string, error) {
 	aiCoreURL := "http://localhost:8000/predict"
 
-	// Mock carbon intensity data
-	mockCarbonIntensity := float64(rand.Intn(600)) // Random value between 0-599
-	log.Printf("Mock carbon intensity: %.2f gCO2eq/kWh", mockCarbonIntensity)
+	candidates := make([]GpuCandidate, 0, len(cluster))
+	for id, s := range cluster {
+		candidates = append(candidates, GpuCandidate{
+			GpuID:             id,
+			Temp:              s.Temp,
+			MemUsed:           s.MemUsed,
+			UtilizationGpu:    s.UtilizationGpu,
+			PowerDrawW:        s.PowerDrawW,
+			ThrottlingReasons: s.ThrottlingReasons,
+		})
+	}
 
 	requestBody, err := json.Marshal(PredictionRequest{
-		GpuTemp:         gpuState.Temp,
-		GpuMemUsed:      gpuState.MemUsed,
-		JobType:         job.Type,
-		CarbonIntensity: mockCarbonIntensity,
+		Candidates: candidates,
+		JobType:    job.Type,
 	})
 	if err != nil {
-		return false, "", err
+		return "", err
 	}
 
 	resp, err := http.Post(aiCoreURL, "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
-		return false, "", err
+		return "", err
 	}
 	defer resp.Body.Close()
 
 	var predictionResp PredictionResponse
 	if err := json.NewDecoder(resp.Body).Decode(&predictionResp); err != nil {
-		return false, "", err
+		return "", err
 	}
 
-	return predictionResp.IsGoodPlacement, predictionResp.Reason, nil
+	return predictionResp.BestGpuID, nil
 }
 
 // scheduleJobs is our main scheduling loop
@@ -122,28 +171,33 @@ func scheduleJobs() {
 		queueMux.Unlock()
 
 		// Get the most recent GPU state
-		gpuStateMux.RLock()
-		currentGpuState := latestGpuState
-		gpuStateMux.RUnlock()
+		clusterStateMux.RLock()
+		candidates := make([]GpuCandidate, 0, len(clusterState))
+		for gpuID, state := range clusterState {
+			candidates = append(candidates, GpuCandidate{
+				GpuID:             gpuID,
+				Temp:              state.Temp,
+				MemUsed:           state.MemUsed,
+				UtilizationGpu:    state.UtilizationGpu,
+				PowerDrawW:        state.PowerDrawW,
+				ThrottlingReasons: state.ThrottlingReasons,
+			})
+		}
+		clusterStateMux.RUnlock()
 
-		log.Printf("Attempting to schedule job %s. Current GPU state: Temp=%dC, MemUsed=%dMB",
-			jobToSchedule.ID, currentGpuState.Temp, currentGpuState.MemUsed)
+		log.Printf("Attempting to schedule job %s. Candidates: %d",
+			jobToSchedule.ID, len(candidates))
 
 		// Ask the AI for a decision
-		isGoodPlacement, reason, err := askAICore(currentGpuState, jobToSchedule)
+		bestGpuID, err := askAICoreCandidates(clusterState, jobToSchedule)
 		if err != nil {
 			log.Printf("Error consulting AI core: %v. Re-queuing job.", err)
 			// In a real system, you'd add the job back to the queue with better logic
 			continue
 		}
 
-		if isGoodPlacement {
-			log.Printf("AI approved! Scheduling job %s on GPU. Reason: %s", jobToSchedule.ID, reason)
-			// In the future, this is where we would publish a command to NATS
-		} else {
-			log.Printf("AI denied. Reason: %s. Re-queuing job.", reason)
-			// Re-queue the job for a later attempt
-		}
+		log.Printf("AI approved! Scheduling job %s on GPU %s.", jobToSchedule.ID, bestGpuID)
+		// In the future, this is where we would publish a command to NATS
 	}
 }
 
@@ -158,17 +212,25 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Dashboard connected.")
 
-	// Periodically send the latest GPU state to the dashboard
+	// Periodically send the latest cluster snapshot to the dashboard
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()
 
 	for range ticker.C {
-		gpuStateMux.RLock()
-		currentState := latestGpuState
-		gpuStateMux.RUnlock()
+		clusterStateMux.RLock()
+		snapshot := make(map[string]GpuState, len(clusterState))
+		for gpuID, state := range clusterState {
+			snapshot[gpuID] = state
+		}
+		update := DashboardUpdate{
+			ClusterState:    snapshot,
+			CarbonIntensity: mockCarbonIntensity(),
+			Anomalies:       checkAllAnomalies(snapshot),
+		}
+		clusterStateMux.RUnlock()
 
-		// Marshal the state into JSON to send over WebSocket
-		payload, _ := json.Marshal(currentState)
+		// Marshal the update into JSON to send over WebSocket
+		payload, _ := json.Marshal(update)
 
 		if err := conn.WriteMessage(websocket.TextMessage, payload); err != nil {
 			log.Println("Dashboard disconnected.")
@@ -187,6 +249,22 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	var job Job
 	if err := json.NewDecoder(r.Body).Decode(&job); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Validate required fields
+	if job.ID == "" {
+		http.Error(w, "Job ID is required", http.StatusBadRequest)
+		return
+	}
+	if job.Type == "" {
+		http.Error(w, "Job Type is required", http.StatusBadRequest)
+		return
+	}
+
+	// Validate job type
+	if job.Type != "training" && job.Type != "inference" {
+		http.Error(w, "Job Type must be 'training' or 'inference'", http.StatusBadRequest)
 		return
 	}
 
@@ -217,8 +295,11 @@ func main() {
 	defer conn.Close(context.Background())
 	log.Println("Connected to TimescaleDB.")
 
-	// Subscribe to the telemetry topic
-	sub, err := nc.Subscribe("aether.telemetry.gpu-0", func(msg *nats.Msg) {
+	// Subscribe to telemetry for all GPUs
+	sub, err := nc.Subscribe("aether.telemetry.*", func(msg *nats.Msg) {
+		// Example subject: aether.telemetry.gpu-0
+		parts := strings.Split(msg.Subject, ".")
+		gpuID := parts[len(parts)-1]
 		var telemetry GpuTelemetry
 		err := json.Unmarshal(msg.Data, &telemetry)
 		if err != nil {
@@ -228,52 +309,41 @@ func main() {
 
 		// Insert the data into the database
 		_, err = conn.Exec(context.Background(),
-			"INSERT INTO gpu_telemetry (time, gpu_name, temperature_c, memory_used_mb, memory_total_mb) VALUES ($1, $2, $3, $4, $5)",
+			`INSERT INTO gpu_telemetry (time, gpu_name, temperature_c, memory_used_mb, memory_total_mb, 
+			utilization_gpu, utilization_memory_controller, power_draw_w, clock_gpu_mhz, clock_mem_mhz, 
+			performance_state, throttling_reasons, gpu_id) 
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
 			time.Now(),
 			telemetry.GpuName,
 			telemetry.TemperatureC,
 			telemetry.MemoryUsedMb,
 			telemetry.MemoryTotalMb,
+			telemetry.UtilizationGpu,
+			telemetry.UtilizationMemoryController,
+			telemetry.PowerDrawW,
+			telemetry.ClockGpuMhz,
+			telemetry.ClockMemMhz,
+			telemetry.PerformanceState,
+			telemetry.ThrottlingReasons,
+			gpuID,
 		)
 		if err != nil {
 			log.Printf("Error inserting data: %v", err)
 			return
 		}
 
-		// Update the global state
-		gpuStateMux.Lock()
-		latestGpuState = GpuState{
-			Temp:    telemetry.TemperatureC,
-			MemUsed: telemetry.MemoryUsedMb,
+		// Update the cluster state for this GPU
+		clusterStateMux.Lock()
+		clusterState[gpuID] = GpuState{
+			Temp:              telemetry.TemperatureC,
+			MemUsed:           telemetry.MemoryUsedMb,
+			UtilizationGpu:    telemetry.UtilizationGpu,
+			PowerDrawW:        telemetry.PowerDrawW,
+			ThrottlingReasons: telemetry.ThrottlingReasons,
 		}
-		gpuStateMux.Unlock()
+		clusterStateMux.Unlock()
 
-		// Anomaly detection in a separate goroutine
-		go func(tel GpuTelemetry) {
-			reqBody, _ := json.Marshal(map[string]interface{}{
-				"gpu_temp":     tel.TemperatureC,
-				"gpu_mem_used": tel.MemoryUsedMb,
-			})
-
-			resp, err := http.Post("http://localhost:8000/anomaly", "application/json", bytes.NewBuffer(reqBody))
-			if err != nil {
-				log.Printf("Error checking anomaly: %v", err)
-				return
-			}
-			defer resp.Body.Close()
-
-			var anomalyResp map[string]bool
-			if err := json.NewDecoder(resp.Body).Decode(&anomalyResp); err != nil {
-				log.Printf("Error decoding anomaly response: %v", err)
-				return
-			}
-
-			if anomalyResp["is_anomaly"] {
-				log.Printf("🚨 ANOMALY DETECTED! GPU: %s, Temp: %d°C, Memory: %dMB", tel.GpuName, tel.TemperatureC, tel.MemoryUsedMb)
-			}
-		}(telemetry)
-
-		log.Printf("Logged telemetry for: %s", telemetry.GpuName)
+		log.Printf("Logged telemetry for %s on %s", telemetry.GpuName, gpuID)
 	})
 	if err != nil {
 		log.Fatalf("Error subscribing to NATS: %v", err)

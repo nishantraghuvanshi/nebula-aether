@@ -1,14 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 
-interface GpuState {
-  gpu_temp: number;
-  gpu_mem_used: number;
-}
+// Type definitions
 
 export default function Dashboard() {
-  const [gpuState, setGpuState] = useState<GpuState>({ gpu_temp: 0, gpu_mem_used: 0 });
-  const [connectionStatus, setConnectionStatus] = useState<string>('Connecting');
+  const [state, setState] = useState<any>({ cluster_state: {}, carbon_intensity: 0, anomalies: {} });
+  const [connectionStatus, setConnectionStatus] = useState('Connecting');
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -22,9 +19,10 @@ export default function Dashboard() {
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        setGpuState({
-          gpu_temp: data.gpu_temp || 0,
-          gpu_mem_used: data.gpu_mem_used || 0,
+        setState({
+          cluster_state: data.cluster_state || {},
+          carbon_intensity: data.carbon_intensity || 0,
+          anomalies: data.anomalies || {},
         });
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
@@ -49,12 +47,12 @@ export default function Dashboard() {
   }
 
   return (
-    <main style={{ fontFamily: 'monospace', padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ color: '#333', marginBottom: '2rem' }}>Aether Dashboard</h1>
-      
-      <div style={{ marginBottom: '2rem' }}>
-        <p style={{ 
-          padding: '0.5rem 1rem', 
+    <main style={{ fontFamily: 'monospace', padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
+      <h1 style={{ color: 'white', marginBottom: '1rem' }}>Aether Dashboard</h1>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <p style={{
+          padding: '0.5rem 1rem',
           backgroundColor: connectionStatus === 'Connected' ? '#d4edda' : '#f8d7da',
           color: connectionStatus === 'Connected' ? '#155724' : '#721c24',
           borderRadius: '4px',
@@ -64,51 +62,28 @@ export default function Dashboard() {
         </p>
       </div>
 
-      <div style={{ 
-        border: '2px solid #333', 
-        padding: '2rem', 
-        borderRadius: '8px',
-        backgroundColor: '#f8f9fa'
-      }}>
-        <h2 style={{ marginTop: 0, color: '#333' }}>GPU-0 State</h2>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginTop: '1rem' }}>
-          <div style={{ textAlign: 'center' }}>
-            <p style={{ 
-              fontSize: '2rem', 
-              color: gpuState.gpu_temp > 80 ? '#dc3545' : gpuState.gpu_temp > 60 ? '#ffc107' : '#28a745',
-              fontWeight: 'bold',
-              margin: '0.5rem 0'
-            }}>
-              {gpuState.gpu_temp}°C
-            </p>
-            <p style={{ color: '#666', margin: 0 }}>Temperature</p>
-          </div>
-          
-          <div style={{ textAlign: 'center' }}>
-            <p style={{ 
-              fontSize: '2rem', 
-              color: gpuState.gpu_mem_used > 20000 ? '#dc3545' : gpuState.gpu_mem_used > 10000 ? '#ffc107' : '#28a745',
-              fontWeight: 'bold',
-              margin: '0.5rem 0'
-            }}>
-              {(gpuState.gpu_mem_used || 0).toLocaleString()} MB
-            </p>
-            <p style={{ color: '#666', margin: 0 }}>Memory Used</p>
-          </div>
-        </div>
+      <p>Carbon Intensity: {state.carbon_intensity.toFixed(0)} gCO2/kWh</p>
 
-        <div style={{ marginTop: '2rem', padding: '1rem', backgroundColor: '#e9ecef', borderRadius: '4px' }}>
-          <h3 style={{ marginTop: 0, color: '#333' }}>System Status</h3>
-          <p style={{ margin: '0.5rem 0' }}>
-            <strong>GPU Health:</strong> {
-              gpuState.gpu_temp < 80 && gpuState.gpu_mem_used < 20000 ? '✅ Healthy' : '⚠️ Warning'
-            }
-          </p>
-          <p style={{ margin: '0.5rem 0' }}>
-            <strong>Last Update:</strong> {new Date().toLocaleTimeString()}
-          </p>
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+        {Object.keys(state.cluster_state).length === 0 ? (
+          <div style={{ border: '1px solid #ccc', padding: '2rem', borderRadius: '8px', background: '#f8f9fa', textAlign: 'center', color :'black' }}>
+            <p>No GPU data available. Waiting for telemetry...</p>
+            <p style={{ color: '#666', fontSize: '0.9rem' }}>
+              Make sure the Rust agent is running and publishing data.
+            </p>
+          </div>
+        ) : (
+          Object.entries(state.cluster_state).map(([gpuId, gpuState]) => (
+            <div key={gpuId} style={{ border: state.anomalies[gpuId] ? '2px solid red' : '1px solid #333', padding: '1rem', borderRadius: '8px', background: '#f8f9fa',color: 'black' }}>
+              <h2 style={{ marginTop: 0 }}>{gpuId.toUpperCase()}</h2>
+              <p>Temperature: {(gpuState as any).gpu_temp || 0}°C</p>
+              <p>Memory Used: {((gpuState as any).gpu_mem_used || 0).toLocaleString()} MB</p>
+              <p>Utilization: {(gpuState as any).utilization_gpu || 0}%</p>
+              <p>Power: {(gpuState as any).power_draw_w || 0}W</p>
+              {state.anomalies[gpuId] && <p style={{ color: 'red' }}>ANOMALY DETECTED</p>}
+            </div>
+          ))
+        )}
       </div>
 
       <div style={{ marginTop: '2rem', textAlign: 'center' }}>

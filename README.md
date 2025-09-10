@@ -1,135 +1,210 @@
-# Turborepo starter
+# Aether GPU Telemetry and Scheduling System
 
-This Turborepo starter is maintained by the Turborepo core team.
+A comprehensive GPU telemetry collection and AI-powered job scheduling system built with Rust, Go, Python, and Next.js.
 
-## Using this example
+## 🏗️ Architecture
 
-Run the following command:
-
-```sh
-npx create-turbo@latest
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+### System Components
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   GPU Hardware  │───▶│  Rust Agent     │───▶│      NATS       │
+│   (NVML)        │    │  (Telemetry)    │    │  (Message Bus)  │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                                        │
+                                                        ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Next.js       │◀───│  Go Orchestrator│◀───│   TimescaleDB   │
+│   Dashboard     │    │  (Scheduler)    │    │  (Time Series)  │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                │
+                                ▼
+                       ┌─────────────────┐
+                       │  Python AI Core │
+                       │  (XGBoost ML)   │
+                       └─────────────────┘
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Component Details
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+#### 1. **Rust Telemetry Agent** (`apps/agent/`)
+- **Purpose**: Collects real-time GPU telemetry data
+- **Technology**: Rust with NVML wrapper
+- **Features**:
+  - Multi-GPU support with individual telemetry streams
+  - Comprehensive metrics (temperature, memory, utilization, power, clocks)
+  - NATS message publishing
+  - Mock mode for macOS development
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+#### 2. **Go Orchestrator** (`apps/orchestrator/`)
+- **Purpose**: Central coordination and job scheduling
+- **Technology**: Go with NATS and PostgreSQL drivers
+- **Features**:
+  - Job queue management
+  - AI-powered GPU selection
+  - WebSocket API for dashboard
+  - Database integration
+  - Multi-GPU cluster state management
 
-### Develop
+#### 3. **Python AI Core** (`apps/ai-core/`)
+- **Purpose**: Machine learning-based GPU placement decisions
+- **Technology**: Python with XGBoost and FastAPI
+- **Features**:
+  - XGBoost model for optimal GPU selection
+  - Multi-GPU candidate evaluation
+  - Real-time prediction API
+  - Synthetic data generation for training
 
-To develop all apps and packages, run the following command:
+#### 4. **Next.js Dashboard** (`apps/dashboard/`)
+- **Purpose**: Real-time monitoring and visualization
+- **Technology**: Next.js with TypeScript
+- **Features**:
+  - Multi-GPU visualization
+  - Real-time telemetry display
+  - Anomaly detection alerts
+  - Carbon intensity monitoring
+  - WebSocket-based updates
 
-```
-cd my-turborepo
+#### 5. **Infrastructure**
+- **NATS**: High-performance message broker for telemetry
+- **TimescaleDB**: Time-series database for historical data storage
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+## 🚀 Quick Start
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+### Prerequisites
+- macOS (tested on macOS 24.5.0)/linux
+- Docker Desktop
+- Rust (via rustup)
+- Go 1.19+
+- Node.js 18+
+- Conda/Miniconda
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### One-Command Setup
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```bash
+# Clone and setup everything
+git clone <your-repo-url>
+cd nebula/project
+./setup.sh
 ```
 
-## Useful Links
+### Access Points
+- **Dashboard**: http://localhost:3000
+- **Orchestrator API**: http://localhost:8080
+- **AI Core API**: http://localhost:8000
+- **Database**: postgres://aether:aether@localhost:5432/aether
 
-Learn more about the power of Turborepo:
+## 📊 Data Flow
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+### Telemetry Collection
+1. **GPU Hardware** → **Rust Agent** (via NVML)
+2. **Rust Agent** → **NATS** (publishes to `aether.telemetry.gpu-{id}`)
+3. **NATS** → **Go Orchestrator** (subscribes to `aether.telemetry.*`)
+4. **Go Orchestrator** → **TimescaleDB** (stores historical data)
+
+### Job Scheduling
+1. **Job Submission** → **Go Orchestrator** (via HTTP API)
+2. **Go Orchestrator** → **Python AI Core** (sends GPU candidates)
+3. **Python AI Core** → **Go Orchestrator** (returns best GPU ID)
+4. **Go Orchestrator** → **GPU Agent** (via NATS commands)
+
+### Dashboard Updates
+1. **Go Orchestrator** → **Next.js Dashboard** (via WebSocket)
+2. **Dashboard** → **User** (real-time visualization)
+
+## 🛠️ Management Scripts
+
+### Setup and Restart
+```bash
+# First-time setup (installs everything)
+./setup.sh
+
+# Quick restart for existing setup
+./restart.sh
+
+# Stop all services
+./stop.sh
+```
+
+### Testing
+```bash
+# Comprehensive system test
+./test.sh
+```
+
+## 📈 Telemetry Data
+
+### GPU Metrics Collected
+- **Temperature**: GPU core temperature
+- **Memory**: Used/total memory in MB
+- **Utilization**: GPU and memory controller utilization %
+- **Power**: Current power draw in watts
+- **Clocks**: GPU and memory clock speeds
+- **Performance State**: Current performance state
+- **Throttling**: Throttling reasons and flags
+
+### Data Storage
+- **Format**: Time-series data in TimescaleDB
+- **Retention**: Configurable based on needs
+- **Indexing**: Optimized for time-based queries
+- **Partitioning**: Automatic time-based partitioning
+
+## 🤖 AI-Powered Scheduling
+
+### Machine Learning Model
+- **Algorithm**: XGBoost Classifier
+- **Features**: Temperature, memory usage, utilization, power draw, job type
+- **Output**: Best GPU selection from candidates
+- **Training**: Synthetic data generation with realistic patterns
+
+### Scheduling Logic
+1. Collect current state of all GPUs
+2. Send candidates to AI Core for evaluation
+3. Select best GPU based on ML prediction
+4. Execute job on selected GPU
+5. Monitor and adjust as needed
+
+## 🔧 Configuration
+
+### Environment Variables
+- `NATS_URL`: NATS connection string (default: nats://localhost:4222)
+- `DATABASE_URL`: PostgreSQL connection string
+- `AI_CORE_URL`: AI Core API endpoint (default: http://localhost:8000)
+
+### Customization Points
+- **Anomaly Detection**: Modify thresholds in `orchestrator/main.go`
+- **Telemetry Frequency**: Adjust interval in `agent/src/main.rs`
+- **Dashboard Styling**: Update `dashboard/app/page.tsx`
+- **AI Model**: Retrain with new data in `ai-core/train.py`
+
+## 🐛 Troubleshooting
+
+### Common Issues
+1. **Docker not running**: Start Docker Desktop
+2. **Port conflicts**: Check what's using ports 3000, 8000, 8080
+3. **Conda environment**: Recreate with `conda env remove -n aether-ai`
+4. **Database connection**: Restart TimescaleDB container
+
+### Logs
+- AI Core: `aether/apps/ai-core/ai-core.log`
+- Agent: `aether/apps/agent/agent.log`
+- Orchestrator: `aether/apps/orchestrator/orchestrator.log`
+- Dashboard: `aether/dashboard.log`
+
+## 📁 Project Structure
+
+```
+aether/
+├── apps/
+│   ├── agent/           # Rust telemetry agent
+│   ├── orchestrator/    # Go coordination service
+│   ├── ai-core/         # Python AI/ML service
+│   └── dashboard/       # Next.js monitoring UI
+├── docker-compose.yml   # Infrastructure services
+├── package.json         # Dashboard dependencies
+└── README.md           # This file
+```
+
+---
+
+**Built for efficient GPU resource management and intelligent job scheduling**
