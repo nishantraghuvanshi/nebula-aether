@@ -52,3 +52,4 @@ echo "   • Predictive power-gating with sleep mode"
 echo "   • Real-time dashboard with WebSocket streaming"
 echo ""
 echo "🌟 Aether is now a truly intelligent GPU control plane!"
+
