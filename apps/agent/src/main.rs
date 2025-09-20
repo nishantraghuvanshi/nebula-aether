@@ -1,16 +1,44 @@
 use serde::Serialize;
 use std::time::Duration;
+use std::sync::Arc;
 use futures_util::StreamExt;
 use tokio::sync::Mutex;
-use std::sync::Arc;
 
-#[cfg(target_os = "macos")]
+// Mock mode (macOS or when NVML is not available)
+#[cfg(any(target_os = "macos", not(feature = "nvml")))]
 #[tokio::main]
 async fn main() {
+    run_mock_mode().await;
+}
+
+// Try NVML first, fall back to mock mode on Linux
+#[cfg(all(not(target_os = "macos"), feature = "nvml"))]
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Try to initialize NVML first
+    match try_nvml_mode().await {
+        Ok(_) => Ok(()),
+        Err(err) => {
+            println!("NVML initialization failed: {}", err);
+            println!("Falling back to mock mode...");
+            run_mock_mode().await;
+            Ok(())
+        }
+    }
+}
+
+async fn run_mock_mode() {
     use tokio::time;
 
+    let os_info = if cfg!(target_os = "macos") {
+        "macOS"
+    } else {
+        "Linux (NVML not available)"
+    };
+
     println!(
-        "NVML is not supported on macOS. Running in MOCK mode with 3 simulated GPUs and publishing synthetic telemetry to NATS."
+        "NVML is not supported on {} or NVIDIA drivers not found. Running in MOCK mode with 3 simulated GPUs and publishing synthetic telemetry to NATS.",
+        os_info
     );
 
     let nats_url = "nats://localhost:4222";
@@ -102,7 +130,7 @@ async fn main() {
 
                             let subject = format!("aether.telemetry.{}", gpu_id);
 
-                            if let Err(err) = client.publish(subject.clone(), payload.into()).await { // <-- ADD & HERE
+                            if let Err(err) = client.publish(subject.clone(), payload.into()).await {
                                 eprintln!("Failed to publish to NATS: {err}");
                                 continue;
                             }
@@ -122,9 +150,8 @@ async fn main() {
     }
 }
 
-#[cfg(not(target_os = "macos"))]
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+#[cfg(all(not(target_os = "macos"), feature = "nvml"))]
+async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     use nvml_wrapper::enum_wrappers::device::{Clock, TemperatureSensor};
     use nvml_wrapper::Nvml;
     use tokio::time;
@@ -137,7 +164,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Connected to NATS server at {}.", nats_url);
 
     // Initialize the NVML library
-    let nvml = Nvml::init()?;
+    let nvml = Arc::new(Nvml::init()?);
     println!("NVML initialized.");
 
     let device_count = nvml.device_count()?;
@@ -148,7 +175,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let nvml = nvml.clone();
 
         tokio::spawn(async move {
-            let device = nvml.device_by_index(i).unwrap();
+            // Get the device inside the async task
+            let device = match nvml.device_by_index(i) {
+                Ok(device) => device,
+                Err(err) => {
+                    eprintln!("Failed to get device {}: {}", i, err);
+                    return;
+                }
+            };
+            
             let mut interval = time::interval(Duration::from_secs(2));
 
             loop {
@@ -181,7 +216,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 let subject = format!("aether.telemetry.gpu-{}", i);
                 let payload = serde_json::to_vec(&telemetry).unwrap();
-                if let Err(err) = client.publish(&subject, payload.into()).await {
+                if let Err(err) = client.publish(subject.clone(), payload.into()).await {
                     eprintln!("Failed to publish to NATS: {}", err);
                     continue;
                 }

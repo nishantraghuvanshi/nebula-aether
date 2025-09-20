@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 # Project root directory
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-AETHER_DIR="$PROJECT_ROOT/aether"
+AETHER_DIR="$PROJECT_ROOT"
 
 echo -e "${BLUE}🚀 Aether GPU Telemetry and Scheduling System Setup${NC}"
 echo -e "${BLUE}================================================${NC}"
