@@ -27,3 +27,77 @@ web:dev:  ✓ Compiled /favicon.ico in 505ms
 web:dev:  GET /favicon.ico?favicon.0b3bf435.ico 200 in 804ms
 web:dev:  GET /favicon.ico?favicon.0b3bf435.ico 200 in 810ms
 web:dev:  GET /favicon.ico?favicon.0b3bf435.ico 200 in 863ms
+web:dev: 
+web:dev: -----
+web:dev: [1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to /var/folders/xs/sslj00fs5b11jtgl8w58hnq80000gn/T/next-panic-5abf82a9f87ef6a948ca496732ba307c.log.
+web:dev: 
+web:dev: To help make Turbopack better, report this error by ]8;;https://github.com/vercel/next.js/discussions/new?category=turbopack-error-report&title=Turbopack%20Error%3A%20Next.js%20package%20not%20found&body=Turbopack%20version%3A%20%60v15.5.0-3-gc8cf55f4e%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0ANext.js%20package%20not%20found%0A%0ADebug%20info%3A%0A-%20Execution%20of%20get_entrypoints_with_issues_operation%20failed%0A-%20Execution%20of%20EntrypointsOperation%3A%3Anew%20failed%0A-%20Execution%20of%20Project%3A%3Aentrypoints%20failed%0A-%20Execution%20of%20PagesProject%3A%3Aroutes%20failed%0A-%20Execution%20of%20get_pages_structure_for_root_directory%20failed%0A-%20Execution%20of%20get_next_package%20failed%0A-%20Next.js%20package%20not%20found%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace\clicking here.]8;;\
+web:dev: -----
+web:dev: 
+web:dev:  ⨯ [Error: Cannot find module 'next/dist/client/components/builtin/global-not-found'
+web:dev: Require stack:
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/build/webpack-config.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/router-server.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/start-server.js] {
+web:dev:   code: 'MODULE_NOT_FOUND',
+web:dev:   requireStack: [Array]
+web:dev: }
+web:dev: [Error: Cannot find module 'next/dist/pages/_error'
+web:dev: Require stack:
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/build/webpack-config.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/router-server.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/start-server.js] {
+web:dev:   code: 'MODULE_NOT_FOUND',
+web:dev:   requireStack: [Array]
+web:dev: }
+web:dev:  ⨯ [Error: Cannot find module 'next/dist/pages/_error'
+web:dev: Require stack:
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/build/webpack-config.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/router-server.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/start-server.js] {
+web:dev:   code: 'MODULE_NOT_FOUND',
+web:dev:   requireStack: [Array]
+web:dev: }
+web:dev: [Error: Cannot find module 'next/dist/pages/_error'
+web:dev: Require stack:
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/dev/on-demand-entry-handler.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/build/webpack/plugins/flight-client-entry-plugin.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/build/webpack-config.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/dev/hot-reloader-webpack.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/router-utils/setup-dev-bundler.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/router-server.js
+web:dev: - /Users/nishant/Desktop/Hackathon/nebula/project/aether/node_modules/next/dist/server/lib/start-server.js] {
+web:dev:   code: 'MODULE_NOT_FOUND',
+web:dev:   requireStack: [Array]
+web:dev: }
+web:dev: Error [TurbopackInternalError]: Next.js package not found
+web:dev: 
+web:dev: Debug info:
+web:dev: - Execution of get_entrypoints_with_issues_operation failed
+web:dev: - Execution of EntrypointsOperation::new failed
+web:dev: - Execution of Project::entrypoints failed
+web:dev: - Execution of PagesProject::routes failed
+web:dev: - Execution of get_pages_structure_for_root_directory failed
+web:dev: - Execution of get_next_package failed
+web:dev: - Next.js package not found
+web:dev:     at <unknown> (TurbopackInternalError: Next.js package not found) {
+web:dev:   location: undefined
+web:dev: }
+web:dev: [?25h
+
+ Tasks:    1 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    33m15.128s 
+
