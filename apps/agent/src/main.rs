@@ -190,15 +190,51 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
                 interval.tick().await;
 
                 // --- Get All Data Points ---
-                let gpu_name = device.name().unwrap();
-                let utilization_rates = device.utilization_rates().unwrap();
-                let perf_state = device.performance_state().unwrap();
-                let clock_gpu = device.clock_info(Clock::Graphics).unwrap();
-                let clock_mem = device.clock_info(Clock::Memory).unwrap();
-                let memory_info = device.memory_info().unwrap();
-                let temperature_c = device.temperature(TemperatureSensor::Gpu).unwrap();
-                let power_draw = device.power_usage().unwrap() / 1000; // mW -> W
-                let throttle_reasons = device.current_throttle_reasons().unwrap();
+                // ✅ SAFE - Uses proper error handling with defaults and logging
+                let gpu_name = device.name().unwrap_or_else(|err| {
+                    eprintln!("Warning: Failed to get GPU {} name: {}. Using default.", i, err);
+                    format!("Unknown GPU {}", i)
+                });
+
+                let utilization_rates = device.utilization_rates().unwrap_or_else(|err| {
+                    eprintln!("Warning: Failed to get GPU {} utilization: {}. Using defaults.", i, err);
+                    nvml_wrapper::struct_wrappers::device::Utilization { gpu: 0, memory: 0 }
+                });
+
+                let perf_state = device.performance_state().unwrap_or_else(|err| {
+                    eprintln!("Warning: Failed to get GPU {} performance state: {}. Using default.", i, err);
+                    "P0".to_string() // Safe string default
+                });
+
+                let clock_gpu = device.clock_info(Clock::Graphics).unwrap_or_else(|err| {
+                    eprintln!("Warning: Failed to get GPU {} graphics clock: {}. Using default.", i, err);
+                    0
+                });
+
+                let clock_mem = device.clock_info(Clock::Memory).unwrap_or_else(|err| {
+                    eprintln!("Warning: Failed to get GPU {} memory clock: {}. Using default.", i, err);
+                    0
+                });
+
+                let memory_info = device.memory_info().unwrap_or_else(|err| {
+                    eprintln!("Warning: Failed to get GPU {} memory info: {}. Using defaults.", i, err);
+                    nvml_wrapper::struct_wrappers::device::MemoryInfo { total: 0, free: 0, used: 0 }
+                });
+
+                let temperature_c = device.temperature(TemperatureSensor::Gpu).unwrap_or_else(|err| {
+                    eprintln!("Warning: Failed to get GPU {} temperature: {}. Using default.", i, err);
+                    0
+                });
+
+                let power_draw = device.power_usage().unwrap_or_else(|err| {
+                    eprintln!("Warning: Failed to get GPU {} power usage: {}. Using default.", i, err);
+                    0
+                }) / 1000; // mW -> W
+
+                let throttle_reasons = device.current_throttle_reasons().unwrap_or_else(|err| {
+                    eprintln!("Warning: Failed to get GPU {} throttle reasons: {}. Using default.", i, err);
+                    "None".to_string() // Safe string default
+                });
 
                 let telemetry = GpuTelemetry {
                     gpu_name,

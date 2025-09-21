@@ -10,10 +10,10 @@ export default function Dashboard() {
   const [jobForm, setJobForm] = useState({ id: '', type: 'training' });
   const [submitStatus, setSubmitStatus] = useState('');
 
-  const submitJob = async (e: any) => {
+  const submitJob = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitStatus('Submitting...');
-    
+
     try {
       const response = await fetch('http://localhost:8080/submit', {
         method: 'POST',
