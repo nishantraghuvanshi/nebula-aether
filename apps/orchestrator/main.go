@@ -43,6 +43,7 @@ type GpuState struct {
 	UtilizationGpu    uint32 `json:"utilization_gpu"`
 	PowerDrawW        uint32 `json:"power_draw_w"`
 	ThrottlingReasons string `json:"throttling_reasons"`
+	GpuName           string `json:"gpu_name"`
 }
 
 // Candidate sent to AI Core with ID
@@ -364,6 +365,7 @@ func main() {
 			UtilizationGpu:    telemetry.UtilizationGpu,
 			PowerDrawW:        telemetry.PowerDrawW,
 			ThrottlingReasons: telemetry.ThrottlingReasons,
+			GpuName:           telemetry.GpuName,
 		}
 		clusterStateMux.Unlock()
 

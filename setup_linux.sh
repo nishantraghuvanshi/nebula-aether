@@ -575,10 +575,10 @@ print_info "Starting infrastructure services (NATS, TimescaleDB)..."
 cd "$AETHER_DIR"
 
 # Stop any existing containers
-docker compose down 2>/dev/null || true
+docker-compose down 2>/dev/null || true
 
 # Start infrastructure
-docker compose up -d
+docker-compose up -d
 
 # Wait for services to be ready
 print_info "Waiting for services to start..."
@@ -604,10 +604,10 @@ print_info "Setting up database schema..."
 sleep 5
 
 # Create the database and table if they don't exist
-docker compose exec -T timescaledb psql -U aether -d postgres -c "CREATE DATABASE aether;" 2>/dev/null || true
+docker-compose exec -T timescaledb psql -U aether -d postgres -c "CREATE DATABASE aether;" 2>/dev/null || true
 
 # Create the gpu_telemetry table with all columns
-docker compose exec -T timescaledb psql -U aether -d aether -c "
+docker-compose exec -T timescaledb psql -U aether -d aether -c "
 CREATE TABLE IF NOT EXISTS gpu_telemetry (
     time TIMESTAMPTZ NOT NULL,
     gpu_name TEXT,
@@ -625,7 +625,7 @@ CREATE TABLE IF NOT EXISTS gpu_telemetry (
 );" 2>/dev/null || true
 
 # Convert to hypertable
-docker compose exec -T timescaledb psql -U aether -d aether -c "SELECT create_hypertable('gpu_telemetry', 'time', if_not_exists => TRUE);" 2>/dev/null || true
+docker-compose exec -T timescaledb psql -U aether -d aether -c "SELECT create_hypertable('gpu_telemetry', 'time', if_not_exists => TRUE);" 2>/dev/null || true
 
 print_status "Database schema ready"
 

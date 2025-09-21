@@ -158,7 +158,7 @@ export default function Dashboard() {
         ) : (
           Object.entries(state.cluster_state).map(([gpuId, gpuState]) => (
             <div key={gpuId} style={{ border: state.anomalies[gpuId] ? '2px solid red' : '1px solid #333', padding: '1rem', borderRadius: '8px', background: '#f8f9fa',color: 'black' }}>
-              <h2 style={{ marginTop: 0 }}>{gpuId.toUpperCase()}</h2>
+              <h2 style={{ marginTop: 0 }}>{(gpuState as any).gpu_name || gpuId.toUpperCase()}</h2>
               <p>Temperature: {(gpuState as any).gpu_temp || 0}°C</p>
               <p>Memory Used: {((gpuState as any).gpu_mem_used || 0).toLocaleString()} MB</p>
               <p>Utilization: {(gpuState as any).utilization_gpu || 0}%</p>
