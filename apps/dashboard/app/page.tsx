@@ -7,8 +7,18 @@ export default function Dashboard() {
   const [state, setState] = useState<any>({ cluster_state: {}, carbon_intensity: 0, anomalies: {} });
   const [connectionStatus, setConnectionStatus] = useState('Connecting');
   const [isClient, setIsClient] = useState(false);
-  const [jobForm, setJobForm] = useState({ id: '', type: 'training' });
+  const [jobForm, setJobForm] = useState({ id: 'mnist-training-small' });
   const [submitStatus, setSubmitStatus] = useState('');
+  const [jobStatus, setJobStatus] = useState<any>({});
+
+  // Available job definitions
+  const availableJobs = [
+    { id: 'mnist-training-small', name: 'MNIST Neural Network Training', type: 'training' },
+    { id: 'matrix-multiply-heavy', name: 'Matrix Multiplication Benchmark', type: 'compute' },
+    { id: 'image-inference-batch', name: 'Batch Image Classification', type: 'inference' },
+    { id: 'memory-stress-test', name: 'GPU Memory Stress Test', type: 'memory' },
+    { id: 'monte-carlo-simulation', name: 'Monte Carlo Pi Estimation', type: 'simulation' }
+  ];
 
   const submitJob = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,6 +64,11 @@ export default function Dashboard() {
           carbon_intensity: data.carbon_intensity || 0,
           anomalies: data.anomalies || {},
         });
+
+        // Update job status if available
+        if (data.job_status) {
+          setJobStatus(data.job_status);
+        }
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
       }
@@ -99,25 +114,17 @@ export default function Dashboard() {
         <h3 style={{ marginTop: 0, color: '#333' }}>Submit GPU Job</h3>
         <form onSubmit={submitJob} style={{ display: 'flex', gap: '1rem', alignItems: 'end', flexWrap: 'wrap' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#333' }}>Job ID:</label>
-            <input
-              type="text"
-              value={jobForm.id}
-              onChange={(e) => setJobForm({ ...jobForm, id: e.target.value })}
-              placeholder="e.g., training-job-001"
-              required
-              style={{ padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', minWidth: '200px' }}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#333' }}>Job Type:</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#333' }}>Select Job:</label>
             <select
-              value={jobForm.type}
-              onChange={(e) => setJobForm({ ...jobForm, type: e.target.value })}
-              style={{ padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
+              value={jobForm.id}
+              onChange={(e) => setJobForm({ id: e.target.value })}
+              style={{ padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', minWidth: '250px' }}
             >
-              <option value="training">Training</option>
-              <option value="inference">Inference</option>
+              {availableJobs.map(job => (
+                <option key={job.id} value={job.id}>
+                  {job.name} ({job.type})
+                </option>
+              ))}
             </select>
           </div>
           <button
@@ -135,9 +142,9 @@ export default function Dashboard() {
           </button>
         </form>
         {submitStatus && (
-          <p style={{ 
-            marginTop: '1rem', 
-            padding: '0.5rem', 
+          <p style={{
+            marginTop: '1rem',
+            padding: '0.5rem',
             backgroundColor: submitStatus.includes('Error') ? '#f8d7da' : '#d4edda',
             color: submitStatus.includes('Error') ? '#721c24' : '#155724',
             borderRadius: '4px'
@@ -146,6 +153,33 @@ export default function Dashboard() {
           </p>
         )}
       </div>
+
+      {/* Job Status Display */}
+      {Object.keys(jobStatus).length > 0 && (
+        <div style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #007bff', borderRadius: '8px', backgroundColor: '#e7f3ff' }}>
+          <h3 style={{ marginTop: 0, color: '#333' }}>Recent Job Status</h3>
+          {Object.entries(jobStatus).map(([jobId, status]: [string, any]) => (
+            <div key={jobId} style={{
+              padding: '0.5rem',
+              marginBottom: '0.5rem',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              backgroundColor: 'white'
+            }}>
+              <div style={{ fontWeight: 'bold', color: '#333' }}>Job: {jobId}</div>
+              <div style={{ color: status.status === 'completed' ? '#155724' : status.status === 'failed' ? '#721c24' : '#856404' }}>
+                Status: {status.status}
+              </div>
+              <div style={{ color: '#666', fontSize: '0.9rem' }}>{status.message}</div>
+              {status.start_time && (
+                <div style={{ color: '#666', fontSize: '0.8rem' }}>
+                  Started: {new Date(status.start_time * 1000).toLocaleTimeString()}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
         {Object.keys(state.cluster_state).length === 0 ? (

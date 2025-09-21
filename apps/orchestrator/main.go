@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -32,8 +35,36 @@ type GpuTelemetry struct {
 
 // Job struct to define a workload
 type Job struct {
-	ID   string `json:"id"`
-	Type string `json:"type"` // e.g., "training" or "inference"
+	ID              string   `json:"id"`
+	Type            string   `json:"type"` // e.g., "training" or "inference"
+	Name            string   `json:"name,omitempty"`
+	Description     string   `json:"description,omitempty"`
+	Script          string   `json:"script,omitempty"`
+	Args            []string `json:"args,omitempty"`
+	MinMemoryMB     int      `json:"min_memory_mb,omitempty"`
+	MaxDurationSec  int      `json:"max_duration_sec,omitempty"`
+	Priority        string   `json:"priority,omitempty"`
+	ExpectedGpuUtil int      `json:"expected_gpu_util,omitempty"`
+}
+
+// JobExecution struct for sending execution commands
+type JobExecution struct {
+	JobID  string   `json:"job_id"`
+	Type   string   `json:"job_type"`
+	Script string   `json:"script"`
+	Args   []string `json:"args"`
+	GpuID  string   `json:"gpu_id"`
+}
+
+// JobStatus struct for receiving status updates
+type JobStatus struct {
+	JobID     string `json:"job_id"`
+	GpuID     string `json:"gpu_id"`
+	Status    string `json:"status"` // "started", "running", "completed", "failed"
+	Message   string `json:"message"`
+	StartTime *int64 `json:"start_time,omitempty"`
+	EndTime   *int64 `json:"end_time,omitempty"`
+	ExitCode  *int   `json:"exit_code,omitempty"`
 }
 
 // Represents the current state of a GPU, which we'll send to the AI
@@ -69,9 +100,10 @@ type PredictionResponse struct {
 
 // DashboardUpdate packages full cluster info for the dashboard
 type DashboardUpdate struct {
-	ClusterState    map[string]GpuState `json:"cluster_state"`
-	CarbonIntensity float64             `json:"carbon_intensity"`
-	Anomalies       map[string]bool     `json:"anomalies"`
+	ClusterState    map[string]GpuState  `json:"cluster_state"`
+	CarbonIntensity float64              `json:"carbon_intensity"`
+	Anomalies       map[string]bool      `json:"anomalies"`
+	JobStatus       map[string]JobStatus `json:"job_status"`
 }
 
 // mockCarbonIntensity returns a placeholder carbon intensity value
@@ -107,7 +139,58 @@ var (
 	clusterStateMux = &sync.RWMutex{}
 	latestGpuState  = GpuState{}
 	gpuStateMux     = &sync.RWMutex{}
+	natsClient      *nats.Conn
+	jobDefinitions  = make(map[string]Job)        // Job definitions by ID
+	activeJobStatus = make(map[string]JobStatus)  // Current job status by job ID
+	jobStatusMux    = &sync.RWMutex{}
 )
+
+// loadJobDefinitions loads job definitions from the JSON file
+func loadJobDefinitions() error {
+	// Try multiple paths to find the job definitions file
+	possiblePaths := []string{
+		"./demo-jobs/job-definitions.json",
+		"../demo-jobs/job-definitions.json",
+		"../../demo-jobs/job-definitions.json",
+	}
+
+	var file *os.File
+	var err error
+	var filePath string
+
+	for _, path := range possiblePaths {
+		file, err = os.Open(path)
+		if err == nil {
+			filePath = path
+			break
+		}
+	}
+
+	if err != nil {
+		return fmt.Errorf("failed to find job definitions file in any of these paths: %v", possiblePaths)
+	}
+	defer file.Close()
+
+	log.Printf("📂 Loading job definitions from: %s", filePath)
+
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		return fmt.Errorf("failed to read job definitions file: %v", err)
+	}
+
+	var jobs []Job
+	if err := json.Unmarshal(data, &jobs); err != nil {
+		return fmt.Errorf("failed to parse job definitions: %v", err)
+	}
+
+	// Index jobs by ID for quick lookup
+	for _, job := range jobs {
+		jobDefinitions[job.ID] = job
+	}
+
+	log.Printf("📋 Loaded %d job definitions", len(jobDefinitions))
+	return nil
+}
 
 // askAICoreCandidates sends all GPU candidates to the AI service and gets the best GPU ID
 func askAICoreCandidates(cluster map[string]GpuState, job Job) (string, error) {
@@ -145,6 +228,30 @@ func askAICoreCandidates(cluster map[string]GpuState, job Job) (string, error) {
 	}
 
 	return predictionResp.BestGpuID, nil
+}
+
+// sendJobExecution sends a job execution command via NATS
+func sendJobExecution(jobExec JobExecution) error {
+	if natsClient == nil {
+		return fmt.Errorf("NATS client not initialized")
+	}
+
+	// Serialize the job execution command
+	commandData, err := json.Marshal(jobExec)
+	if err != nil {
+		return fmt.Errorf("failed to marshal job execution: %v", err)
+	}
+
+	// Send command to the specific GPU
+	subject := fmt.Sprintf("aether.commands.%s", jobExec.GpuID)
+	command := fmt.Sprintf("execute_job:%s", string(commandData))
+
+	if err := natsClient.Publish(subject, []byte(command)); err != nil {
+		return fmt.Errorf("failed to publish job command: %v", err)
+	}
+
+	log.Printf("📡 Published job execution command to %s", subject)
+	return nil
 }
 
 // scheduleJobs is our main scheduling loop
@@ -198,7 +305,22 @@ func scheduleJobs() {
 		}
 
 		log.Printf("AI approved! Scheduling job %s on GPU %s.", jobToSchedule.ID, bestGpuID)
-		// In the future, this is where we would publish a command to NATS
+
+		// Send job execution command via NATS
+		jobExecution := JobExecution{
+			JobID:  jobToSchedule.ID,
+			Type:   jobToSchedule.Type,
+			Script: jobToSchedule.Script,
+			Args:   jobToSchedule.Args,
+			GpuID:  bestGpuID,
+		}
+
+		if err := sendJobExecution(jobExecution); err != nil {
+			log.Printf("Error sending job execution command: %v", err)
+			// Could re-queue the job here
+		} else {
+			log.Printf("✅ Job execution command sent for %s on %s", jobToSchedule.ID, bestGpuID)
+		}
 	}
 }
 
@@ -223,10 +345,20 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		for gpuID, state := range clusterState {
 			snapshot[gpuID] = state
 		}
+
+		// Include job status in dashboard update
+		jobStatusMux.RLock()
+		jobStatusSnapshot := make(map[string]JobStatus, len(activeJobStatus))
+		for jobID, status := range activeJobStatus {
+			jobStatusSnapshot[jobID] = status
+		}
+		jobStatusMux.RUnlock()
+
 		update := DashboardUpdate{
 			ClusterState:    snapshot,
 			CarbonIntensity: mockCarbonIntensity(),
 			Anomalies:       checkAllAnomalies(snapshot),
+			JobStatus:       jobStatusSnapshot,
 		}
 		clusterStateMux.RUnlock()
 
@@ -271,44 +403,84 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var job Job
-	if err := json.NewDecoder(r.Body).Decode(&job); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	var jobSubmission struct {
+		ID string `json:"id"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&jobSubmission); err != nil {
+		log.Printf("❌ Failed to decode job submission JSON: %v", err)
+		http.Error(w, "Invalid JSON: " + err.Error(), http.StatusBadRequest)
 		return
 	}
 
+	log.Printf("📥 Received job submission: %+v", jobSubmission)
+
 	// Validate required fields
-	if job.ID == "" {
+	if jobSubmission.ID == "" {
+		log.Printf("❌ Job submission missing ID")
 		http.Error(w, "Job ID is required", http.StatusBadRequest)
 		return
 	}
-	if job.Type == "" {
-		http.Error(w, "Job Type is required", http.StatusBadRequest)
+
+	log.Printf("🔍 Looking up job definition for ID: %s", jobSubmission.ID)
+	log.Printf("📋 Available job definitions: %v", func() []string {
+		keys := make([]string, 0, len(jobDefinitions))
+		for k := range jobDefinitions {
+			keys = append(keys, k)
+		}
+		return keys
+	}())
+
+	// Look up job definition
+	jobDef, exists := jobDefinitions[jobSubmission.ID]
+	if !exists {
+		log.Printf("❌ Job definition not found: %s", jobSubmission.ID)
+		http.Error(w, fmt.Sprintf("Job definition not found: %s. Available jobs: %v", jobSubmission.ID, func() []string {
+			keys := make([]string, 0, len(jobDefinitions))
+			for k := range jobDefinitions {
+				keys = append(keys, k)
+			}
+			return keys
+		}()), http.StatusNotFound)
 		return
 	}
 
-	// Validate job type
-	if job.Type != "training" && job.Type != "inference" {
-		http.Error(w, "Job Type must be 'training' or 'inference'", http.StatusBadRequest)
-		return
-	}
+	log.Printf("✅ Found job definition: %+v", jobDef)
 
+	// Add the complete job to the queue
 	queueMux.Lock()
-	jobQueue = append(jobQueue, job)
+	jobQueue = append(jobQueue, jobDef)
 	queueMux.Unlock()
 
-	log.Printf("Added job to queue: ID=%s, Type=%s", job.ID, job.Type)
+	log.Printf("📥 Added job to queue: %s (%s) - %s", jobDef.ID, jobDef.Type, jobDef.Name)
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{"status": "job added"})
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"status": "job added",
+		"job": map[string]interface{}{
+			"id":          jobDef.ID,
+			"type":        jobDef.Type,
+			"name":        jobDef.Name,
+			"description": jobDef.Description,
+		},
+	})
 }
 
 func main() {
+	// Load job definitions
+	if err := loadJobDefinitions(); err != nil {
+		log.Printf("Warning: Failed to load job definitions: %v", err)
+		log.Println("Job submission will be limited to basic job types")
+	}
+
 	// Connect to NATS
 	nc, err := nats.Connect("nats://localhost:4222")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
 	defer nc.Close()
+
+	// Set global NATS client
+	natsClient = nc
 	log.Println("Connected to NATS.")
 
 	// Connect to TimescaleDB
@@ -375,6 +547,38 @@ func main() {
 		log.Fatalf("Error subscribing to NATS: %v", err)
 	}
 	defer sub.Unsubscribe()
+
+	// Subscribe to job status updates
+	statusSub, err := nc.Subscribe("aether.status.*", func(msg *nats.Msg) {
+		// Parse job status update
+		var status JobStatus
+		if err := json.Unmarshal(msg.Data, &status); err != nil {
+			log.Printf("Error decoding job status: %v", err)
+			return
+		}
+
+		// Update job status
+		jobStatusMux.Lock()
+		activeJobStatus[status.JobID] = status
+		jobStatusMux.Unlock()
+
+		log.Printf("📊 Job status update: %s - %s (%s)", status.JobID, status.Status, status.Message)
+
+		// Clean up completed/failed jobs after 30 seconds to prevent memory buildup
+		if status.Status == "completed" || status.Status == "failed" {
+			go func(jobID string) {
+				time.Sleep(30 * time.Second)
+				jobStatusMux.Lock()
+				delete(activeJobStatus, jobID)
+				jobStatusMux.Unlock()
+				log.Printf("🧹 Cleaned up job status for: %s", jobID)
+			}(status.JobID)
+		}
+	})
+	if err != nil {
+		log.Fatalf("Error subscribing to job status: %v", err)
+	}
+	defer statusSub.Unsubscribe()
 
 	// Start the HTTP server in a separate goroutine
 	go func() {
