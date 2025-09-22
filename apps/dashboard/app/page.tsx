@@ -7,17 +7,18 @@ export default function Dashboard() {
   const [state, setState] = useState<any>({ cluster_state: {}, carbon_intensity: 0, anomalies: {} });
   const [connectionStatus, setConnectionStatus] = useState('Connecting');
   const [isClient, setIsClient] = useState(false);
-  const [jobForm, setJobForm] = useState({ id: 'mnist-training-small' });
+  const [jobForm, setJobForm] = useState({ id: 'neural-network-training' });
   const [submitStatus, setSubmitStatus] = useState('');
   const [jobStatus, setJobStatus] = useState<any>({});
 
   // Available job definitions
   const availableJobs = [
-    { id: 'mnist-training-small', name: 'MNIST Neural Network Training', type: 'training' },
+    { id: 'neural-network-training', name: 'Neural Network Training', type: 'training' },
     { id: 'matrix-multiply-heavy', name: 'Matrix Multiplication Benchmark', type: 'compute' },
-    { id: 'image-inference-batch', name: 'Batch Image Classification', type: 'inference' },
-    { id: 'memory-stress-test', name: 'GPU Memory Stress Test', type: 'memory' },
-    { id: 'monte-carlo-simulation', name: 'Monte Carlo Pi Estimation', type: 'simulation' }
+    { id: 'image-inference-batch', name: 'Image Inference Simulation', type: 'inference' },
+    { id: 'memory-stress-test', name: 'Memory Stress Test', type: 'memory' },
+    { id: 'monte-carlo-simulation', name: 'Monte Carlo Pi Estimation', type: 'simulation' },
+    { id: 'simple-cpu-test', name: 'Simple CPU Test', type: 'test' }
   ];
 
   const submitJob = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,7 +33,7 @@ export default function Dashboard() {
         },
         body: JSON.stringify(jobForm),
       });
-      
+
       if (response.ok) {
         setSubmitStatus('Job submitted successfully!');
         setJobForm({ id: '', type: 'training' });
@@ -44,6 +45,26 @@ export default function Dashboard() {
       }
     } catch (error) {
       setSubmitStatus(`Error: ${error}`);
+      setTimeout(() => setSubmitStatus(''), 5000);
+    }
+  };
+
+  const killJob = async (jobId: string) => {
+    try {
+      const response = await fetch(`http://localhost:8080/kill/${jobId}`, {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        setSubmitStatus(`Job ${jobId} killed successfully!`);
+        setTimeout(() => setSubmitStatus(''), 3000);
+      } else {
+        const error = await response.text();
+        setSubmitStatus(`Error killing job: ${error}`);
+        setTimeout(() => setSubmitStatus(''), 5000);
+      }
+    } catch (error) {
+      setSubmitStatus(`Error killing job: ${error}`);
       setTimeout(() => setSubmitStatus(''), 5000);
     }
   };
@@ -164,17 +185,38 @@ export default function Dashboard() {
               marginBottom: '0.5rem',
               border: '1px solid #ddd',
               borderRadius: '4px',
-              backgroundColor: 'white'
+              backgroundColor: 'white',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}>
-              <div style={{ fontWeight: 'bold', color: '#333' }}>Job: {jobId}</div>
-              <div style={{ color: status.status === 'completed' ? '#155724' : status.status === 'failed' ? '#721c24' : '#856404' }}>
-                Status: {status.status}
-              </div>
-              <div style={{ color: '#666', fontSize: '0.9rem' }}>{status.message}</div>
-              {status.start_time && (
-                <div style={{ color: '#666', fontSize: '0.8rem' }}>
-                  Started: {new Date(status.start_time * 1000).toLocaleTimeString()}
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 'bold', color: '#333' }}>Job: {jobId}</div>
+                <div style={{ color: status.status === 'completed' ? '#155724' : status.status === 'failed' ? '#721c24' : '#856404' }}>
+                  Status: {status.status}
                 </div>
+                <div style={{ color: '#666', fontSize: '0.9rem' }}>{status.message}</div>
+                {status.start_time && (
+                  <div style={{ color: '#666', fontSize: '0.8rem' }}>
+                    Started: {new Date(status.start_time * 1000).toLocaleTimeString()}
+                  </div>
+                )}
+              </div>
+              {status.status === 'running' && (
+                <button
+                  onClick={() => killJob(jobId)}
+                  style={{
+                    padding: '0.3rem 0.8rem',
+                    backgroundColor: '#dc3545',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '0.8rem'
+                  }}
+                >
+                  Kill Job
+                </button>
               )}
             </div>
           ))}

@@ -563,6 +563,53 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func handleKill(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Extract job ID from URL path
+	jobID := r.URL.Path[len("/kill/"):]
+	if jobID == "" {
+		http.Error(w, "Job ID is required", http.StatusBadRequest)
+		return
+	}
+
+	log.Printf("🔴 Kill request for job: %s", jobID)
+
+	// Check if job is currently running
+	jobStatusMux.RLock()
+	status, exists := activeJobStatus[jobID]
+	jobStatusMux.RUnlock()
+
+	if !exists {
+		http.Error(w, fmt.Sprintf("Job %s not found or not running", jobID), http.StatusNotFound)
+		return
+	}
+
+	if status.Status != "running" {
+		http.Error(w, fmt.Sprintf("Job %s is not running (status: %s)", jobID, status.Status), http.StatusBadRequest)
+		return
+	}
+
+	// Send kill command via NATS
+	killCommand := fmt.Sprintf("kill_job:%s", jobID)
+	if err := natsClient.Publish("aether.commands.all", []byte(killCommand)); err != nil {
+		log.Printf("Error sending kill command: %v", err)
+		http.Error(w, "Failed to send kill command", http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("📡 Sent kill command for job: %s", jobID)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"status":  "kill command sent",
+		"job_id":  jobID,
+		"message": fmt.Sprintf("Kill command sent for job %s", jobID),
+	})
+}
+
 func main() {
 	// Load job definitions
 	if err := loadJobDefinitions(); err != nil {
@@ -697,6 +744,13 @@ func main() {
 				return
 			}
 			corsMiddleware(handleSubmit)(w, r)
+		})
+		http.HandleFunc("/kill/", func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == "OPTIONS" {
+				corsHandler(w, r)
+				return
+			}
+			corsMiddleware(handleKill)(w, r)
 		})
 		http.HandleFunc("/graphql", graphqlHandler) // Add the WebSocket handler
 		log.Println("API server listening on :8080")

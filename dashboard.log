@@ -7,7 +7,7 @@ turbo 2.5.6
 • Packages in scope: web
 • Running dev in 1 packages
 • Remote caching disabled
-web:dev: cache bypass, force executing 534b4f59803b2ec8
+web:dev: cache bypass, force executing 2699aa49de13c343
 web:dev: 
 web:dev: > web@0.1.0 dev
 web:dev: > next dev --turbopack --port 3000
@@ -17,8 +17,8 @@ web:dev:    - Local:        http://localhost:3000
 web:dev:    - Network:      http://10.30.32.161:3000
 web:dev: 
 web:dev:  ✓ Starting...
-web:dev:  ✓ Ready in 1116ms
+web:dev:  ✓ Ready in 1078ms
 web:dev:  ○ Compiling / ...
-web:dev:  ✓ Compiled / in 1451ms
-web:dev:  GET / 200 in 1743ms
-web:dev:  GET / 200 in 952ms
+web:dev:  ✓ Compiled / in 1251ms
+web:dev:  GET / 200 in 1511ms
+web:dev:  GET / 200 in 74ms

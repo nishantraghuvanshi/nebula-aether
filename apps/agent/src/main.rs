@@ -4,7 +4,6 @@ use std::sync::Arc;
 use futures_util::StreamExt;
 use tokio::sync::Mutex;
 use tokio::process::Command;
-use std::collections::HashMap;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 fn create_fallback_script(job_type: &str) -> String {
@@ -340,6 +339,43 @@ async fn run_mock_mode() {
                                 });
                             } else {
                                 println!("Failed to parse job execution data: {}", job_data);
+                            }
+                        }
+                    } else if command.starts_with("kill_job:") {
+                        // Parse kill job command
+                        if let Some(job_id) = command.strip_prefix("kill_job:") {
+                            println!("\n>>> Received kill command for job: {} <<<\n", job_id);
+
+                            // For now, we'll use a simple approach with killall
+                            // In a more sophisticated system, we'd track process IDs
+                            let kill_result = tokio::process::Command::new("killall")
+                                .arg("-9")
+                                .arg("python3")
+                                .output()
+                                .await;
+
+                            match kill_result {
+                                Ok(_) => {
+                                    println!("🔴 Attempted to kill Python processes for job: {}", job_id);
+
+                                    // Send job status update
+                                    let status_update = JobStatus {
+                                        job_id: job_id.to_string(),
+                                        gpu_id: "unknown".to_string(),
+                                        status: "killed".to_string(),
+                                        message: "Job was killed by user request".to_string(),
+                                        start_time: None,
+                                        end_time: Some(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
+                                        exit_code: Some(-9),
+                                    };
+
+                                    if let Ok(json) = serde_json::to_string(&status_update) {
+                                        let _ = command_client.publish("aether.job_status", json.into_bytes().into()).await;
+                                    }
+                                }
+                                Err(e) => {
+                                    println!("⚠️ Failed to kill processes: {}", e);
+                                }
                             }
                         }
                     } else if command == "enter_sleep" {

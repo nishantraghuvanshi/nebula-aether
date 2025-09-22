@@ -1,9 +1,7 @@
-INFO:     Started server process [93694]
+INFO:     Started server process [31710]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-ERROR:    [Errno 48] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 Loaded general model from scheduler_model.pkl
 Loaded general scaler from scheduler_scaler.pkl
 Loaded training model from training_model.pkl
@@ -14,3 +12,43 @@ Loaded compute model from compute_model.pkl
 Loaded compute scaler from compute_scaler.pkl
 Loaded memory model from memory_model.pkl
 Loaded memory scaler from memory_scaler.pkl
+INFO:     127.0.0.1:58189 - "GET /docs HTTP/1.1" 200 OK
+/Users/moksh/Desktop/c/nebula/nebula/lib/python3.11/site-packages/sklearn/base.py:458: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/Users/moksh/Desktop/c/nebula/nebula/lib/python3.11/site-packages/sklearn/base.py:458: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/Users/moksh/Desktop/c/nebula/nebula/lib/python3.11/site-packages/sklearn/base.py:458: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+GPU Selection Results:
+  Rejected gpu-1: 58.1% performance score
+  Rejected gpu-0: 73.0% performance score
+  Selected gpu-2: 80.0% performance score
+    ✓ Good thermal conditions (37°C headroom)
+    ✓ Good memory availability (99.2% free)
+INFO:     127.0.0.1:58202 - "POST /predict HTTP/1.1" 200 OK
+/Users/moksh/Desktop/c/nebula/nebula/lib/python3.11/site-packages/sklearn/base.py:458: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/Users/moksh/Desktop/c/nebula/nebula/lib/python3.11/site-packages/sklearn/base.py:458: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/Users/moksh/Desktop/c/nebula/nebula/lib/python3.11/site-packages/sklearn/base.py:458: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+GPU Selection Results:
+  Selected gpu-1: 94.0% performance score
+    ✓ Good thermal conditions (23°C headroom)
+    ✓ Good memory availability (97.6% free)
+  Rejected gpu-0: 87.0% performance score
+  Rejected gpu-2: 80.0% performance score
+INFO:     127.0.0.1:58207 - "POST /predict HTTP/1.1" 200 OK
+/Users/moksh/Desktop/c/nebula/nebula/lib/python3.11/site-packages/sklearn/base.py:458: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/Users/moksh/Desktop/c/nebula/nebula/lib/python3.11/site-packages/sklearn/base.py:458: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+/Users/moksh/Desktop/c/nebula/nebula/lib/python3.11/site-packages/sklearn/base.py:458: UserWarning: X has feature names, but StandardScaler was fitted without feature names
+  warnings.warn(
+GPU Selection Results:
+  Selected gpu-2: 45.4% performance score
+    ✓ Good thermal conditions (37°C headroom)
+    ✓ Good memory availability (99.2% free)
+  Rejected gpu-1: 31.0% performance score
+  Rejected gpu-0: 37.9% performance score
+INFO:     127.0.0.1:58219 - "POST /predict HTTP/1.1" 200 OK
