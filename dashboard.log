@@ -17,17 +17,8 @@ web:dev:    - Local:        http://localhost:3000
 web:dev:    - Network:      http://10.30.32.161:3000
 web:dev: 
 web:dev:  ✓ Starting...
-web:dev:  ✓ Ready in 990ms
+web:dev:  ✓ Ready in 1116ms
 web:dev:  ○ Compiling / ...
-web:dev:  ✓ Compiled / in 1141ms
-web:dev:  GET / 200 in 1370ms
-web:dev:  GET / 200 in 74ms
-web:dev: ERROR: command finished with error: command (/Users/moksh/Desktop/c/nebula/nebula-aether/apps/dashboard) /opt/homebrew/bin/npm run dev exited (1)
-web#dev: command (/Users/moksh/Desktop/c/nebula/nebula-aether/apps/dashboard) /opt/homebrew/bin/npm run dev exited (1)
-
- Tasks:    0 successful, 1 total
-Cached:    0 cached, 1 total
-  Time:    4m32.588s 
-Failed:    web#dev
-
- ERROR  run failed: command  exited (1)
+web:dev:  ✓ Compiled / in 1451ms
+web:dev:  GET / 200 in 1743ms
+web:dev:  GET / 200 in 952ms

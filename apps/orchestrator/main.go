@@ -69,33 +69,70 @@ type JobStatus struct {
 
 // Represents the current state of a GPU, which we'll send to the AI
 type GpuState struct {
-	Temp              uint32 `json:"gpu_temp"`
-	MemUsed           uint64 `json:"gpu_mem_used"`
-	UtilizationGpu    uint32 `json:"utilization_gpu"`
-	PowerDrawW        uint32 `json:"power_draw_w"`
-	ThrottlingReasons string `json:"throttling_reasons"`
-	GpuName           string `json:"gpu_name"`
+	// Core telemetry
+	GpuName                     string `json:"gpu_name"`
+	Temp                        uint32 `json:"gpu_temp"`
+	MemUsed                     uint64 `json:"gpu_mem_used"`
+	MemTotal                    uint64 `json:"gpu_mem_total"`
+	UtilizationGpu              uint32 `json:"utilization_gpu"`
+	UtilizationMemoryController uint32 `json:"utilization_memory_controller"`
+	PowerDrawW                  uint32 `json:"power_draw_w"`
+	ThrottlingReasons           string `json:"throttling_reasons"`
+
+	// Clock speeds
+	ClockGpuMhz uint32 `json:"clock_gpu_mhz"`
+	ClockMemMhz uint32 `json:"clock_mem_mhz"`
+
+	// Performance state
+	PerformanceState string `json:"performance_state"`
 }
 
-// Candidate sent to AI Core with ID
+// Enhanced GPU Candidate with all telemetry features
 type GpuCandidate struct {
-	GpuID             string `json:"gpu_id"`
-	Temp              uint32 `json:"gpu_temp"`
-	MemUsed           uint64 `json:"gpu_mem_used"`
-	UtilizationGpu    uint32 `json:"utilization_gpu"`
-	PowerDrawW        uint32 `json:"power_draw_w"`
-	ThrottlingReasons string `json:"throttling_reasons"`
+	GpuID   string `json:"gpu_id"`
+	GpuName string `json:"gpu_name"`
+
+	// Core telemetry
+	Temp                        uint32 `json:"gpu_temp"`
+	MemUsed                     uint64 `json:"gpu_mem_used"`
+	MemTotal                    uint64 `json:"gpu_mem_total"`
+	UtilizationGpu              uint32 `json:"utilization_gpu"`
+	UtilizationMemoryController uint32 `json:"utilization_memory_controller"`
+	PowerDrawW                  uint32 `json:"power_draw_w"`
+	ThrottlingReasons           string `json:"throttling_reasons"`
+
+	// Clock speeds
+	ClockGpuMhz uint32 `json:"clock_gpu_mhz"`
+	ClockMemMhz uint32 `json:"clock_mem_mhz"`
+
+	// Performance state
+	PerformanceState string `json:"performance_state"`
 }
 
-// PredictionRequest matches the Python API's expected input
+// Job requirements for enhanced scheduling
+type JobRequirements struct {
+	MinMemoryMB      int    `json:"min_memory_mb"`
+	ExpectedGpuUtil  int    `json:"expected_gpu_util"`
+	MaxDurationSec   int    `json:"max_duration_sec"`
+	Priority         string `json:"priority"`         // "low", "normal", "high"
+	ComputeIntensity string `json:"compute_intensity"` // "memory", "compute", "mixed"
+}
+
+// Enhanced PredictionRequest
 type PredictionRequest struct {
-	Candidates []GpuCandidate `json:"candidates"`
-	JobType    string         `json:"job_type"`
+	Candidates      []GpuCandidate    `json:"candidates"`
+	JobType         string            `json:"job_type"`
+	JobRequirements *JobRequirements  `json:"job_requirements,omitempty"`
 }
 
-// PredictionResponse matches the Python API's output
+// Enhanced PredictionResponse
 type PredictionResponse struct {
-	BestGpuID string `json:"best_gpu_id"`
+	BestGpuID           string    `json:"best_gpu_id"`
+	ConfidenceScore     float64   `json:"confidence_score"`
+	PredictedPerf       float64   `json:"predicted_performance"`
+	ThermalRisk         float64   `json:"thermal_risk"`
+	MemoryRisk          float64   `json:"memory_risk"`
+	Reasons             []string  `json:"reasons"`
 }
 
 // DashboardUpdate packages full cluster info for the dashboard
@@ -192,6 +229,40 @@ func loadJobDefinitions() error {
 	return nil
 }
 
+// createJobRequirements creates job requirements from job definition
+func createJobRequirements(job Job) *JobRequirements {
+	if job.MinMemoryMB == 0 && job.ExpectedGpuUtil == 0 {
+		return nil // No requirements specified
+	}
+
+	// Set defaults for missing fields
+	priority := job.Priority
+	if priority == "" {
+		priority = "normal"
+	}
+
+	// Determine compute intensity based on job type
+	computeIntensity := "mixed"
+	switch job.Type {
+	case "training":
+		computeIntensity = "compute"
+	case "inference":
+		computeIntensity = "memory"
+	case "memory":
+		computeIntensity = "memory"
+	case "compute":
+		computeIntensity = "compute"
+	}
+
+	return &JobRequirements{
+		MinMemoryMB:      job.MinMemoryMB,
+		ExpectedGpuUtil:  job.ExpectedGpuUtil,
+		MaxDurationSec:   job.MaxDurationSec,
+		Priority:         priority,
+		ComputeIntensity: computeIntensity,
+	}
+}
+
 // askAICoreCandidates sends all GPU candidates to the AI service and gets the best GPU ID
 func askAICoreCandidates(cluster map[string]GpuState, job Job) (string, error) {
 	aiCoreURL := "http://localhost:8000/predict"
@@ -199,18 +270,34 @@ func askAICoreCandidates(cluster map[string]GpuState, job Job) (string, error) {
 	candidates := make([]GpuCandidate, 0, len(cluster))
 	for id, s := range cluster {
 		candidates = append(candidates, GpuCandidate{
-			GpuID:             id,
-			Temp:              s.Temp,
-			MemUsed:           s.MemUsed,
-			UtilizationGpu:    s.UtilizationGpu,
-			PowerDrawW:        s.PowerDrawW,
-			ThrottlingReasons: s.ThrottlingReasons,
+			GpuID:   id,
+			GpuName: s.GpuName,
+
+			// Core telemetry - all fields from enhanced struct
+			Temp:                        s.Temp,
+			MemUsed:                     s.MemUsed,
+			MemTotal:                    s.MemTotal,
+			UtilizationGpu:              s.UtilizationGpu,
+			UtilizationMemoryController: s.UtilizationMemoryController,
+			PowerDrawW:                  s.PowerDrawW,
+			ThrottlingReasons:           s.ThrottlingReasons,
+
+			// Clock speeds
+			ClockGpuMhz: s.ClockGpuMhz,
+			ClockMemMhz: s.ClockMemMhz,
+
+			// Performance state
+			PerformanceState: s.PerformanceState,
 		})
 	}
 
+	// Create job requirements from job definition
+	jobRequirements := createJobRequirements(job)
+
 	requestBody, err := json.Marshal(PredictionRequest{
-		Candidates: candidates,
-		JobType:    job.Type,
+		Candidates:      candidates,
+		JobType:         job.Type,
+		JobRequirements: jobRequirements,
 	})
 	if err != nil {
 		return "", err
@@ -225,6 +312,17 @@ func askAICoreCandidates(cluster map[string]GpuState, job Job) (string, error) {
 	var predictionResp PredictionResponse
 	if err := json.NewDecoder(resp.Body).Decode(&predictionResp); err != nil {
 		return "", err
+	}
+
+	// Log enhanced prediction results
+	log.Printf("🤖 AI Prediction Results:")
+	log.Printf("   Selected GPU: %s", predictionResp.BestGpuID)
+	log.Printf("   Confidence: %.1f%%", predictionResp.ConfidenceScore*100)
+	log.Printf("   Predicted Performance: %.1f%%", predictionResp.PredictedPerf)
+	log.Printf("   Thermal Risk: %.1f%%", predictionResp.ThermalRisk*100)
+	log.Printf("   Memory Risk: %.1f%%", predictionResp.MemoryRisk*100)
+	for _, reason := range predictionResp.Reasons {
+		log.Printf("   %s", reason)
 	}
 
 	return predictionResp.BestGpuID, nil
@@ -529,15 +627,25 @@ func main() {
 			return
 		}
 
-		// Update the cluster state for this GPU
+		// Update the cluster state for this GPU with all telemetry fields
 		clusterStateMux.Lock()
 		clusterState[gpuID] = GpuState{
-			Temp:              telemetry.TemperatureC,
-			MemUsed:           telemetry.MemoryUsedMb,
-			UtilizationGpu:    telemetry.UtilizationGpu,
-			PowerDrawW:        telemetry.PowerDrawW,
-			ThrottlingReasons: telemetry.ThrottlingReasons,
-			GpuName:           telemetry.GpuName,
+			// Core telemetry
+			GpuName:                     telemetry.GpuName,
+			Temp:                        telemetry.TemperatureC,
+			MemUsed:                     telemetry.MemoryUsedMb,
+			MemTotal:                    telemetry.MemoryTotalMb,
+			UtilizationGpu:              telemetry.UtilizationGpu,
+			UtilizationMemoryController: telemetry.UtilizationMemoryController,
+			PowerDrawW:                  telemetry.PowerDrawW,
+			ThrottlingReasons:           telemetry.ThrottlingReasons,
+
+			// Clock speeds
+			ClockGpuMhz: telemetry.ClockGpuMhz,
+			ClockMemMhz: telemetry.ClockMemMhz,
+
+			// Performance state
+			PerformanceState: telemetry.PerformanceState,
 		}
 		clusterStateMux.Unlock()
 

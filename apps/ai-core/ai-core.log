@@ -1,27 +1,16 @@
-INFO:     Started server process [38543]
+INFO:     Started server process [93694]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     127.0.0.1:51707 - "GET /docs HTTP/1.1" 200 OK
-GPU scores: {'gpu-1': 0.99, 'gpu-2': 0.98, 'gpu-0': 0.98}
-Selected GPU: gpu-1
-INFO:     127.0.0.1:51721 - "POST /predict HTTP/1.1" 200 OK
-GPU scores: {'gpu-2': 0.98, 'gpu-0': 0.98, 'gpu-1': 0.98}
-Selected GPU: gpu-2
-INFO:     127.0.0.1:51723 - "POST /predict HTTP/1.1" 200 OK
-GPU scores: {'gpu-2': 1.0, 'gpu-0': 1.0, 'gpu-1': 1.0}
-Selected GPU: gpu-2
-INFO:     127.0.0.1:51723 - "POST /predict HTTP/1.1" 200 OK
-GPU scores: {'gpu-2': 1.0, 'gpu-0': 1.0, 'gpu-1': 1.0}
-Selected GPU: gpu-2
-INFO:     127.0.0.1:51723 - "POST /predict HTTP/1.1" 200 OK
-GPU scores: {'gpu-2': 1.0, 'gpu-0': 1.0, 'gpu-1': 1.0}
-Selected GPU: gpu-2
-INFO:     127.0.0.1:51723 - "POST /predict HTTP/1.1" 200 OK
-GPU scores: {'gpu-2': 0.98, 'gpu-0': 0.98, 'gpu-1': 0.98}
-Selected GPU: gpu-2
-INFO:     127.0.0.1:51725 - "POST /predict HTTP/1.1" 200 OK
-INFO:     Shutting down
+ERROR:    [Errno 48] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [38543]
+Loaded general model from scheduler_model.pkl
+Loaded general scaler from scheduler_scaler.pkl
+Loaded training model from training_model.pkl
+Loaded training scaler from training_scaler.pkl
+Loaded inference model from inference_model.pkl
+Loaded inference scaler from inference_scaler.pkl
+Loaded compute model from compute_model.pkl
+Loaded compute scaler from compute_scaler.pkl
+Loaded memory model from memory_model.pkl
+Loaded memory scaler from memory_scaler.pkl
