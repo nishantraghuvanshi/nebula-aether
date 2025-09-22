@@ -141,6 +141,8 @@ type DashboardUpdate struct {
 	CarbonIntensity float64              `json:"carbon_intensity"`
 	Anomalies       map[string]bool      `json:"anomalies"`
 	JobStatus       map[string]JobStatus `json:"job_status"`
+	JobQueue        []Job                `json:"job_queue"`
+	CompletedJobs   []JobStatus          `json:"completed_jobs"`
 }
 
 // mockCarbonIntensity returns a placeholder carbon intensity value
@@ -179,6 +181,7 @@ var (
 	natsClient      *nats.Conn
 	jobDefinitions  = make(map[string]Job)        // Job definitions by ID
 	activeJobStatus = make(map[string]JobStatus)  // Current job status by job ID
+	completedJobs   = make([]JobStatus, 0)        // Recently completed jobs
 	jobStatusMux    = &sync.RWMutex{}
 )
 
@@ -450,13 +453,23 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 		for jobID, status := range activeJobStatus {
 			jobStatusSnapshot[jobID] = status
 		}
+		completedJobsSnapshot := make([]JobStatus, len(completedJobs))
+		copy(completedJobsSnapshot, completedJobs)
 		jobStatusMux.RUnlock()
+
+		// Get job queue snapshot
+		queueMux.Lock()
+		jobQueueSnapshot := make([]Job, len(jobQueue))
+		copy(jobQueueSnapshot, jobQueue)
+		queueMux.Unlock()
 
 		update := DashboardUpdate{
 			ClusterState:    snapshot,
 			CarbonIntensity: mockCarbonIntensity(),
 			Anomalies:       checkAllAnomalies(snapshot),
 			JobStatus:       jobStatusSnapshot,
+			JobQueue:        jobQueueSnapshot,
+			CompletedJobs:   completedJobsSnapshot,
 		}
 		clusterStateMux.RUnlock()
 
@@ -719,14 +732,21 @@ func main() {
 
 		log.Printf("📊 Job status update: %s - %s (%s)", status.JobID, status.Status, status.Message)
 
-		// Clean up completed/failed jobs after 30 seconds to prevent memory buildup
-		if status.Status == "completed" || status.Status == "failed" {
+		// Move completed/failed jobs to completed jobs list
+		if status.Status == "completed" || status.Status == "failed" || status.Status == "killed" {
+			// Add to completed jobs list (keep only last 10)
+			if len(completedJobs) >= 10 {
+				completedJobs = completedJobs[1:] // Remove oldest
+			}
+			completedJobs = append(completedJobs, status)
+
+			// Clean up from active jobs after 15 seconds to give UI time to show completion
 			go func(jobID string) {
-				time.Sleep(30 * time.Second)
+				time.Sleep(15 * time.Second)
 				jobStatusMux.Lock()
 				delete(activeJobStatus, jobID)
 				jobStatusMux.Unlock()
-				log.Printf("🧹 Cleaned up job status for: %s", jobID)
+				log.Printf("🧹 Moved job %s from active to completed", jobID)
 			}(status.JobID)
 		}
 	})

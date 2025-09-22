@@ -3,8 +3,9 @@ use std::time::Duration;
 use std::sync::Arc;
 use futures_util::StreamExt;
 use tokio::sync::Mutex;
-use tokio::process::Command;
+use tokio::process::{Command, Child};
 use std::time::{SystemTime, UNIX_EPOCH};
+use std::collections::HashMap;
 
 fn create_fallback_script(job_type: &str) -> String {
     match job_type {
@@ -131,7 +132,7 @@ print("✅ Job completed successfully!")
     }
 }
 
-async fn execute_job(job: JobExecution, client: async_nats::Client) {
+async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs: Arc<Mutex<HashMap<String, Child>>>) {
     let start_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
 
     // Send job started status
@@ -206,38 +207,75 @@ async fn execute_job(job: JobExecution, client: async_nats::Client) {
     };
     publish_job_status(&client, &status).await;
 
-    // Execute the command
-    match cmd.output().await {
-        Ok(output) => {
-            let end_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
-            let exit_code = output.status.code().unwrap_or(-1);
-
-            let (status_str, message) = if output.status.success() {
-                ("completed", "Job completed successfully")
-            } else {
-                ("failed", "Job execution failed")
-            };
-
-            // Print output for debugging
-            if !output.stdout.is_empty() {
-                println!("📊 Job stdout:\n{}", String::from_utf8_lossy(&output.stdout));
-            }
-            if !output.stderr.is_empty() {
-                println!("❌ Job stderr:\n{}", String::from_utf8_lossy(&output.stderr));
+    // Execute the command and track the process
+    match cmd.spawn() {
+        Ok(child) => {
+            // Store the child process in active jobs
+            {
+                let mut jobs = active_jobs.lock().await;
+                jobs.insert(job.job_id.clone(), child);
             }
 
-            let final_status = JobStatus {
-                job_id: job.job_id.clone(),
-                gpu_id: job.gpu_id.clone(),
-                status: status_str.to_string(),
-                message: format!("{} (exit code: {})", message, exit_code),
-                start_time: Some(start_time),
-                end_time: Some(end_time),
-                exit_code: Some(exit_code),
+            // Wait for the process to complete
+            let mut child = {
+                let mut jobs = active_jobs.lock().await;
+                jobs.remove(&job.job_id).unwrap()
             };
 
-            publish_job_status(&client, &final_status).await;
-            println!("✅ Job {} completed with exit code: {}", job.job_id, exit_code);
+            match child.wait_with_output().await {
+                Ok(output) => {
+                    let end_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+                    let exit_code = output.status.code().unwrap_or(-1);
+
+                    let (status_str, message) = if output.status.success() {
+                        ("completed", "Job completed successfully")
+                    } else {
+                        ("failed", "Job execution failed")
+                    };
+
+                    // Print output for debugging
+                    if !output.stdout.is_empty() {
+                        println!("📊 Job stdout:\n{}", String::from_utf8_lossy(&output.stdout));
+                    }
+                    if !output.stderr.is_empty() {
+                        println!("❌ Job stderr:\n{}", String::from_utf8_lossy(&output.stderr));
+                    }
+
+                    let final_status = JobStatus {
+                        job_id: job.job_id.clone(),
+                        gpu_id: job.gpu_id.clone(),
+                        status: status_str.to_string(),
+                        message: format!("{} (exit code: {})", message, exit_code),
+                        start_time: Some(start_time),
+                        end_time: Some(end_time),
+                        exit_code: Some(exit_code),
+                    };
+
+                    publish_job_status(&client, &final_status).await;
+                    println!("✅ Job {} completed with exit code: {}", job.job_id, exit_code);
+                }
+                Err(e) => {
+                    let end_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+                    let error_status = JobStatus {
+                        job_id: job.job_id.clone(),
+                        gpu_id: job.gpu_id.clone(),
+                        status: "failed".to_string(),
+                        message: format!("Process error: {}", e),
+                        start_time: Some(start_time),
+                        end_time: Some(end_time),
+                        exit_code: Some(-1),
+                    };
+
+                    publish_job_status(&client, &error_status).await;
+                    println!("❌ Job {} process error: {}", job.job_id, e);
+                }
+            }
+
+            // Ensure job is removed from active jobs map when complete
+            {
+                let mut jobs = active_jobs.lock().await;
+                jobs.remove(&job.job_id);
+            }
         }
         Err(e) => {
             let end_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
@@ -245,14 +283,20 @@ async fn execute_job(job: JobExecution, client: async_nats::Client) {
                 job_id: job.job_id.clone(),
                 gpu_id: job.gpu_id.clone(),
                 status: "failed".to_string(),
-                message: format!("Failed to execute job: {}", e),
+                message: format!("Failed to spawn job: {}", e),
                 start_time: Some(start_time),
                 end_time: Some(end_time),
                 exit_code: Some(-1),
             };
 
             publish_job_status(&client, &error_status).await;
-            println!("❌ Failed to execute job {}: {}", job.job_id, e);
+            println!("❌ Failed to spawn job {}: {}", job.job_id, e);
+
+            // Ensure job is removed from active jobs map
+            {
+                let mut jobs = active_jobs.lock().await;
+                jobs.remove(&job.job_id);
+            }
         }
     }
 }
@@ -312,12 +356,16 @@ async fn run_mock_mode() {
             
             // Clone the client for the command listener task
             let command_client = client.clone();
-            
+
             // Shared state to control telemetry publishing
             let publishing = Arc::new(Mutex::new(true));
             let telemetry_publishing = publishing.clone();
+
+            // Shared state to track active job processes
+            let active_jobs = Arc::new(Mutex::new(HashMap::<String, Child>::new()));
             
             // Spawn a separate task to listen for commands from all GPUs
+            let jobs_for_commands = active_jobs.clone();
             tokio::spawn(async move {
                 let mut sub = command_client.subscribe("aether.commands.*").await.unwrap();
                 println!("Listening for commands on 'aether.commands.*'");
@@ -331,11 +379,12 @@ async fn run_mock_mode() {
                             if let Ok(job) = serde_json::from_str::<JobExecution>(job_data) {
                                 println!("\n>>> Executing job: {} <<<\n", job.job_id);
 
-                                // Clone client for job execution
+                                // Clone client and active_jobs for job execution
                                 let job_client = command_client.clone();
+                                let job_active_jobs = jobs_for_commands.clone();
 
                                 tokio::spawn(async move {
-                                    execute_job(job, job_client).await;
+                                    execute_job(job, job_client, job_active_jobs).await;
                                 });
                             } else {
                                 println!("Failed to parse job execution data: {}", job_data);
@@ -346,36 +395,32 @@ async fn run_mock_mode() {
                         if let Some(job_id) = command.strip_prefix("kill_job:") {
                             println!("\n>>> Received kill command for job: {} <<<\n", job_id);
 
-                            // For now, we'll use a simple approach with killall
-                            // In a more sophisticated system, we'd track process IDs
-                            let kill_result = tokio::process::Command::new("killall")
-                                .arg("-9")
-                                .arg("python3")
-                                .output()
-                                .await;
+                            // Try to kill the specific job process
+                            let mut jobs = jobs_for_commands.lock().await;
+                            if let Some(mut child) = jobs.remove(job_id) {
+                                match child.kill().await {
+                                    Ok(_) => {
+                                        println!("🔴 Successfully killed job process: {}", job_id);
 
-                            match kill_result {
-                                Ok(_) => {
-                                    println!("🔴 Attempted to kill Python processes for job: {}", job_id);
+                                        // Send job status update
+                                        let status_update = JobStatus {
+                                            job_id: job_id.to_string(),
+                                            gpu_id: "unknown".to_string(),
+                                            status: "killed".to_string(),
+                                            message: "Job was killed by user request".to_string(),
+                                            start_time: None,
+                                            end_time: Some(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
+                                            exit_code: Some(-9),
+                                        };
 
-                                    // Send job status update
-                                    let status_update = JobStatus {
-                                        job_id: job_id.to_string(),
-                                        gpu_id: "unknown".to_string(),
-                                        status: "killed".to_string(),
-                                        message: "Job was killed by user request".to_string(),
-                                        start_time: None,
-                                        end_time: Some(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
-                                        exit_code: Some(-9),
-                                    };
-
-                                    if let Ok(json) = serde_json::to_string(&status_update) {
-                                        let _ = command_client.publish("aether.job_status", json.into_bytes().into()).await;
+                                        publish_job_status(&command_client, &status_update).await;
+                                    }
+                                    Err(e) => {
+                                        println!("⚠️ Failed to kill job {}: {}", job_id, e);
                                     }
                                 }
-                                Err(e) => {
-                                    println!("⚠️ Failed to kill processes: {}", e);
-                                }
+                            } else {
+                                println!("⚠️ Job {} not found in active processes", job_id);
                             }
                         }
                     } else if command == "enter_sleep" {
@@ -411,29 +456,30 @@ async fn run_mock_mode() {
                         
                         // Check if we should publish telemetry
                         if *telemetry_publishing.lock().await {
-                            // Add some variation to make it more realistic
-                            let temp_variation = (std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() % 10) as u32;
-                            let util_variation = (std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() % 15) as u32;
+                            // More realistic variation based on sine waves for smooth changes
+                            let time_factor = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as f64;
+                            let temp_variation = ((time_factor / 30.0).sin() * 5.0) as i32; // ±5°C variation over 1 minute cycle
+                            let util_variation = ((time_factor / 20.0).sin() * 10.0) as i32; // ±10% utilization variation
                             
                             let telemetry = GpuTelemetry {
                                 // Identification
                                 gpu_name: gpu_name.to_string(),
                                 
                                 // Performance & Utilization
-                                utilization_gpu: base_util + util_variation,
-                                utilization_memory_controller: base_util + util_variation - 5,
+                                utilization_gpu: ((base_util as i32 + util_variation).max(0).min(100)) as u32,
+                                utilization_memory_controller: ((base_util as i32 + util_variation - 5).max(0).min(100)) as u32,
                                 performance_state: "P2".to_string(),
-                                clock_gpu_mhz: 1200 + (util_variation * 10),
-                                clock_mem_mhz: 5000 + (util_variation * 50),
+                                clock_gpu_mhz: ((1200 + util_variation * 5).max(800).min(2000)) as u32,
+                                clock_mem_mhz: ((5000 + util_variation * 25).max(4000).min(7000)) as u32,
 
                                 // Memory
-                                memory_used_mb: (base_mem + (util_variation * 10)) as u64,
+                                memory_used_mb: ((base_mem as i32 + util_variation * 5).max(100).min(20000)) as u64,
                                 memory_total_mb: 24564,
 
                                 // Power & Thermal
-                                temperature_c: base_temp + temp_variation,
-                                power_draw_w: base_power + (temp_variation / 2),
-                                throttling_reasons: if base_temp + temp_variation > 80 { "Thermal".to_string() } else { "None".to_string() },
+                                temperature_c: ((base_temp as i32 + temp_variation).max(30).min(85)) as u32,
+                                power_draw_w: ((base_power as i32 + temp_variation / 2).max(20).min(300)) as u32,
+                                throttling_reasons: if (base_temp as i32 + temp_variation) > 80 { "Thermal".to_string() } else { "None".to_string() },
                             };
 
                             let payload = match serde_json::to_vec(&telemetry) {
