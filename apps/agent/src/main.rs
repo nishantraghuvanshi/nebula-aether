@@ -514,7 +514,8 @@ async fn run_mock_mode() {
 
 #[cfg(all(not(target_os = "macos"), feature = "nvml"))]
 async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
-    use nvml_wrapper::enum_wrappers::device::{Clock, TemperatureSensor, PerformanceState, ThrottleReasons};
+    use nvml_wrapper::enum_wrappers::device::{Clock, TemperatureSensor, PerformanceState};
+    use nvml_wrapper::bitmasks::device::ThrottleReasons;
     use nvml_wrapper::Nvml;
     use tokio::time;
 
@@ -565,7 +566,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
 
                 let perf_state = device.performance_state().unwrap_or_else(|err| {
                     eprintln!("Warning: Failed to get GPU {} performance state: {}. Using default.", i, err);
-                    PerformanceState::P0 // Safe enum default
+                    PerformanceState::Maximum // Safe enum default
                 });
 
                 let clock_gpu = device.clock_info(Clock::Graphics).unwrap_or_else(|err| {
