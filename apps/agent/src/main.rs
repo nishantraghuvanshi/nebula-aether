@@ -349,7 +349,7 @@ async fn run_mock_mode() {
         os_info
     );
 
-    let nats_url = "nats://localhost:4222";
+    let nats_url = "nats://0.tcp.in.ngrok.io:15910";
     match async_nats::connect(nats_url).await {
         Ok(client) => {
             println!("Connected to NATS server at {}.", nats_url);
@@ -514,14 +514,14 @@ async fn run_mock_mode() {
 
 #[cfg(all(not(target_os = "macos"), feature = "nvml"))]
 async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
-    use nvml_wrapper::enum_wrappers::device::{Clock, TemperatureSensor};
+    use nvml_wrapper::enum_wrappers::device::{Clock, TemperatureSensor, PerformanceState, ThrottleReasons};
     use nvml_wrapper::Nvml;
     use tokio::time;
 
     println!("Starting Aether Telemetry Agent...");
 
     // Connect to NATS server
-    let nats_url = "nats://localhost:4222";
+    let nats_url = "nats://0.tcp.in.ngrok.io:15910";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
@@ -565,7 +565,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
 
                 let perf_state = device.performance_state().unwrap_or_else(|err| {
                     eprintln!("Warning: Failed to get GPU {} performance state: {}. Using default.", i, err);
-                    "P0".to_string() // Safe string default
+                    PerformanceState::P0 // Safe enum default
                 });
 
                 let clock_gpu = device.clock_info(Clock::Graphics).unwrap_or_else(|err| {
@@ -595,7 +595,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
 
                 let throttle_reasons = device.current_throttle_reasons().unwrap_or_else(|err| {
                     eprintln!("Warning: Failed to get GPU {} throttle reasons: {}. Using default.", i, err);
-                    "None".to_string() // Safe string default
+                    ThrottleReasons::empty() // Safe enum default
                 });
 
                 let telemetry = GpuTelemetry {
