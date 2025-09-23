@@ -631,7 +631,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("nats://localhost:4222")
+	nc, err := nats.Connect("nats://0.tcp.in.ngrok.io:15910")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
