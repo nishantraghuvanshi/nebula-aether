@@ -564,10 +564,12 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
                     nvml_wrapper::struct_wrappers::device::Utilization { gpu: 0, memory: 0 }
                 });
 
-                let perf_state = device.performance_state().unwrap_or_else(|err| {
-                    eprintln!("Warning: Failed to get GPU {} performance state: {}. Using default.", i, err);
-                    PerformanceState::Maximum // Safe enum default
-                });
+                let perf_state_str = device.performance_state()
+                    .map(|state| format!("{:?}", state))
+                    .unwrap_or_else(|err| {
+                        eprintln!("Warning: Failed to get GPU {} performance state: {}. Using default.", i, err);
+                        "Unknown".to_string()
+                    });
 
                 let clock_gpu = device.clock_info(Clock::Graphics).unwrap_or_else(|err| {
                     eprintln!("Warning: Failed to get GPU {} graphics clock: {}. Using default.", i, err);
@@ -603,7 +605,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
                     gpu_name,
                     utilization_gpu: utilization_rates.gpu,
                     utilization_memory_controller: utilization_rates.memory,
-                    performance_state: format!("{:?}", perf_state),
+                    performance_state: perf_state_str,
                     clock_gpu_mhz: clock_gpu,
                     clock_mem_mhz: clock_mem,
                     memory_used_mb: memory_info.used / 1024 / 1024,
