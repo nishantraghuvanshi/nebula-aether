@@ -349,7 +349,7 @@ async fn run_mock_mode() {
         os_info
     );
 
-    let nats_url = "nats://0.tcp.in.ngrok.io:17222";
+    let nats_url = "nats://0.tcp.in.ngrok.io:16521";
     match async_nats::connect(nats_url).await {
         Ok(client) => {
             println!("Connected to NATS server at {}.", nats_url);
@@ -369,7 +369,7 @@ async fn run_mock_mode() {
             let poll_client = command_client.clone();
             tokio::spawn(async move {
                 let http_client = reqwest::Client::new();
-                let orchestrator_url = "https://01a4952d597b.ngrok-free.app";
+                let orchestrator_url = "https://b5400c821168.ngrok-free.app";
                 let gpu_id = "runpod-gpu-0"; // This would be detected at runtime on real RunPod
 
                 println!("🌐 Starting HTTP polling for jobs from orchestrator at {}", orchestrator_url);
@@ -495,7 +495,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     println!("Starting Aether Telemetry Agent with NVML...");
 
     // Connect to NATS server
-    let nats_url = "nats://0.tcp.in.ngrok.io:17222";
+    let nats_url = "nats://0.tcp.in.ngrok.io:16521";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
@@ -515,7 +515,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
         let jobs_for_commands = active_jobs.clone();
         tokio::spawn(async move {
             let http_client = reqwest::Client::new();
-            let orchestrator_url = "https://01a4952d597b.ngrok-free.app";
+            let orchestrator_url = "https://b5400c821168.ngrok-free.app";
             let gpu_id = "gpu-0"; // Use consistent ID with NVML telemetry
 
             println!("🌐 Starting HTTP polling for jobs from orchestrator at {}", orchestrator_url);
