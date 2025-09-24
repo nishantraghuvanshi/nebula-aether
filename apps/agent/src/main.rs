@@ -369,7 +369,7 @@ async fn run_mock_mode() {
             let poll_client = command_client.clone();
             tokio::spawn(async move {
                 let http_client = reqwest::Client::new();
-                let orchestrator_url = "https://a7fe8e5f2dd8.ngrok-free.app";
+                let orchestrator_url = "https://4be434ecd546.ngrok-free.app";
                 // Generate unique GPU ID based on hostname
                 let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                     std::process::Command::new("hostname")
@@ -489,7 +489,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
         let jobs_for_commands = active_jobs.clone();
         tokio::spawn(async move {
             let http_client = reqwest::Client::new();
-            let orchestrator_url = "https://a7fe8e5f2dd8.ngrok-free.app";
+            let orchestrator_url = "https://4be434ecd546.ngrok-free.app";
             // Generate unique GPU ID based on hostname + GPU index
             let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                 std::process::Command::new("hostname")
