@@ -386,7 +386,7 @@ async fn run_mock_mode() {
 
                     match http_client
                         .get(&format!("{}/poll", orchestrator_url))
-                        .query(&[("gpu_id", gpu_id)])
+                        .query(&[("gpu_id", &gpu_id)])
                         .header("ngrok-skip-browser-warning", "true")
                         .send()
                         .await
@@ -506,7 +506,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
 
                 match http_client
                     .get(&format!("{}/poll", orchestrator_url))
-                    .query(&[("gpu_id", gpu_id)])
+                    .query(&[("gpu_id", &gpu_id)])
                     .header("ngrok-skip-browser-warning", "true")
                     .send()
                     .await
