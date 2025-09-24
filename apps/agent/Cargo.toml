@@ -10,7 +10,13 @@ async-nats = "0.38"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 futures-util = "0.3"
+plist = { version = "1.0", optional = true }
 
 [features]
-default = ["nvml"]
-nvml = ["nvml-wrapper"]
+default = ["nvidia"]
+nvidia = ["nvml-wrapper"]
+amd = []
+intel = []
+macos = ["plist"]
+# Legacy feature for backward compatibility
+nvml = ["nvidia"]

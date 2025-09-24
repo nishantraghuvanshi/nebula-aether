@@ -1,0 +1,9 @@
+Starting Aether Telemetry Agent with multi-vendor support...
+NVML initialized successfully
+Using NVIDIA GPU monitor
+Initialized NVIDIA NVML Monitor successfully
+Found 1 NVIDIA GPUs
+Detected 1 GPUs:
+  - gpu-0 (NVIDIA): NVIDIA GeForce GTX 1650 Ti
+    Architecture: Turing
+Error: Error { kind: Io, source: Some(Os { code: 111, kind: ConnectionRefused, message: "Connection refused" }) }

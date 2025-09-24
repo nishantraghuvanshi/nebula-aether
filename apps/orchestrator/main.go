@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -15,8 +16,9 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
-// This struct must match the Rust agent's GpuTelemetry struct
+// This struct must match the Rust agent's enhanced GpuTelemetry struct
 type GpuTelemetry struct {
+	// === EXISTING FIELDS (unchanged for backward compatibility) ===
 	GpuName                     string `json:"gpu_name"`
 	UtilizationGpu              uint32 `json:"utilization_gpu"`
 	UtilizationMemoryController uint32 `json:"utilization_memory_controller"`
@@ -28,43 +30,82 @@ type GpuTelemetry struct {
 	TemperatureC                uint32 `json:"temperature_c"`
 	PowerDrawW                  uint32 `json:"power_draw_w"`
 	ThrottlingReasons           string `json:"throttling_reasons"`
+
+	// === NEW OPTIONAL FIELDS (from enhanced Rust agent) ===
+	// These fields may be null/nil if not provided by older agent versions
+	GpuVendor              *string `json:"gpu_vendor"`               // "NVIDIA", "AMD", "Intel", "Apple"
+	GpuArchitecture        *string `json:"gpu_architecture"`         // "Ada Lovelace", "RDNA3", etc.
+	UtilizationEncoder     *uint32 `json:"utilization_encoder"`      // Video encoder utilization %
+	UtilizationDecoder     *uint32 `json:"utilization_decoder"`      // Video decoder utilization %
+	PcieTxThroughputMbps   *uint32 `json:"pcie_tx_throughput_mbps"`  // PCIe transmit MB/s
+	PcieRxThroughputMbps   *uint32 `json:"pcie_rx_throughput_mbps"`  // PCIe receive MB/s
+	EccErrorsCorrectable   *uint32 `json:"ecc_errors_correctable"`   // Correctable ECC errors
+	EccErrorsUncorrectable *uint32 `json:"ecc_errors_uncorrectable"` // Uncorrectable ECC errors
 }
 
-// Job struct to define a workload
+// Job struct to define a workload with enhanced requirements
 type Job struct {
 	ID   string `json:"id"`
 	Type string `json:"type"` // e.g., "training" or "inference"
+	// === NEW HARD CONSTRAINTS ===
+	VramRequiredMB uint64 `json:"vram_required_mb"` // VRAM requirement in MB
+	GpuCount       int    `json:"gpu_count"`        // Number of GPUs required (default: 1)
+	Priority       int    `json:"priority"`         // Job priority (0-10, higher = more important)
+	// === NEW SOFT HINTS ===
+	UserID           string `json:"user_id"`           // User submitting the job
+	TenantID         string `json:"tenant_id"`         // Tenant/organization ID
+	ExpectedDuration string `json:"expected_duration"` // "short", "medium", "long"
+	ComputeIntensity string `json:"compute_intensity"` // "compute-bound", "memory-bound", "io-bound"
 }
 
 // Represents the current state of a GPU, which we'll send to the AI
 type GpuState struct {
 	Temp              uint32 `json:"gpu_temp"`
 	MemUsed           uint64 `json:"gpu_mem_used"`
+	MemTotal          uint64 `json:"gpu_mem_total"` // NEW: Total VRAM for constraint checking
 	UtilizationGpu    uint32 `json:"utilization_gpu"`
 	PowerDrawW        uint32 `json:"power_draw_w"`
 	ThrottlingReasons string `json:"throttling_reasons"`
 	GpuName           string `json:"gpu_name"`
+	// === NEW ENHANCED FIELDS ===
+	GpuVendor       string `json:"gpu_vendor"`       // "NVIDIA", "AMD", "Intel", "Apple"
+	GpuArchitecture string `json:"gpu_architecture"` // "Ada Lovelace", "RDNA3", etc.
 }
 
-// Candidate sent to AI Core with ID
+// Candidate sent to AI Core with ID and enhanced information
 type GpuCandidate struct {
 	GpuID             string `json:"gpu_id"`
 	Temp              uint32 `json:"gpu_temp"`
 	MemUsed           uint64 `json:"gpu_mem_used"`
+	MemTotal          uint64 `json:"gpu_mem_total"` // NEW: Total VRAM for AI decision making
 	UtilizationGpu    uint32 `json:"utilization_gpu"`
 	PowerDrawW        uint32 `json:"power_draw_w"`
 	ThrottlingReasons string `json:"throttling_reasons"`
+	// === NEW ENHANCED FIELDS ===
+	GpuVendor       string `json:"gpu_vendor"`       // GPU vendor for vendor-aware scheduling
+	GpuArchitecture string `json:"gpu_architecture"` // GPU architecture for performance estimation
 }
 
-// PredictionRequest matches the Python API's expected input
+// PredictionRequest matches the Python AI Core's expected input with enhanced job context
 type PredictionRequest struct {
 	Candidates []GpuCandidate `json:"candidates"`
 	JobType    string         `json:"job_type"`
+	// === NEW JOB CONTEXT ===
+	VramRequiredMB   uint64 `json:"vram_required_mb"`  // VRAM requirement for constraint checking
+	GpuCount         int    `json:"gpu_count"`         // Number of GPUs needed
+	Priority         int    `json:"priority"`          // Job priority for scheduling decisions
+	UserID           string `json:"user_id"`           // User context for fairness
+	TenantID         string `json:"tenant_id"`         // Tenant context for resource allocation
+	ExpectedDuration string `json:"expected_duration"` // Duration hint for scheduling
+	ComputeIntensity string `json:"compute_intensity"` // Workload type hint
 }
 
-// PredictionResponse matches the Python API's output
+// PredictionResponse matches the Python AI Core's output with enhanced decision context
 type PredictionResponse struct {
-	BestGpuID string `json:"best_gpu_id"`
+	BestGpuIDs    []string `json:"best_gpu_ids"`   // Selected GPU IDs (supports multi-GPU)
+	Confidence    float64  `json:"confidence"`     // Confidence score (0.0-1.0)
+	ReasonCode    string   `json:"reason_code"`    // Human-readable decision reason
+	FailureReason string   `json:"failure_reason"` // Why placement failed (if any)
 }
 
 // DashboardUpdate packages full cluster info for the dashboard
@@ -78,6 +119,14 @@ type DashboardUpdate struct {
 func mockCarbonIntensity() float64 {
 	// Simple oscillating mock between 100-500
 	return 100 + float64(time.Now().Unix()%400)
+}
+
+// getStringField safely extracts string from pointer with default fallback
+func getStringField(field *string, defaultValue string) string {
+	if field != nil {
+		return *field
+	}
+	return defaultValue
 }
 
 // checkAllAnomalies flags GPUs with simple heuristics
@@ -109,25 +158,99 @@ var (
 	gpuStateMux     = &sync.RWMutex{}
 )
 
-// askAICoreCandidates sends all GPU candidates to the AI service and gets the best GPU ID
+// filterViableGpus applies hard constraints to filter out GPUs that cannot satisfy the job requirements
+func filterViableGpus(clusterState map[string]GpuState, job Job) ([]GpuCandidate, error) {
+	var viableCandidates []GpuCandidate
+
+	// Validate job requirements
+	if job.VramRequiredMB == 0 {
+		// Default VRAM requirement based on job type if not specified
+		switch job.Type {
+		case "training":
+			job.VramRequiredMB = 4096 // 4GB default for training
+		case "inference":
+			job.VramRequiredMB = 2048 // 2GB default for inference
+		default:
+			job.VramRequiredMB = 1024 // 1GB default for unknown job types
+		}
+		log.Printf("No VRAM requirement specified for job %s, using default: %d MB", job.ID, job.VramRequiredMB)
+	}
+
+	if job.GpuCount == 0 {
+		job.GpuCount = 1 // Default to single GPU
+	}
+
+	log.Printf("Filtering GPUs for job %s: VRAM needed=%d MB, GPU count=%d",
+		job.ID, job.VramRequiredMB, job.GpuCount)
+
+	for gpuID, state := range clusterState {
+		// HARD CONSTRAINT 1: Available VRAM check
+		availableMemory := state.MemTotal - state.MemUsed
+		if availableMemory < job.VramRequiredMB {
+			log.Printf("GPU %s rejected: insufficient VRAM (available: %d MB, needed: %d MB)",
+				gpuID, availableMemory, job.VramRequiredMB)
+			continue
+		}
+
+		// HARD CONSTRAINT 2: GPU health check
+		if state.ThrottlingReasons != "" && state.ThrottlingReasons != "None" && state.ThrottlingReasons != "[]" {
+			log.Printf("GPU %s rejected: throttling active (%s)", gpuID, state.ThrottlingReasons)
+			continue
+		}
+
+		// HARD CONSTRAINT 3: Temperature safety check
+		if state.Temp >= 90 {
+			log.Printf("GPU %s rejected: temperature too high (%d°C)", gpuID, state.Temp)
+			continue
+		}
+
+		// GPU passes all hard constraints
+		viableCandidates = append(viableCandidates, GpuCandidate{
+			GpuID:             gpuID,
+			Temp:              state.Temp,
+			MemUsed:           state.MemUsed,
+			MemTotal:          state.MemTotal,
+			UtilizationGpu:    state.UtilizationGpu,
+			PowerDrawW:        state.PowerDrawW,
+			ThrottlingReasons: state.ThrottlingReasons,
+			GpuVendor:         state.GpuVendor,
+			GpuArchitecture:   state.GpuArchitecture,
+		})
+
+		log.Printf("GPU %s viable: %d MB available, %d°C, %d%% utilization",
+			gpuID, availableMemory, state.Temp, state.UtilizationGpu)
+	}
+
+	// Check if we have enough viable GPUs
+	if len(viableCandidates) < job.GpuCount {
+		return nil, fmt.Errorf("insufficient viable GPUs: need %d, found %d", job.GpuCount, len(viableCandidates))
+	}
+
+	log.Printf("Pre-filtering complete: %d viable candidates for job %s", len(viableCandidates), job.ID)
+	return viableCandidates, nil
+}
+
+// askAICoreCandidates sends viable GPU candidates to the AI service and gets the best GPU ID
 func askAICoreCandidates(cluster map[string]GpuState, job Job) (string, error) {
 	aiCoreURL := "http://localhost:8000/predict"
 
-	candidates := make([]GpuCandidate, 0, len(cluster))
-	for id, s := range cluster {
-		candidates = append(candidates, GpuCandidate{
-			GpuID:             id,
-			Temp:              s.Temp,
-			MemUsed:           s.MemUsed,
-			UtilizationGpu:    s.UtilizationGpu,
-			PowerDrawW:        s.PowerDrawW,
-			ThrottlingReasons: s.ThrottlingReasons,
-		})
+	// Use pre-filtering to get viable candidates
+	viableCandidates, err := filterViableGpus(cluster, job)
+	if err != nil {
+		return "", fmt.Errorf("pre-filtering failed: %v", err)
 	}
 
+	// Create enhanced prediction request with job context
 	requestBody, err := json.Marshal(PredictionRequest{
-		Candidates: candidates,
-		JobType:    job.Type,
+		Candidates:       viableCandidates,
+		JobType:          job.Type,
+		VramRequiredMB:   job.VramRequiredMB,
+		GpuCount:         job.GpuCount,
+		Priority:         job.Priority,
+		UserID:           job.UserID,
+		TenantID:         job.TenantID,
+		ExpectedDuration: job.ExpectedDuration,
+		ComputeIntensity: job.ComputeIntensity,
 	})
 	if err != nil {
 		return "", err
@@ -144,7 +267,11 @@ func askAICoreCandidates(cluster map[string]GpuState, job Job) (string, error) {
 		return "", err
 	}
 
-	return predictionResp.BestGpuID, nil
+	// Handle the new response format - return first GPU ID for backward compatibility
+	if len(predictionResp.BestGpuIDs) == 0 {
+		return "", fmt.Errorf("AI Core returned no GPU recommendations: %s", predictionResp.FailureReason)
+	}
+	return predictionResp.BestGpuIDs[0], nil
 }
 
 // scheduleJobs is our main scheduling loop
@@ -171,26 +298,19 @@ func scheduleJobs() {
 		jobQueue = jobQueue[1:]
 		queueMux.Unlock()
 
-		// Get the most recent GPU state
+		// Get the most recent GPU state for scheduling decision
 		clusterStateMux.RLock()
-		candidates := make([]GpuCandidate, 0, len(clusterState))
+		clusterSnapshot := make(map[string]GpuState, len(clusterState))
 		for gpuID, state := range clusterState {
-			candidates = append(candidates, GpuCandidate{
-				GpuID:             gpuID,
-				Temp:              state.Temp,
-				MemUsed:           state.MemUsed,
-				UtilizationGpu:    state.UtilizationGpu,
-				PowerDrawW:        state.PowerDrawW,
-				ThrottlingReasons: state.ThrottlingReasons,
-			})
+			clusterSnapshot[gpuID] = state
 		}
 		clusterStateMux.RUnlock()
 
-		log.Printf("Attempting to schedule job %s. Candidates: %d",
-			jobToSchedule.ID, len(candidates))
+		log.Printf("Attempting to schedule job %s (type: %s, VRAM: %d MB, priority: %d)",
+			jobToSchedule.ID, jobToSchedule.Type, jobToSchedule.VramRequiredMB, jobToSchedule.Priority)
 
-		// Ask the AI for a decision
-		bestGpuID, err := askAICoreCandidates(clusterState, jobToSchedule)
+		// Ask the AI for a decision (includes pre-filtering)
+		bestGpuID, err := askAICoreCandidates(clusterSnapshot, jobToSchedule)
 		if err != nil {
 			log.Printf("Error consulting AI core: %v. Re-queuing job.", err)
 			// In a real system, you'd add the job back to the queue with better logic
@@ -357,15 +477,19 @@ func main() {
 			return
 		}
 
-		// Update the cluster state for this GPU
+		// Update the cluster state for this GPU with enhanced fields
 		clusterStateMux.Lock()
 		clusterState[gpuID] = GpuState{
 			Temp:              telemetry.TemperatureC,
 			MemUsed:           telemetry.MemoryUsedMb,
+			MemTotal:          telemetry.MemoryTotalMb, // NEW: Total memory for constraint checking
 			UtilizationGpu:    telemetry.UtilizationGpu,
 			PowerDrawW:        telemetry.PowerDrawW,
 			ThrottlingReasons: telemetry.ThrottlingReasons,
 			GpuName:           telemetry.GpuName,
+			// NEW: Enhanced vendor and architecture information
+			GpuVendor:       getStringField(telemetry.GpuVendor, "Unknown"),
+			GpuArchitecture: getStringField(telemetry.GpuArchitecture, "Unknown"),
 		}
 		clusterStateMux.Unlock()
 
