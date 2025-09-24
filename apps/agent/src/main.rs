@@ -411,70 +411,8 @@ async fn run_mock_mode() {
                 }
             });
             
-            // Simulate 3 GPUs for testing multi-GPU functionality
-            let gpu_configs = vec![
-                ("gpu-0", "Mock RTX 4090", 45, 35, 256, 65),
-                ("gpu-1", "Mock RTX 4080", 52, 28, 512, 55),
-                ("gpu-2", "Mock RTX 4070", 38, 42, 128, 45),
-            ];
-
-            for (gpu_id, gpu_name, base_temp, base_util, base_mem, base_power) in gpu_configs {
-                let client = client.clone();
-                let telemetry_publishing = telemetry_publishing.clone();
-                
-                tokio::spawn(async move {
-                    let mut interval = time::interval(Duration::from_secs(2));
-                    loop {
-                        interval.tick().await;
-                        
-                        // Check if we should publish telemetry
-                        if *telemetry_publishing.lock().await {
-                            // More realistic variation based on sine waves for smooth changes
-                            let time_factor = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as f64;
-                            let temp_variation = ((time_factor / 30.0).sin() * 5.0) as i32; // ±5°C variation over 1 minute cycle
-                            let util_variation = ((time_factor / 20.0).sin() * 10.0) as i32; // ±10% utilization variation
-                            
-                            let telemetry = GpuTelemetry {
-                                // Identification
-                                gpu_name: gpu_name.to_string(),
-                                
-                                // Performance & Utilization
-                                utilization_gpu: ((base_util as i32 + util_variation).max(0).min(100)) as u32,
-                                utilization_memory_controller: ((base_util as i32 + util_variation - 5).max(0).min(100)) as u32,
-                                performance_state: "P2".to_string(),
-                                clock_gpu_mhz: ((1200 + util_variation * 5).max(800).min(2000)) as u32,
-                                clock_mem_mhz: ((5000 + util_variation * 25).max(4000).min(7000)) as u32,
-
-                                // Memory
-                                memory_used_mb: ((base_mem as i32 + util_variation * 5).max(100).min(20000)) as u64,
-                                memory_total_mb: 24564,
-
-                                // Power & Thermal
-                                temperature_c: ((base_temp as i32 + temp_variation).max(30).min(85)) as u32,
-                                power_draw_w: ((base_power as i32 + temp_variation / 2).max(20).min(300)) as u32,
-                                throttling_reasons: if (base_temp as i32 + temp_variation) > 80 { "Thermal".to_string() } else { "None".to_string() },
-                            };
-
-                            let payload = match serde_json::to_vec(&telemetry) {
-                                Ok(p) => p,
-                                Err(err) => {
-                                    eprintln!("Failed to serialize telemetry: {err}");
-                                    continue;
-                                }
-                            };
-
-                            let subject = format!("aether.telemetry.{}", gpu_id);
-
-                            if let Err(err) = client.publish(subject.clone(), payload.into()).await {
-                                eprintln!("Failed to publish to NATS: {err}");
-                                continue;
-                            }
-
-                            println!("Published telemetry to '{}': {:?}", subject, telemetry);
-                        }
-                    }
-                });
-            }
+            // Don't simulate fake GPUs in mock mode - only provide HTTP polling for job execution
+            println!("Mock mode: Skipping GPU telemetry simulation to avoid fake GPUs in dashboard");
             
             // Keep the main thread alive
             std::future::pending::<()>().await;
@@ -494,14 +432,41 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("Starting Aether Telemetry Agent with NVML...");
 
+    // Set up NVIDIA driver environment
+    std::env::set_var("NVIDIA_DRIVER_CAPABILITIES", "all");
+    std::env::set_var("NVIDIA_VISIBLE_DEVICES", "all");
+
     // Connect to NATS server
     let nats_url = "nats://0.tcp.in.ngrok.io:16521";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
-    // Initialize the NVML library
-    let nvml = Arc::new(Nvml::init()?);
-    println!("NVML initialized.");
+    // Try to initialize NVML with better error handling
+    println!("Attempting NVML initialization...");
+    let nvml = match Nvml::init() {
+        Ok(nvml) => {
+            println!("✅ NVML initialized successfully!");
+            Arc::new(nvml)
+        },
+        Err(e) => {
+            println!("❌ NVML init failed: {}", e);
+            println!("Checking NVIDIA driver status...");
+            // Check if nvidia-smi works
+            let output = std::process::Command::new("nvidia-smi").output();
+            match output {
+                Ok(output) => {
+                    if output.status.success() {
+                        println!("✅ nvidia-smi works, but NVML library connection failed");
+                        println!("This might be a Docker/container permission issue");
+                    } else {
+                        println!("❌ nvidia-smi failed");
+                    }
+                },
+                Err(e) => println!("❌ Cannot run nvidia-smi: {}", e),
+            }
+            return Err(e.into());
+        }
+    };
 
     let device_count = nvml.device_count()?;
     println!("Found {} NVIDIA GPUs.", device_count);
