@@ -36,3 +36,9 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+#ML models and data
+*.pkl
+
+#temp scripts
+continue_setup.sh

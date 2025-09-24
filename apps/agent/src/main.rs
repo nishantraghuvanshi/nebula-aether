@@ -349,7 +349,7 @@ async fn run_mock_mode() {
         os_info
     );
 
-    let nats_url = "nats://0.tcp.in.ngrok.io:15910";
+    let nats_url = "nats://0.tcp.in.ngrok.io:17222";
     match async_nats::connect(nats_url).await {
         Ok(client) => {
             println!("Connected to NATS server at {}.", nats_url);
@@ -364,76 +364,49 @@ async fn run_mock_mode() {
             // Shared state to track active job processes
             let active_jobs = Arc::new(Mutex::new(HashMap::<String, Child>::new()));
             
-            // Spawn a separate task to listen for commands from all GPUs
+            // Spawn a separate task to poll for jobs via HTTP
             let jobs_for_commands = active_jobs.clone();
+            let poll_client = command_client.clone();
             tokio::spawn(async move {
-                let mut sub = command_client.subscribe("aether.commands.*").await.unwrap();
-                println!("Listening for commands on 'aether.commands.*'");
+                let http_client = reqwest::Client::new();
+                let orchestrator_url = "https://01a4952d597b.ngrok-free.app";
+                let gpu_id = "runpod-gpu-0"; // This would be detected at runtime on real RunPod
 
-                while let Some(msg) = sub.next().await {
-                    let command = String::from_utf8_lossy(&msg.payload);
+                println!("🌐 Starting HTTP polling for jobs from orchestrator at {}", orchestrator_url);
 
-                    if command.starts_with("execute_job:") {
-                        // Parse job execution command
-                        if let Some(job_data) = command.strip_prefix("execute_job:") {
-                            if let Ok(job) = serde_json::from_str::<JobExecution>(job_data) {
-                                println!("\n>>> Executing job: {} <<<\n", job.job_id);
+                loop {
+                    tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
 
-                                // Clone client and active_jobs for job execution
-                                let job_client = command_client.clone();
-                                let job_active_jobs = jobs_for_commands.clone();
+                    match http_client
+                        .get(&format!("{}/poll", orchestrator_url))
+                        .query(&[("gpu_id", gpu_id)])
+                        .header("ngrok-skip-browser-warning", "true")
+                        .send()
+                        .await
+                    {
+                        Ok(response) => {
+                            match response.json::<PollResponse>().await {
+                                Ok(poll_response) => {
+                                    if let Some(job) = poll_response.job {
+                                        println!("\n>>> 🎯 Received job via HTTP polling: {} <<<\n", job.job_id);
 
-                                tokio::spawn(async move {
-                                    execute_job(job, job_client, job_active_jobs).await;
-                                });
-                            } else {
-                                println!("Failed to parse job execution data: {}", job_data);
-                            }
-                        }
-                    } else if command.starts_with("kill_job:") {
-                        // Parse kill job command
-                        if let Some(job_id) = command.strip_prefix("kill_job:") {
-                            println!("\n>>> Received kill command for job: {} <<<\n", job_id);
+                                        // Clone client and active_jobs for job execution
+                                        let job_client = poll_client.clone();
+                                        let job_active_jobs = jobs_for_commands.clone();
 
-                            // Try to kill the specific job process
-                            let mut jobs = jobs_for_commands.lock().await;
-                            if let Some(mut child) = jobs.remove(job_id) {
-                                match child.kill().await {
-                                    Ok(_) => {
-                                        println!("🔴 Successfully killed job process: {}", job_id);
-
-                                        // Send job status update
-                                        let status_update = JobStatus {
-                                            job_id: job_id.to_string(),
-                                            gpu_id: "unknown".to_string(),
-                                            status: "killed".to_string(),
-                                            message: "Job was killed by user request".to_string(),
-                                            start_time: None,
-                                            end_time: Some(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
-                                            exit_code: Some(-9),
-                                        };
-
-                                        publish_job_status(&command_client, &status_update).await;
-                                    }
-                                    Err(e) => {
-                                        println!("⚠️ Failed to kill job {}: {}", job_id, e);
+                                        tokio::spawn(async move {
+                                            execute_job(job, job_client, job_active_jobs).await;
+                                        });
                                     }
                                 }
-                            } else {
-                                println!("⚠️ Job {} not found in active processes", job_id);
+                                Err(e) => {
+                                    println!("⚠️ Failed to parse poll response: {}", e);
+                                }
                             }
                         }
-                    } else if command == "enter_sleep" {
-                        println!("\n>>> Received command to enter sleep mode. Pausing telemetry for 10s. <<<\n");
-                        let mut p = publishing.lock().await;
-                        *p = false;
-
-                        // Wake up after 10 seconds
-                        tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
-
-                        let mut p = publishing.lock().await;
-                        *p = true;
-                        println!("\n>>> Waking up from sleep mode. Resuming telemetry. <<<\n");
+                        Err(e) => {
+                            println!("⚠️ HTTP polling request failed: {}", e);
+                        }
                     }
                 }
             });
@@ -522,7 +495,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     println!("Starting Aether Telemetry Agent...");
 
     // Connect to NATS server
-    let nats_url = "nats://0.tcp.in.ngrok.io:15910";
+    let nats_url = "nats://0.tcp.in.ngrok.io:17222";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
@@ -661,6 +634,12 @@ struct JobExecution {
     script: String,
     args: Vec<String>,
     gpu_id: String,
+}
+
+#[derive(Deserialize, Debug)]
+struct PollResponse {
+    job: Option<JobExecution>,
+    message: String,
 }
 
 #[derive(Serialize, Debug)]

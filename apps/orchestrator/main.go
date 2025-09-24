@@ -623,6 +623,55 @@ func handleKill(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func handlePoll(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Only GET method is allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Get GPU ID from query parameter
+	gpuID := r.URL.Query().Get("gpu_id")
+	if gpuID == "" {
+		http.Error(w, "gpu_id parameter is required", http.StatusBadRequest)
+		return
+	}
+
+	// Check if there's a job in the queue
+	queueMux.Lock()
+	if len(jobQueue) == 0 {
+		queueMux.Unlock()
+		// No jobs available
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"job": nil,
+			"message": "no jobs available",
+		})
+		return
+	}
+
+	// Get the next job from the queue
+	job := jobQueue[0]
+	jobQueue = jobQueue[1:]
+	queueMux.Unlock()
+
+	log.Printf("📤 Polling agent %s retrieved job: %s", gpuID, job.ID)
+
+	// Convert to JobExecution format
+	jobExecution := JobExecution{
+		JobID:  job.ID,
+		Type:   job.Type,
+		Script: job.Script,
+		Args:   job.Args,
+		GpuID:  gpuID,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"job": jobExecution,
+		"message": "job assigned",
+	})
+}
+
 func main() {
 	// Load job definitions
 	if err := loadJobDefinitions(); err != nil {
@@ -631,7 +680,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("nats://0.tcp.in.ngrok.io:15910")
+	nc, err := nats.Connect("nats://0.tcp.in.ngrok.io:17222")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
@@ -771,6 +820,13 @@ func main() {
 				return
 			}
 			corsMiddleware(handleKill)(w, r)
+		})
+		http.HandleFunc("/poll", func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == "OPTIONS" {
+				corsHandler(w, r)
+				return
+			}
+			corsMiddleware(handlePoll)(w, r)
 		})
 		http.HandleFunc("/graphql", graphqlHandler) // Add the WebSocket handler
 		log.Println("API server listening on :8080")
