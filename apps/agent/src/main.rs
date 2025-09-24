@@ -349,7 +349,7 @@ async fn run_mock_mode() {
         os_info
     );
 
-    let nats_url = "tcp://0.tcp.in.ngrok.io:18595";
+    let nats_url = "0.tcp.in.ngrok.io:18595";
     match async_nats::connect(nats_url).await {
         Ok(client) => {
             println!("Connected to NATS server at {}.", nats_url);
@@ -446,7 +446,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Connect to NATS server
-    let nats_url = "tcp://0.tcp.in.ngrok.io:18595";
+    let nats_url = "0.tcp.in.ngrok.io:18595";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
