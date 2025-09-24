@@ -120,8 +120,8 @@ echo "  • Dependencies: Rust, OpenSSL, NVIDIA drivers configured"
 echo ""
 echo -e "${BLUE}🔗 Connection Details:${NC}"
 echo "  • NATS Server: tcp://0.tcp.in.ngrok.io:18595"
-echo "  • HTTP Polling: https://5f9184d7a785.ngrok-free.app"
-echo "  • Orchestrator API: https://5f9184d7a785.ngrok-free.app"
+echo "  • HTTP Polling: https://a7fe8e5f2dd8.ngrok-free.app"
+echo "  • Orchestrator API: https://a7fe8e5f2dd8.ngrok-free.app"
 echo ""
 
 # Step 8: Test GPU Detection
