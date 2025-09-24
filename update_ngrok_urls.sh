@@ -7,8 +7,11 @@ echo "🔄 Updating ngrok URLs..."
 sleep 3
 
 # Get URLs
-NATS_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[] | select(.name=="nats") | .public_url')
+NATS_URL_RAW=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[] | select(.name=="nats") | .public_url')
 HTTP_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[] | select(.name=="orchestrator") | .public_url')
+
+# Remove tcp:// prefix from NATS URL since our code doesn't use it
+NATS_URL=$(echo "$NATS_URL_RAW" | sed 's|tcp://||')
 
 if [[ "$NATS_URL" == "null" || "$HTTP_URL" == "null" ]]; then
     echo "❌ Failed to get ngrok URLs. Is ngrok running?"

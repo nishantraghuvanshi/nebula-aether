@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
 use std::time::Duration;
 use std::sync::Arc;
-use futures_util::StreamExt;
+// use futures_util::StreamExt; // Unused import
 use tokio::sync::Mutex;
 use tokio::process::{Command, Child};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -217,7 +217,7 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
             }
 
             // Wait for the process to complete
-            let mut child = {
+            let child = {
                 let mut jobs = active_jobs.lock().await;
                 jobs.remove(&job.job_id).unwrap()
             };
@@ -336,7 +336,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 async fn run_mock_mode() {
-    use tokio::time;
+    // use tokio::time; // Unused import
 
     let os_info = if cfg!(target_os = "macos") {
         "macOS"
@@ -349,7 +349,7 @@ async fn run_mock_mode() {
         os_info
     );
 
-    let nats_url = "0.tcp.in.ngrok.io:18595";
+    let nats_url = "0.tcp.in.ngrok.io:16686";
     match async_nats::connect(nats_url).await {
         Ok(client) => {
             println!("Connected to NATS server at {}.", nats_url);
@@ -359,7 +359,7 @@ async fn run_mock_mode() {
 
             // Shared state to control telemetry publishing
             let publishing = Arc::new(Mutex::new(true));
-            let telemetry_publishing = publishing.clone();
+            let _telemetry_publishing = publishing.clone();
 
             // Shared state to track active job processes
             let active_jobs = Arc::new(Mutex::new(HashMap::<String, Child>::new()));
@@ -432,7 +432,7 @@ async fn run_mock_mode() {
 
 #[cfg(all(not(target_os = "macos"), feature = "nvml"))]
 async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
-    use nvml_wrapper::enum_wrappers::device::{Clock, TemperatureSensor, PerformanceState};
+    use nvml_wrapper::enum_wrappers::device::{Clock, TemperatureSensor};
     use nvml_wrapper::bitmasks::device::ThrottleReasons;
     use nvml_wrapper::Nvml;
     use tokio::time;
@@ -446,7 +446,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Connect to NATS server
-    let nats_url = "0.tcp.in.ngrok.io:18595";
+    let nats_url = "0.tcp.in.ngrok.io:16686";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
