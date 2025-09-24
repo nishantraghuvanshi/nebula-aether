@@ -1,0 +1,49 @@
+{
+  "total_samples": 5000,
+  "features": [
+    "utilization_gpu",
+    "gpu_temp",
+    "power_draw_w",
+    "gpu_mem_used",
+    "gpu_mem_total",
+    "utilization_memory_controller",
+    "clock_gpu_mhz",
+    "clock_mem_mhz",
+    "job_type_training",
+    "job_type_inference",
+    "job_type_compute",
+    "job_type_memory",
+    "memory_utilization_pct",
+    "thermal_headroom",
+    "power_per_util",
+    "gpu_clock_ratio",
+    "mem_clock_ratio",
+    "perf_state_numeric",
+    "is_throttling",
+    "memory_sufficient",
+    "expected_util_match",
+    "priority_weight",
+    "performance_score",
+    "thermal_risk",
+    "memory_risk",
+    "scenario_name",
+    "job_type"
+  ],
+  "scenarios": [
+    "Large Language Model Training",
+    "Computer Vision Training",
+    "Small Model Training",
+    "Real-time Inference",
+    "Batch Inference",
+    "Matrix Operations",
+    "Scientific Computing",
+    "Large Dataset Processing"
+  ],
+  "feature_count": 27,
+  "job_types": [
+    "training",
+    "inference",
+    "compute",
+    "memory"
+  ]
+}
