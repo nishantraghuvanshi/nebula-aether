@@ -63,6 +63,9 @@ fi
 
 print_status "Rust installation complete"
 
+# Make Rust environment permanent for future SSH sessions
+echo 'source ~/.cargo/env' >> ~/.bashrc
+
 # Step 4: Create NVIDIA ML symlink (required for GPU access)
 print_info "Setting up NVIDIA GPU access..."
 if [ -f "/usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1" ]; then
@@ -116,9 +119,9 @@ echo "  • Agent binary: /workspace/nebula-aether/apps/agent/target/release/age
 echo "  • Dependencies: Rust, OpenSSL, NVIDIA drivers configured"
 echo ""
 echo -e "${BLUE}🔗 Connection Details:${NC}"
-echo "  • NATS Server: nats://0.tcp.in.ngrok.io:10544"
-echo "  • HTTP Polling: https://b172e93381d8.ngrok-free.app"
-echo "  • Orchestrator API: https://b172e93381d8.ngrok-free.app"
+echo "  • NATS Server: tcp://0.tcp.in.ngrok.io:18595"
+echo "  • HTTP Polling: https://5f9184d7a785.ngrok-free.app"
+echo "  • Orchestrator API: https://5f9184d7a785.ngrok-free.app"
 echo ""
 
 # Step 8: Test GPU Detection
@@ -140,7 +143,7 @@ echo "  source ~/.cargo/env"
 echo "  cargo run --release"
 echo ""
 echo -e "${YELLOW}Expected behavior:${NC}"
-echo "  ✅ Connect to NATS at nats://0.tcp.in.ngrok.io:10544"
+echo "  ✅ Connect to NATS at tcp://0.tcp.in.ngrok.io:18595"
 echo "  ✅ Detect GPU: NVIDIA RTX 2000 Ada Generation (real GPU only)"
 echo "  ✅ Send telemetry every 5 seconds"
 echo "  ✅ Poll for jobs every 5 seconds via HTTPS"
