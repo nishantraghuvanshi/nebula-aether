@@ -433,10 +433,8 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     println!("Starting Aether Telemetry Agent with NVML...");
 
     // Set up NVIDIA driver environment
-    unsafe {
-        std::env::set_var("NVIDIA_DRIVER_CAPABILITIES", "all");
-        std::env::set_var("NVIDIA_VISIBLE_DEVICES", "all");
-    }
+    std::env::set_var("NVIDIA_DRIVER_CAPABILITIES", "all");
+    std::env::set_var("NVIDIA_VISIBLE_DEVICES", "all");
 
     // Connect to NATS server
     let nats_url = "nats://0.tcp.in.ngrok.io:16521";
