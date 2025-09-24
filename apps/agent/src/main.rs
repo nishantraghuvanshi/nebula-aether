@@ -492,7 +492,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     use nvml_wrapper::Nvml;
     use tokio::time;
 
-    println!("Starting Aether Telemetry Agent...");
+    println!("Starting Aether Telemetry Agent with NVML...");
 
     // Connect to NATS server
     let nats_url = "nats://0.tcp.in.ngrok.io:17222";
@@ -505,6 +505,58 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
 
     let device_count = nvml.device_count()?;
     println!("Found {} NVIDIA GPUs.", device_count);
+
+    // Shared state to track active job processes
+    let active_jobs = Arc::new(Mutex::new(HashMap::<String, Child>::new()));
+
+    // Add HTTP polling for job execution (only for the first GPU)
+    if device_count > 0 {
+        let command_client = client.clone();
+        let jobs_for_commands = active_jobs.clone();
+        tokio::spawn(async move {
+            let http_client = reqwest::Client::new();
+            let orchestrator_url = "https://01a4952d597b.ngrok-free.app";
+            let gpu_id = "gpu-0"; // Use consistent ID with NVML telemetry
+
+            println!("🌐 Starting HTTP polling for jobs from orchestrator at {}", orchestrator_url);
+
+            loop {
+                tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+
+                match http_client
+                    .get(&format!("{}/poll", orchestrator_url))
+                    .query(&[("gpu_id", gpu_id)])
+                    .header("ngrok-skip-browser-warning", "true")
+                    .send()
+                    .await
+                {
+                    Ok(response) => {
+                        match response.json::<PollResponse>().await {
+                            Ok(poll_response) => {
+                                if let Some(job) = poll_response.job {
+                                    println!("\n>>> 🎯 Received job via HTTP polling: {} <<<\n", job.job_id);
+
+                                    // Clone client and active_jobs for job execution
+                                    let job_client = command_client.clone();
+                                    let job_active_jobs = jobs_for_commands.clone();
+
+                                    tokio::spawn(async move {
+                                        execute_job(job, job_client, job_active_jobs).await;
+                                    });
+                                }
+                            }
+                            Err(e) => {
+                                println!("⚠️ Failed to parse poll response: {}", e);
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        println!("⚠️ HTTP polling request failed: {}", e);
+                    }
+                }
+            }
+        });
+    }
 
     for i in 0..device_count {
         let client = client.clone();
@@ -519,7 +571,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
                     return;
                 }
             };
-            
+
             let mut interval = time::interval(Duration::from_secs(2));
 
             loop {
