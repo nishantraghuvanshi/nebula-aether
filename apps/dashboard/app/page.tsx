@@ -18,8 +18,12 @@ export default function Dashboard() {
     { id: 'neural-network-training', name: 'Neural Network Training', type: 'training' },
     { id: 'matrix-multiply-heavy', name: 'Matrix Multiplication Benchmark', type: 'compute' },
     { id: 'image-inference-batch', name: 'Image Inference Simulation', type: 'inference' },
-    { id: 'memory-stress-test', name: 'Memory Stress Test', type: 'memory' },
     { id: 'monte-carlo-simulation', name: 'Monte Carlo Pi Estimation', type: 'simulation' },
+    { id: 'video-encoding-benchmark', name: 'Video Encoding Benchmark', type: 'encoding' },
+    { id: 'ray-tracing-benchmark', name: 'Ray Tracing Benchmark', type: 'rendering' },
+    { id: 'protein-folding-simulation', name: 'Protein Folding Simulation', type: 'scientific' },
+    { id: 'llm-finetuning-simulation', name: 'LLM Fine-tuning Simulation', type: 'llm' },
+    { id: 'memory-stress-test', name: 'Memory Stress Test', type: 'memory' },
     { id: 'simple-cpu-test', name: 'Simple CPU Test', type: 'test' }
   ];
 

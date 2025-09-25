@@ -94,5 +94,29 @@
     "max_duration_sec": 600,
     "priority": "high",
     "expected_gpu_util": 80
+  },
+  {
+    "id": "memory-stress-test",
+    "type": "memory",
+    "name": "Memory Stress Test",
+    "description": "Safe memory allocation and manipulation test",
+    "script": "memory_stress.py",
+    "args": ["--memory-gb", "3", "--duration", "30", "--safety-limit", "0.6"],
+    "min_memory_mb": 3072,
+    "max_duration_sec": 90,
+    "priority": "low",
+    "expected_gpu_util": 30
+  },
+  {
+    "id": "simple-cpu-test",
+    "type": "test",
+    "name": "Simple CPU Test",
+    "description": "Basic CPU-intensive test - no external dependencies",
+    "script": "simple_test.py",
+    "args": ["--duration", "15", "--intensity", "500000"],
+    "min_memory_mb": 256,
+    "max_duration_sec": 20,
+    "priority": "normal",
+    "expected_gpu_util": 0
   }
 ]
