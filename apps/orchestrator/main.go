@@ -680,7 +680,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:16686")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:16965")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
@@ -836,7 +836,7 @@ func main() {
 	}()
 
 	// Start the main scheduling loop
-	go scheduleJobs()
+	// go scheduleJobs() // Disabled: conflicts with HTTP polling system
 
 	log.Println("Orchestrator started. Now processing jobs.")
 	// Keep the NATS subscription running

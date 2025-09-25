@@ -22,12 +22,17 @@ fi
 echo "📡 NATS: $NATS_URL"
 echo "🌐 HTTP: $HTTP_URL"
 
-# Update files
-sed -i '' "s|nats://0.tcp.in.ngrok.io:[0-9]*|${NATS_URL}|g" apps/orchestrator/main.go
-sed -i '' "s|nats://0.tcp.in.ngrok.io:[0-9]*|${NATS_URL}|g" apps/agent/src/main.rs
-sed -i '' "s|https://[a-z0-9]*.ngrok-free.app|${HTTP_URL}|g" apps/agent/src/main.rs
-sed -i '' "s|nats://0.tcp.in.ngrok.io:[0-9]*|${NATS_URL}|g" setup_runpod.sh
-sed -i '' "s|https://[a-z0-9]*.ngrok-free.app|${HTTP_URL}|g" setup_runpod.sh
+# Update files with correct patterns (no nats:// prefix)
+echo "🔧 Updating orchestrator..."
+sed -i '' "s|0\.tcp\.in\.ngrok\.io:[0-9]*|${NATS_URL}|g" apps/orchestrator/main.go
+
+echo "🔧 Updating agent..."
+sed -i '' "s|0\.tcp\.in\.ngrok\.io:[0-9]*|${NATS_URL}|g" apps/agent/src/main.rs
+sed -i '' "s|https://[a-z0-9]*\.ngrok-free\.app|${HTTP_URL}|g" apps/agent/src/main.rs
+
+echo "🔧 Updating setup script..."
+sed -i '' "s|0\.tcp\.in\.ngrok\.io:[0-9]*|${NATS_URL}|g" setup_runpod.sh
+sed -i '' "s|https://[a-z0-9]*\.ngrok-free\.app|${HTTP_URL}|g" setup_runpod.sh
 
 echo "✅ URLs updated locally in all files"
 echo "💡 Next steps:"

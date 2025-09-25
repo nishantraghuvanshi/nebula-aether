@@ -36,39 +36,63 @@
     "expected_gpu_util": 60
   },
   {
-    "id": "memory-stress-test",
-    "type": "memory",
-    "name": "Memory Stress Test",
-    "description": "Safe memory allocation and manipulation test",
-    "script": "memory_stress.py",
-    "args": ["--memory-gb", "3", "--duration", "30", "--safety-limit", "0.6"],
-    "min_memory_mb": 3072,
-    "max_duration_sec": 90,
-    "priority": "low",
-    "expected_gpu_util": 30
-  },
-  {
     "id": "monte-carlo-simulation",
     "type": "simulation",
     "name": "Monte Carlo Pi Estimation",
-    "description": "Extended parallel computation with configurable duration",
+    "description": "Task-based parallel computation with configurable accuracy target",
     "script": "monte_carlo.py",
-    "args": ["--samples", "50000000", "--min-duration", "45", "--complexity", "2"],
+    "args": ["--samples-per-round", "50000000", "--target-accuracy", "99.95", "--complexity", "2"],
     "min_memory_mb": 512,
-    "max_duration_sec": 180,
+    "max_duration_sec": 300,
     "priority": "normal",
     "expected_gpu_util": 80
   },
   {
-    "id": "simple-cpu-test",
-    "type": "test",
-    "name": "Simple CPU Test",
-    "description": "Basic CPU-intensive test - no external dependencies",
-    "script": "simple_test.py",
-    "args": ["--duration", "15", "--intensity", "500000"],
-    "min_memory_mb": 256,
-    "max_duration_sec": 20,
+    "id": "video-encoding-benchmark",
+    "type": "encoding",
+    "name": "Video Encoding Benchmark",
+    "description": "H.264/H.265 video transcoding simulation - real-world media workload",
+    "script": "video_encoding.py",
+    "args": ["--frames", "1000", "--resolution", "1080p", "--quality", "23", "--batch-size", "4"],
+    "min_memory_mb": 2048,
+    "max_duration_sec": 360,
     "priority": "normal",
-    "expected_gpu_util": 0
+    "expected_gpu_util": 85
+  },
+  {
+    "id": "ray-tracing-benchmark",
+    "type": "rendering",
+    "name": "Ray Tracing Benchmark",
+    "description": "Path tracing with reflections and global illumination - modern graphics workload",
+    "script": "ray_tracing.py",
+    "args": ["--width", "800", "--height", "600", "--samples", "50", "--max-depth", "8", "--batch-size", "1024"],
+    "min_memory_mb": 3072,
+    "max_duration_sec": 420,
+    "priority": "normal",
+    "expected_gpu_util": 90
+  },
+  {
+    "id": "protein-folding-simulation",
+    "type": "scientific",
+    "name": "Protein Folding Simulation",
+    "description": "Molecular dynamics for protein structure prediction - scientific computing",
+    "script": "protein_folding.py",
+    "args": ["--residues", "100", "--steps", "10000", "--dt", "0.001", "--save-frequency", "500", "--temperature", "300.0"],
+    "min_memory_mb": 1536,
+    "max_duration_sec": 480,
+    "priority": "normal",
+    "expected_gpu_util": 75
+  },
+  {
+    "id": "llm-finetuning-simulation",
+    "type": "llm",
+    "name": "LLM Fine-tuning Simulation",
+    "description": "Transformer model fine-tuning with attention mechanisms - AI/ML workload",
+    "script": "llm_finetuning.py",
+    "args": ["--model-size", "small", "--batch-size", "4", "--seq-length", "512", "--training-steps", "1000", "--learning-rate", "1e-4"],
+    "min_memory_mb": 4096,
+    "max_duration_sec": 600,
+    "priority": "high",
+    "expected_gpu_util": 80
   }
 ]

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Monte Carlo Pi Estimation - Extended Compute Stress Test
-Uses massive parallel random number generation to estimate Pi value
-Mac-compatible with configurable duration and complexity
+Monte Carlo Pi Estimation - Task-Based Compute Benchmark
+Uses parallel random number generation to estimate Pi value to target accuracy
+Mac-compatible with configurable accuracy target and complexity
 """
 
 import torch
@@ -12,14 +12,15 @@ import math
 
 def main():
     parser = argparse.ArgumentParser(description='Monte Carlo Pi Estimation')
-    parser.add_argument('--samples', type=int, default=375_000_000, help='Number of random samples')
+    parser.add_argument('--samples-per-round', type=int, default=50_000_000, help='Number of random samples per round')
     parser.add_argument('--device', type=str, default='auto', help='Device to use')
-    parser.add_argument('--min-duration', type=int, default=30, help='Minimum runtime in seconds')
-    parser.add_argument('--complexity', type=int, default=1, help='Computational complexity multiplier')
+    parser.add_argument('--target-accuracy', type=float, default=99.95, help='Target accuracy percentage (e.g., 99.95 for 99.95%)')
+    parser.add_argument('--complexity', type=int, default=2, help='Computational complexity multiplier')
     args = parser.parse_args()
 
     print(f"🎲 Starting Monte Carlo Pi Estimation")
-    print(f"   Samples: {args.samples:,}, Min Duration: {args.min_duration}s")
+    print(f"   Samples per round: {args.samples_per_round:,}")
+    print(f"   Target accuracy: {args.target_accuracy}%")
     print(f"   Complexity: {args.complexity}x")
 
     # Device selection with optimization
@@ -39,24 +40,24 @@ def main():
         device = torch.device(args.device)
         print(f"📱 Using specified device: {device}")
 
-    # Adaptive batch processing for memory efficiency and longer runtime - reduced by 25%
+    # Adaptive batch processing for memory efficiency
     if device.type == 'cuda':
-        batch_size = min(args.samples, 15_000_000)  # Reduced batches for GPU
+        batch_size = min(args.samples_per_round, 15_000_000)  # GPU batch size
     elif device.type == 'mps':
-        batch_size = min(args.samples, 7_500_000)   # Reduced batches for MPS
+        batch_size = min(args.samples_per_round, 7_500_000)   # MPS batch size
     else:
-        batch_size = min(args.samples, 3_750_000)   # Reduced batches for CPU
+        batch_size = min(args.samples_per_round, 3_750_000)   # CPU batch size
 
     total_inside = 0
     total_processed = 0
     round_count = 0
 
     print(f"🔢 Processing in batches of {batch_size:,} samples")
-    print(f"🔄 Will run multiple rounds if needed to meet minimum duration")
+    print(f"🎯 Will run multiple rounds until {args.target_accuracy}% accuracy is achieved")
     start_time = time.time()
 
     try:
-        # Run until we meet both sample count and minimum duration
+        # Run until target accuracy is achieved
         while True:
             round_count += 1
             round_start = time.time()
@@ -65,8 +66,8 @@ def main():
 
             print(f"🔄 Starting round {round_count}...")
 
-            # Process one full set of samples
-            current_samples = args.samples
+            # Process one round of samples
+            current_samples = args.samples_per_round
             batch_count = 0
 
             while round_processed < current_samples:
@@ -117,16 +118,22 @@ def main():
             round_time = time.time() - round_start
             elapsed_total = time.time() - start_time
 
-            print(f"✅ Round {round_count} completed in {round_time:.1f}s")
-            print(f"   Round accuracy: {4.0 * round_inside / round_processed:.6f}")
+            # Calculate current accuracy
+            current_pi_estimate = 4.0 * total_inside / total_processed
+            error = abs(current_pi_estimate - math.pi)
+            accuracy_percent = (1 - error / math.pi) * 100
 
-            # Check if we should continue (meet minimum duration)
-            if elapsed_total >= args.min_duration:
-                print(f"⏱️ Minimum duration of {args.min_duration}s reached ({elapsed_total:.1f}s total)")
+            print(f"✅ Round {round_count} completed in {round_time:.1f}s")
+            print(f"   Round π estimate: {4.0 * round_inside / round_processed:.6f}")
+            print(f"   Overall accuracy: {accuracy_percent:.4f}%")
+
+            # Check if we've reached target accuracy
+            if accuracy_percent >= args.target_accuracy:
+                print(f"🎯 Target accuracy of {args.target_accuracy}% achieved! ({accuracy_percent:.4f}%)")
                 break
             else:
-                remaining_time = args.min_duration - elapsed_total
-                print(f"🔄 Continuing for {remaining_time:.1f}s more to meet minimum duration...")
+                accuracy_gap = args.target_accuracy - accuracy_percent
+                print(f"🔄 Continuing... Need {accuracy_gap:.4f}% more accuracy")
 
         # Synchronize GPU operations
         if device.type == 'cuda':
