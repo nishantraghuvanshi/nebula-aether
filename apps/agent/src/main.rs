@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
 use std::time::Duration;
 use std::sync::Arc;
-// use futures_util::StreamExt; // Unused import
+use futures_util::StreamExt;
 use tokio::sync::Mutex;
 use tokio::process::{Command, Child};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -417,7 +417,57 @@ async fn run_mock_mode() {
                     }
                 }
             });
-            
+
+            // Add NATS command listener for kill commands
+            let command_active_jobs = active_jobs.clone();
+            let command_nats_client = client.clone();
+            tokio::spawn(async move {
+                println!("🎧 Starting NATS command listener for kill commands...");
+
+                match command_nats_client.subscribe("aether.commands.all").await {
+                    Ok(mut subscription) => {
+                        while let Some(message) = subscription.next().await {
+                            if let Ok(command) = String::from_utf8(message.payload.to_vec()) {
+                                if command.starts_with("kill_job:") {
+                                    let job_id = command.strip_prefix("kill_job:").unwrap_or("");
+                                    println!("🔪 Received kill command for job: {}", job_id);
+
+                                    // Kill the job process
+                                    let mut jobs = command_active_jobs.lock().await;
+                                    if let Some(mut child) = jobs.remove(job_id) {
+                                        match child.kill().await {
+                                            Ok(_) => {
+                                                println!("✅ Successfully killed job: {}", job_id);
+
+                                                // Send job killed status
+                                                let status = JobStatus {
+                                                    job_id: job_id.to_string(),
+                                                    gpu_id: "mock".to_string(), // Will be updated with proper GPU ID
+                                                    status: "killed".to_string(),
+                                                    message: "Job was terminated by kill command".to_string(),
+                                                    start_time: None,
+                                                    end_time: Some(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
+                                                    exit_code: Some(-1),
+                                                };
+                                                publish_job_status(&command_nats_client, &status).await;
+                                            }
+                                            Err(e) => {
+                                                println!("❌ Failed to kill job {}: {}", job_id, e);
+                                            }
+                                        }
+                                    } else {
+                                        println!("⚠️ Job {} not found in active jobs", job_id);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    Err(e) => {
+                        println!("❌ Failed to subscribe to command channel: {}", e);
+                    }
+                }
+            });
+
             // Don't simulate fake GPUs in mock mode - only provide HTTP polling for job execution
             println!("Mock mode: Skipping GPU telemetry simulation to avoid fake GPUs in dashboard");
             
@@ -534,6 +584,65 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
                     Err(e) => {
                         println!("⚠️ HTTP polling request failed: {}", e);
                     }
+                }
+            }
+        });
+
+        // Add NATS command listener for kill commands
+        let command_active_jobs = active_jobs.clone();
+        let command_nats_client = client.clone();
+
+        // Get hostname for GPU ID in kill status
+        let hostname_for_kill = std::env::var("HOSTNAME").unwrap_or_else(|_| {
+            std::process::Command::new("hostname")
+                .output()
+                .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_string())
+                .unwrap_or_else(|_| "unknown".to_string())
+        });
+
+        tokio::spawn(async move {
+            println!("🎧 Starting NATS command listener for kill commands...");
+
+            match command_nats_client.subscribe("aether.commands.all").await {
+                Ok(mut subscription) => {
+                    while let Some(message) = subscription.next().await {
+                        if let Ok(command) = String::from_utf8(message.payload.to_vec()) {
+                            if command.starts_with("kill_job:") {
+                                let job_id = command.strip_prefix("kill_job:").unwrap_or("");
+                                println!("🔪 Received kill command for job: {}", job_id);
+
+                                // Kill the job process
+                                let mut jobs = command_active_jobs.lock().await;
+                                if let Some(mut child) = jobs.remove(job_id) {
+                                    match child.kill().await {
+                                        Ok(_) => {
+                                            println!("✅ Successfully killed job: {}", job_id);
+
+                                            // Send job killed status
+                                            let status = JobStatus {
+                                                job_id: job_id.to_string(),
+                                                gpu_id: format!("{}:gpu-0", hostname_for_kill),
+                                                status: "killed".to_string(),
+                                                message: "Job was terminated by kill command".to_string(),
+                                                start_time: None,
+                                                end_time: Some(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
+                                                exit_code: Some(-1),
+                                            };
+                                            publish_job_status(&command_nats_client, &status).await;
+                                        }
+                                        Err(e) => {
+                                            println!("❌ Failed to kill job {}: {}", job_id, e);
+                                        }
+                                    }
+                                } else {
+                                    println!("⚠️ Job {} not found in active jobs", job_id);
+                                }
+                            }
+                        }
+                    }
+                }
+                Err(e) => {
+                    println!("❌ Failed to subscribe to command channel: {}", e);
                 }
             }
         });

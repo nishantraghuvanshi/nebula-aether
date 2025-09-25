@@ -54,16 +54,15 @@ def random_unit_vector(shape, device):
     Generate random unit vectors for diffuse reflection
     """
     # Generate random points in unit sphere using rejection sampling
-    while True:
-        random_vec = 2.0 * torch.rand(shape + [3], device=device) - 1.0
-        length_squared = torch.sum(random_vec * random_vec, dim=-1, keepdim=True)
-        mask = length_squared < 1.0
+    # Convert tuple shape to list for concatenation
+    if isinstance(shape, tuple):
+        shape = list(shape)
 
-        if torch.all(mask):
-            return random_vec / torch.sqrt(length_squared)
+    random_vec = 2.0 * torch.rand(shape + [3], device=device) - 1.0
+    length_squared = torch.sum(random_vec * random_vec, dim=-1, keepdim=True)
 
-        # If some vectors are outside unit sphere, try again (simplified)
-        return random_vec / torch.sqrt(torch.clamp(length_squared, min=0.001))
+    # Simple normalization (avoiding while loop for efficiency)
+    return random_vec / torch.sqrt(torch.clamp(length_squared, min=0.001))
 
 def trace_ray(ray_origin, ray_direction, spheres, depth, max_depth, device):
     """

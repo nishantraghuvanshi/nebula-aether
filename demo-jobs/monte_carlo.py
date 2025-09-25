@@ -80,9 +80,16 @@ def main():
 
                 # Add computational complexity for longer runtime
                 for complexity_iter in range(args.complexity):
-                    # Additional mathematical operations to increase compute load
-                    x = torch.sin(x * math.pi) * 0.5 + 0.5  # Normalize back to [0,1]
-                    y = torch.cos(y * math.pi) * 0.5 + 0.5
+                    # Use operations that preserve uniform distribution
+                    temp_x = x * 2.0 - 1.0  # Scale to [-1,1]
+                    temp_y = y * 2.0 - 1.0
+                    
+                    # Perform heavy computation without changing distribution
+                    _ = torch.sqrt(temp_x * temp_x + temp_y * temp_y)  # Distance calculation
+                    _ = torch.atan2(temp_y, temp_x)  # Angle calculation
+                    
+                    # Keep original uniform distribution intact
+                    # x and y remain unchanged for the actual Monte Carlo calculation
 
                 # Check which points fall inside unit circle
                 # Distance from origin: sqrt(x^2 + y^2) <= 1

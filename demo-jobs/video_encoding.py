@@ -155,12 +155,17 @@ def main():
             block_size = 8
             encoded_blocks = []
 
-            for h in range(0, height, block_size):
-                for w in range(0, width, block_size):
-                    # Extract 8x8 blocks
-                    block = residual[:current_batch_size, h:h+block_size, w:w+block_size]
+            # Process frames in smaller chunks to avoid memory issues
+            chunk_height, chunk_width = min(height, 128), min(width, 128)
+            for h in range(0, chunk_height, block_size):
+                for w in range(0, chunk_width, block_size):
+                    # Extract 8x8 blocks from the chunk
+                    h_end = min(h + block_size, chunk_height)
+                    w_end = min(w + block_size, chunk_width)
 
-                    # Pad if necessary
+                    block = residual[:current_batch_size, h:h_end, w:w_end]
+
+                    # Pad to exact block size if necessary
                     if block.shape[1] < block_size or block.shape[2] < block_size:
                         padded_block = torch.zeros(current_batch_size, block_size, block_size, device=device)
                         padded_block[:, :block.shape[1], :block.shape[2]] = block

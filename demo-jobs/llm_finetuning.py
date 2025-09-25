@@ -152,8 +152,8 @@ def generate_synthetic_data(batch_size, seq_len, vocab_size, device):
     # Create random token sequences
     input_ids = torch.randint(0, vocab_size, (batch_size, seq_len), device=device)
 
-    # Create attention mask (all ones for simplicity)
-    attention_mask = torch.ones(batch_size, seq_len, device=device)
+    # Create attention mask (all ones for simplicity) - fixed shape
+    attention_mask = torch.ones(batch_size, 1, seq_len, seq_len, device=device)
 
     # For language modeling, labels are input_ids shifted by one position
     labels = torch.roll(input_ids, -1, dims=1)
