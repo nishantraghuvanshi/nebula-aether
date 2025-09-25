@@ -31,3 +31,16 @@ echo "🔍 Verify with: docker compose ps"
 echo "🔍 Check ports: lsof -i :3000,:8080,:4222"
 echo ""
 echo "🚀 To restart: ./startup.sh"
+
+# Force kill by port (backup cleanup) - ENHANCED VERSION
+echo "🔧 Cleaning up ports..."
+lsof -ti:8080 2>/dev/null | xargs kill -9 2>/dev/null || true  # Orchestrator
+lsof -ti:3000 2>/dev/null | xargs kill -9 2>/dev/null || true  # Dashboard
+lsof -ti:4040 2>/dev/null | xargs kill -9 2>/dev/null || true  # Ngrok web UI
+lsof -ti:4222 2>/dev/null | xargs kill -9 2>/dev/null || true  # NATS - ADD THIS
+lsof -ti:5432 2>/dev/null | xargs kill -9 2>/dev/null || true  # TimescaleDB - ADD THIS
+
+# Stop Docker services - CHANGE THIS LINE
+echo "🐳 Stopping Docker services..."
+docker compose down --remove-orphans  # Changed from 'stop' to 'down'
+

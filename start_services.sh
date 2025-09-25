@@ -34,3 +34,4 @@ echo "🔌 Orchestrator API: http://localhost:8080"
 echo "📄 PIDs saved to .orchestrator.pid and .dashboard.pid"
 echo ""
 echo "💡 To stop services: pkill -f 'go run' && pkill -f 'npm run dev'"
+
