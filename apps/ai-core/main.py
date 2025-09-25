@@ -17,7 +17,7 @@ app = FastAPI(title="Aether AI Core", description="Intelligent GPU job schedulin
 
 # Load the trained model
 try:
-    model = joblib.load('scheduler_model.pkl')
+model = joblib.load('scheduler_model.pkl')
     logger.info("Successfully loaded scheduler model")
 except Exception as e:
     logger.error(f"Failed to load model: {e}")

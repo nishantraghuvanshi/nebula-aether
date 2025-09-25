@@ -1,0 +1,2476 @@
+2025/09/24 22:49:37 Connected to NATS.
+2025/09/24 22:49:37 Connected to TimescaleDB.
+2025/09/24 22:49:37 Orchestrator started. Now processing jobs.
+2025/09/24 22:49:37 API server listening on :8080
+2025/09/24 22:49:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:49:42 Would send sleep command to GPU agent
+2025/09/24 22:49:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:49:47 Would send sleep command to GPU agent
+2025/09/24 22:49:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:49:52 Would send sleep command to GPU agent
+2025/09/24 22:49:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:49:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:49:57 Would send sleep command to GPU agent
+2025/09/24 22:49:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:02 Would send sleep command to GPU agent
+2025/09/24 22:50:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:07 Would send sleep command to GPU agent
+2025/09/24 22:50:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:12 Would send sleep command to GPU agent
+2025/09/24 22:50:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:17 Would send sleep command to GPU agent
+2025/09/24 22:50:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:22 Would send sleep command to GPU agent
+2025/09/24 22:50:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:27 Would send sleep command to GPU agent
+2025/09/24 22:50:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:32 Would send sleep command to GPU agent
+2025/09/24 22:50:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:37 Would send sleep command to GPU agent
+2025/09/24 22:50:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:42 Would send sleep command to GPU agent
+2025/09/24 22:50:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:47 Would send sleep command to GPU agent
+2025/09/24 22:50:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:52 Would send sleep command to GPU agent
+2025/09/24 22:50:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:50:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:50:57 Would send sleep command to GPU agent
+2025/09/24 22:50:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:02 Would send sleep command to GPU agent
+2025/09/24 22:51:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:07 Would send sleep command to GPU agent
+2025/09/24 22:51:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:12 Would send sleep command to GPU agent
+2025/09/24 22:51:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:17 Would send sleep command to GPU agent
+2025/09/24 22:51:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:22 Would send sleep command to GPU agent
+2025/09/24 22:51:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:27 Would send sleep command to GPU agent
+2025/09/24 22:51:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:32 Would send sleep command to GPU agent
+2025/09/24 22:51:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:37 Would send sleep command to GPU agent
+2025/09/24 22:51:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:42 Would send sleep command to GPU agent
+2025/09/24 22:51:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:47 Would send sleep command to GPU agent
+2025/09/24 22:51:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:52 Would send sleep command to GPU agent
+2025/09/24 22:51:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:51:57 Would send sleep command to GPU agent
+2025/09/24 22:51:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:51:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:02 Would send sleep command to GPU agent
+2025/09/24 22:52:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:07 Would send sleep command to GPU agent
+2025/09/24 22:52:08 Added job to queue: ID=setup-test-job, Type=training
+2025/09/24 22:52:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:12 Attempting to schedule job setup-test-job (type: training, VRAM: 0 MB, priority: 0)
+2025/09/24 22:52:12 No VRAM requirement specified for job setup-test-job, using default: 4096 MB
+2025/09/24 22:52:12 Filtering GPUs for job setup-test-job: VRAM needed=4096 MB, GPU count=1
+2025/09/24 22:52:12 GPU gpu-0 rejected: insufficient VRAM (available: 3714 MB, needed: 4096 MB)
+2025/09/24 22:52:12 Error consulting AI core: pre-filtering failed: insufficient viable GPUs: need 1, found 0. Re-queuing job.
+2025/09/24 22:52:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:17 Would send sleep command to GPU agent
+2025/09/24 22:52:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:22 Would send sleep command to GPU agent
+2025/09/24 22:52:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:27 Would send sleep command to GPU agent
+2025/09/24 22:52:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:32 Would send sleep command to GPU agent
+2025/09/24 22:52:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:37 Would send sleep command to GPU agent
+2025/09/24 22:52:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:42 Would send sleep command to GPU agent
+2025/09/24 22:52:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:47 Would send sleep command to GPU agent
+2025/09/24 22:52:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:52 Would send sleep command to GPU agent
+2025/09/24 22:52:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:52:57 Would send sleep command to GPU agent
+2025/09/24 22:52:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:52:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:02 Would send sleep command to GPU agent
+2025/09/24 22:53:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:07 Would send sleep command to GPU agent
+2025/09/24 22:53:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:11 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:12 Would send sleep command to GPU agent
+2025/09/24 22:53:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:13 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:15 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:17 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:17 Would send sleep command to GPU agent
+2025/09/24 22:53:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:19 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:21 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:22 Would send sleep command to GPU agent
+2025/09/24 22:53:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:23 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:25 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:27 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:27 Would send sleep command to GPU agent
+2025/09/24 22:53:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:29 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:31 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:32 Would send sleep command to GPU agent
+2025/09/24 22:53:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:33 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:35 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:37 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:37 Would send sleep command to GPU agent
+2025/09/24 22:53:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:39 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:41 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:42 Would send sleep command to GPU agent
+2025/09/24 22:53:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:43 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:45 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:47 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:47 Would send sleep command to GPU agent
+2025/09/24 22:53:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:49 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:51 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:52 Would send sleep command to GPU agent
+2025/09/24 22:53:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:53 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:55 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:57 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:53:57 Would send sleep command to GPU agent
+2025/09/24 22:53:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:53:59 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:01 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:02 Would send sleep command to GPU agent
+2025/09/24 22:54:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:03 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:05 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:07 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:07 Would send sleep command to GPU agent
+2025/09/24 22:54:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:09 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:11 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:12 Would send sleep command to GPU agent
+2025/09/24 22:54:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:13 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:15 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:17 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:17 Would send sleep command to GPU agent
+2025/09/24 22:54:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:19 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:21 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:22 Would send sleep command to GPU agent
+2025/09/24 22:54:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:23 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:24 Dashboard connected.
+2025/09/24 22:54:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:25 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:27 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:27 Would send sleep command to GPU agent
+2025/09/24 22:54:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:29 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:31 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:32 Would send sleep command to GPU agent
+2025/09/24 22:54:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:33 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:35 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:37 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:37 Would send sleep command to GPU agent
+2025/09/24 22:54:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:39 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:41 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:42 Would send sleep command to GPU agent
+2025/09/24 22:54:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:43 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:45 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:47 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:47 Would send sleep command to GPU agent
+2025/09/24 22:54:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:49 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:51 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:52 Would send sleep command to GPU agent
+2025/09/24 22:54:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:53 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:55 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:57 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:54:57 Would send sleep command to GPU agent
+2025/09/24 22:54:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:59 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:54:59 Added job to queue: ID=random-sys, Type=training
+2025/09/24 22:55:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:01 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:01 Added job to queue: ID=asaf, Type=training
+2025/09/24 22:55:02 Attempting to schedule job random-sys (type: training, VRAM: 0 MB, priority: 0)
+2025/09/24 22:55:02 No VRAM requirement specified for job random-sys, using default: 4096 MB
+2025/09/24 22:55:02 Filtering GPUs for job random-sys: VRAM needed=4096 MB, GPU count=1
+2025/09/24 22:55:02 GPU gpu-0 rejected: insufficient VRAM (available: 3714 MB, needed: 4096 MB)
+2025/09/24 22:55:02 Error consulting AI core: pre-filtering failed: insufficient viable GPUs: need 1, found 0. Re-queuing job.
+2025/09/24 22:55:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:03 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:03 Added job to queue: ID=afaf, Type=training
+2025/09/24 22:55:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:04 Added job to queue: ID=asas, Type=training
+2025/09/24 22:55:05 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:06 Added job to queue: ID=asfassf, Type=training
+2025/09/24 22:55:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:07 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:07 Attempting to schedule job asaf (type: training, VRAM: 0 MB, priority: 0)
+2025/09/24 22:55:07 No VRAM requirement specified for job asaf, using default: 4096 MB
+2025/09/24 22:55:07 Filtering GPUs for job asaf: VRAM needed=4096 MB, GPU count=1
+2025/09/24 22:55:07 GPU gpu-0 rejected: insufficient VRAM (available: 3714 MB, needed: 4096 MB)
+2025/09/24 22:55:07 Error consulting AI core: pre-filtering failed: insufficient viable GPUs: need 1, found 0. Re-queuing job.
+2025/09/24 22:55:07 Added job to queue: ID=asfa, Type=training
+2025/09/24 22:55:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:09 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:11 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:12 Attempting to schedule job afaf (type: training, VRAM: 0 MB, priority: 0)
+2025/09/24 22:55:12 No VRAM requirement specified for job afaf, using default: 4096 MB
+2025/09/24 22:55:12 Filtering GPUs for job afaf: VRAM needed=4096 MB, GPU count=1
+2025/09/24 22:55:12 GPU gpu-0 rejected: insufficient VRAM (available: 3714 MB, needed: 4096 MB)
+2025/09/24 22:55:12 Error consulting AI core: pre-filtering failed: insufficient viable GPUs: need 1, found 0. Re-queuing job.
+2025/09/24 22:55:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:13 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:15 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:17 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:17 Attempting to schedule job asas (type: training, VRAM: 0 MB, priority: 0)
+2025/09/24 22:55:17 No VRAM requirement specified for job asas, using default: 4096 MB
+2025/09/24 22:55:17 Filtering GPUs for job asas: VRAM needed=4096 MB, GPU count=1
+2025/09/24 22:55:17 GPU gpu-0 rejected: insufficient VRAM (available: 3714 MB, needed: 4096 MB)
+2025/09/24 22:55:17 Error consulting AI core: pre-filtering failed: insufficient viable GPUs: need 1, found 0. Re-queuing job.
+2025/09/24 22:55:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:19 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:21 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:22 Attempting to schedule job asfassf (type: training, VRAM: 0 MB, priority: 0)
+2025/09/24 22:55:22 No VRAM requirement specified for job asfassf, using default: 4096 MB
+2025/09/24 22:55:22 Filtering GPUs for job asfassf: VRAM needed=4096 MB, GPU count=1
+2025/09/24 22:55:22 GPU gpu-0 rejected: insufficient VRAM (available: 3714 MB, needed: 4096 MB)
+2025/09/24 22:55:22 Error consulting AI core: pre-filtering failed: insufficient viable GPUs: need 1, found 0. Re-queuing job.
+2025/09/24 22:55:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:23 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:25 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:27 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:27 Attempting to schedule job asfa (type: training, VRAM: 0 MB, priority: 0)
+2025/09/24 22:55:27 No VRAM requirement specified for job asfa, using default: 4096 MB
+2025/09/24 22:55:27 Filtering GPUs for job asfa: VRAM needed=4096 MB, GPU count=1
+2025/09/24 22:55:27 GPU gpu-0 rejected: insufficient VRAM (available: 3714 MB, needed: 4096 MB)
+2025/09/24 22:55:27 Error consulting AI core: pre-filtering failed: insufficient viable GPUs: need 1, found 0. Re-queuing job.
+2025/09/24 22:55:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:29 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:31 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:55:32 Would send sleep command to GPU agent
+2025/09/24 22:55:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:33 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:35 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:37 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:55:37 Would send sleep command to GPU agent
+2025/09/24 22:55:38 Dashboard disconnected.
+2025/09/24 22:55:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:39 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:41 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:55:42 Would send sleep command to GPU agent
+2025/09/24 22:55:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:43 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:45 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:47 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:55:47 Would send sleep command to GPU agent
+2025/09/24 22:55:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:49 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:51 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:55:52 Would send sleep command to GPU agent
+2025/09/24 22:55:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:53 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:55 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:57 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:55:57 Would send sleep command to GPU agent
+2025/09/24 22:55:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:55:59 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:01 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:02 Would send sleep command to GPU agent
+2025/09/24 22:56:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:03 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:05 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:07 Would send sleep command to GPU agent
+2025/09/24 22:56:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:12 Would send sleep command to GPU agent
+2025/09/24 22:56:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:17 Would send sleep command to GPU agent
+2025/09/24 22:56:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:22 Would send sleep command to GPU agent
+2025/09/24 22:56:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:27 Would send sleep command to GPU agent
+2025/09/24 22:56:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:32 Would send sleep command to GPU agent
+2025/09/24 22:56:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:37 Would send sleep command to GPU agent
+2025/09/24 22:56:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:42 Would send sleep command to GPU agent
+2025/09/24 22:56:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:47 Would send sleep command to GPU agent
+2025/09/24 22:56:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:52 Would send sleep command to GPU agent
+2025/09/24 22:56:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:56:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:56:57 Would send sleep command to GPU agent
+2025/09/24 22:56:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:02 Would send sleep command to GPU agent
+2025/09/24 22:57:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:07 Would send sleep command to GPU agent
+2025/09/24 22:57:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:12 Would send sleep command to GPU agent
+2025/09/24 22:57:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:17 Would send sleep command to GPU agent
+2025/09/24 22:57:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:22 Would send sleep command to GPU agent
+2025/09/24 22:57:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:27 Would send sleep command to GPU agent
+2025/09/24 22:57:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:32 Would send sleep command to GPU agent
+2025/09/24 22:57:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:37 Would send sleep command to GPU agent
+2025/09/24 22:57:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:42 Would send sleep command to GPU agent
+2025/09/24 22:57:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:47 Would send sleep command to GPU agent
+2025/09/24 22:57:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:52 Would send sleep command to GPU agent
+2025/09/24 22:57:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:57:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:57:57 Would send sleep command to GPU agent
+2025/09/24 22:57:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:02 Would send sleep command to GPU agent
+2025/09/24 22:58:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:07 Would send sleep command to GPU agent
+2025/09/24 22:58:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:12 Would send sleep command to GPU agent
+2025/09/24 22:58:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:17 Would send sleep command to GPU agent
+2025/09/24 22:58:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:22 Would send sleep command to GPU agent
+2025/09/24 22:58:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:27 Would send sleep command to GPU agent
+2025/09/24 22:58:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:32 Would send sleep command to GPU agent
+2025/09/24 22:58:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:37 Would send sleep command to GPU agent
+2025/09/24 22:58:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:42 Would send sleep command to GPU agent
+2025/09/24 22:58:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:47 Would send sleep command to GPU agent
+2025/09/24 22:58:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:52 Would send sleep command to GPU agent
+2025/09/24 22:58:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:58:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:58:57 Would send sleep command to GPU agent
+2025/09/24 22:58:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:02 Would send sleep command to GPU agent
+2025/09/24 22:59:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:07 Would send sleep command to GPU agent
+2025/09/24 22:59:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:12 Would send sleep command to GPU agent
+2025/09/24 22:59:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:17 Would send sleep command to GPU agent
+2025/09/24 22:59:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:22 Would send sleep command to GPU agent
+2025/09/24 22:59:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:27 Would send sleep command to GPU agent
+2025/09/24 22:59:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:32 Would send sleep command to GPU agent
+2025/09/24 22:59:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:37 Would send sleep command to GPU agent
+2025/09/24 22:59:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:42 Would send sleep command to GPU agent
+2025/09/24 22:59:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:47 Would send sleep command to GPU agent
+2025/09/24 22:59:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:52 Would send sleep command to GPU agent
+2025/09/24 22:59:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 22:59:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 22:59:57 Would send sleep command to GPU agent
+2025/09/24 22:59:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:02 Would send sleep command to GPU agent
+2025/09/24 23:00:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:07 Would send sleep command to GPU agent
+2025/09/24 23:00:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:12 Would send sleep command to GPU agent
+2025/09/24 23:00:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:17 Would send sleep command to GPU agent
+2025/09/24 23:00:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:22 Would send sleep command to GPU agent
+2025/09/24 23:00:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:27 Would send sleep command to GPU agent
+2025/09/24 23:00:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:32 Would send sleep command to GPU agent
+2025/09/24 23:00:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:37 Would send sleep command to GPU agent
+2025/09/24 23:00:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:42 Would send sleep command to GPU agent
+2025/09/24 23:00:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:47 Would send sleep command to GPU agent
+2025/09/24 23:00:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:52 Would send sleep command to GPU agent
+2025/09/24 23:00:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:00:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:00:57 Would send sleep command to GPU agent
+2025/09/24 23:00:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:02 Would send sleep command to GPU agent
+2025/09/24 23:01:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:07 Would send sleep command to GPU agent
+2025/09/24 23:01:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:12 Would send sleep command to GPU agent
+2025/09/24 23:01:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:17 Would send sleep command to GPU agent
+2025/09/24 23:01:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:22 Would send sleep command to GPU agent
+2025/09/24 23:01:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:27 Would send sleep command to GPU agent
+2025/09/24 23:01:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:32 Would send sleep command to GPU agent
+2025/09/24 23:01:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:37 Would send sleep command to GPU agent
+2025/09/24 23:01:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:42 Would send sleep command to GPU agent
+2025/09/24 23:01:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:47 Would send sleep command to GPU agent
+2025/09/24 23:01:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:52 Would send sleep command to GPU agent
+2025/09/24 23:01:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:01:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:01:57 Would send sleep command to GPU agent
+2025/09/24 23:01:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:02 Would send sleep command to GPU agent
+2025/09/24 23:02:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:07 Would send sleep command to GPU agent
+2025/09/24 23:02:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:12 Would send sleep command to GPU agent
+2025/09/24 23:02:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:17 Would send sleep command to GPU agent
+2025/09/24 23:02:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:22 Would send sleep command to GPU agent
+2025/09/24 23:02:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:27 Would send sleep command to GPU agent
+2025/09/24 23:02:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:32 Would send sleep command to GPU agent
+2025/09/24 23:02:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:37 Would send sleep command to GPU agent
+2025/09/24 23:02:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:42 Would send sleep command to GPU agent
+2025/09/24 23:02:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:47 Would send sleep command to GPU agent
+2025/09/24 23:02:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:52 Would send sleep command to GPU agent
+2025/09/24 23:02:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:02:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:02:57 Would send sleep command to GPU agent
+2025/09/24 23:02:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:02 Would send sleep command to GPU agent
+2025/09/24 23:03:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:07 Would send sleep command to GPU agent
+2025/09/24 23:03:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:12 Would send sleep command to GPU agent
+2025/09/24 23:03:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:17 Would send sleep command to GPU agent
+2025/09/24 23:03:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:22 Would send sleep command to GPU agent
+2025/09/24 23:03:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:27 Would send sleep command to GPU agent
+2025/09/24 23:03:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:32 Would send sleep command to GPU agent
+2025/09/24 23:03:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:37 Would send sleep command to GPU agent
+2025/09/24 23:03:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:42 Would send sleep command to GPU agent
+2025/09/24 23:03:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:47 Would send sleep command to GPU agent
+2025/09/24 23:03:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:52 Would send sleep command to GPU agent
+2025/09/24 23:03:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:03:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:03:57 Would send sleep command to GPU agent
+2025/09/24 23:03:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:02 Would send sleep command to GPU agent
+2025/09/24 23:04:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:07 Would send sleep command to GPU agent
+2025/09/24 23:04:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:12 Would send sleep command to GPU agent
+2025/09/24 23:04:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:17 Would send sleep command to GPU agent
+2025/09/24 23:04:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:22 Would send sleep command to GPU agent
+2025/09/24 23:04:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:27 Would send sleep command to GPU agent
+2025/09/24 23:04:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:32 Would send sleep command to GPU agent
+2025/09/24 23:04:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:37 Would send sleep command to GPU agent
+2025/09/24 23:04:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:42 Would send sleep command to GPU agent
+2025/09/24 23:04:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:47 Would send sleep command to GPU agent
+2025/09/24 23:04:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:52 Would send sleep command to GPU agent
+2025/09/24 23:04:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:04:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:04:57 Would send sleep command to GPU agent
+2025/09/24 23:04:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:02 Would send sleep command to GPU agent
+2025/09/24 23:05:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:07 Would send sleep command to GPU agent
+2025/09/24 23:05:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:12 Would send sleep command to GPU agent
+2025/09/24 23:05:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:17 Would send sleep command to GPU agent
+2025/09/24 23:05:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:22 Would send sleep command to GPU agent
+2025/09/24 23:05:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:27 Would send sleep command to GPU agent
+2025/09/24 23:05:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:32 Would send sleep command to GPU agent
+2025/09/24 23:05:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:37 Would send sleep command to GPU agent
+2025/09/24 23:05:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:42 Would send sleep command to GPU agent
+2025/09/24 23:05:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:47 Would send sleep command to GPU agent
+2025/09/24 23:05:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:52 Would send sleep command to GPU agent
+2025/09/24 23:05:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:05:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:05:57 Would send sleep command to GPU agent
+2025/09/24 23:05:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:02 Would send sleep command to GPU agent
+2025/09/24 23:06:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:07 Would send sleep command to GPU agent
+2025/09/24 23:06:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:12 Would send sleep command to GPU agent
+2025/09/24 23:06:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:17 Would send sleep command to GPU agent
+2025/09/24 23:06:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:22 Would send sleep command to GPU agent
+2025/09/24 23:06:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:27 Would send sleep command to GPU agent
+2025/09/24 23:06:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:32 Would send sleep command to GPU agent
+2025/09/24 23:06:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:37 Would send sleep command to GPU agent
+2025/09/24 23:06:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:42 Would send sleep command to GPU agent
+2025/09/24 23:06:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:47 Would send sleep command to GPU agent
+2025/09/24 23:06:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:52 Would send sleep command to GPU agent
+2025/09/24 23:06:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:06:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:06:57 Would send sleep command to GPU agent
+2025/09/24 23:06:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:02 Would send sleep command to GPU agent
+2025/09/24 23:07:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:07 Would send sleep command to GPU agent
+2025/09/24 23:07:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:12 Would send sleep command to GPU agent
+2025/09/24 23:07:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:17 Would send sleep command to GPU agent
+2025/09/24 23:07:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:22 Would send sleep command to GPU agent
+2025/09/24 23:07:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:27 Would send sleep command to GPU agent
+2025/09/24 23:07:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:32 Would send sleep command to GPU agent
+2025/09/24 23:07:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:37 Would send sleep command to GPU agent
+2025/09/24 23:07:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:42 Would send sleep command to GPU agent
+2025/09/24 23:07:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:47 Would send sleep command to GPU agent
+2025/09/24 23:07:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:52 Would send sleep command to GPU agent
+2025/09/24 23:07:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:07:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:07:57 Would send sleep command to GPU agent
+2025/09/24 23:07:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:02 Would send sleep command to GPU agent
+2025/09/24 23:08:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:07 Would send sleep command to GPU agent
+2025/09/24 23:08:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:12 Would send sleep command to GPU agent
+2025/09/24 23:08:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:17 Would send sleep command to GPU agent
+2025/09/24 23:08:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:22 Would send sleep command to GPU agent
+2025/09/24 23:08:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:27 Would send sleep command to GPU agent
+2025/09/24 23:08:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:32 Would send sleep command to GPU agent
+2025/09/24 23:08:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:37 Would send sleep command to GPU agent
+2025/09/24 23:08:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:42 Would send sleep command to GPU agent
+2025/09/24 23:08:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:47 Would send sleep command to GPU agent
+2025/09/24 23:08:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:52 Would send sleep command to GPU agent
+2025/09/24 23:08:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:08:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:08:57 Would send sleep command to GPU agent
+2025/09/24 23:08:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:02 Would send sleep command to GPU agent
+2025/09/24 23:09:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:07 Would send sleep command to GPU agent
+2025/09/24 23:09:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:12 Would send sleep command to GPU agent
+2025/09/24 23:09:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:17 Would send sleep command to GPU agent
+2025/09/24 23:09:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:22 Would send sleep command to GPU agent
+2025/09/24 23:09:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:27 Would send sleep command to GPU agent
+2025/09/24 23:09:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:32 Would send sleep command to GPU agent
+2025/09/24 23:09:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:37 Would send sleep command to GPU agent
+2025/09/24 23:09:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:42 Would send sleep command to GPU agent
+2025/09/24 23:09:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:47 Would send sleep command to GPU agent
+2025/09/24 23:09:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:52 Would send sleep command to GPU agent
+2025/09/24 23:09:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:09:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:09:57 Would send sleep command to GPU agent
+2025/09/24 23:09:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:02 Would send sleep command to GPU agent
+2025/09/24 23:10:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:07 Would send sleep command to GPU agent
+2025/09/24 23:10:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:12 Would send sleep command to GPU agent
+2025/09/24 23:10:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:17 Would send sleep command to GPU agent
+2025/09/24 23:10:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:22 Would send sleep command to GPU agent
+2025/09/24 23:10:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:27 Would send sleep command to GPU agent
+2025/09/24 23:10:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:32 Would send sleep command to GPU agent
+2025/09/24 23:10:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:37 Would send sleep command to GPU agent
+2025/09/24 23:10:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:42 Would send sleep command to GPU agent
+2025/09/24 23:10:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:47 Would send sleep command to GPU agent
+2025/09/24 23:10:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:52 Would send sleep command to GPU agent
+2025/09/24 23:10:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:10:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:10:57 Would send sleep command to GPU agent
+2025/09/24 23:10:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:02 Would send sleep command to GPU agent
+2025/09/24 23:11:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:07 Would send sleep command to GPU agent
+2025/09/24 23:11:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:12 Would send sleep command to GPU agent
+2025/09/24 23:11:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:17 Would send sleep command to GPU agent
+2025/09/24 23:11:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:22 Would send sleep command to GPU agent
+2025/09/24 23:11:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:27 Would send sleep command to GPU agent
+2025/09/24 23:11:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:32 Would send sleep command to GPU agent
+2025/09/24 23:11:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:37 Would send sleep command to GPU agent
+2025/09/24 23:11:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:42 Would send sleep command to GPU agent
+2025/09/24 23:11:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:47 Would send sleep command to GPU agent
+2025/09/24 23:11:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:52 Would send sleep command to GPU agent
+2025/09/24 23:11:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:11:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:11:57 Would send sleep command to GPU agent
+2025/09/24 23:11:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:02 Would send sleep command to GPU agent
+2025/09/24 23:12:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:07 Would send sleep command to GPU agent
+2025/09/24 23:12:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:12 Would send sleep command to GPU agent
+2025/09/24 23:12:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:17 Would send sleep command to GPU agent
+2025/09/24 23:12:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:22 Would send sleep command to GPU agent
+2025/09/24 23:12:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:27 Would send sleep command to GPU agent
+2025/09/24 23:12:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:32 Would send sleep command to GPU agent
+2025/09/24 23:12:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:37 Would send sleep command to GPU agent
+2025/09/24 23:12:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:42 Would send sleep command to GPU agent
+2025/09/24 23:12:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:47 Would send sleep command to GPU agent
+2025/09/24 23:12:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:52 Would send sleep command to GPU agent
+2025/09/24 23:12:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:12:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:12:57 Would send sleep command to GPU agent
+2025/09/24 23:12:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:02 Would send sleep command to GPU agent
+2025/09/24 23:13:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:07 Would send sleep command to GPU agent
+2025/09/24 23:13:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:12 Would send sleep command to GPU agent
+2025/09/24 23:13:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:17 Would send sleep command to GPU agent
+2025/09/24 23:13:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:22 Would send sleep command to GPU agent
+2025/09/24 23:13:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:27 Would send sleep command to GPU agent
+2025/09/24 23:13:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:32 Would send sleep command to GPU agent
+2025/09/24 23:13:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:37 Would send sleep command to GPU agent
+2025/09/24 23:13:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:42 Would send sleep command to GPU agent
+2025/09/24 23:13:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:47 Would send sleep command to GPU agent
+2025/09/24 23:13:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:52 Would send sleep command to GPU agent
+2025/09/24 23:13:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:13:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:13:57 Would send sleep command to GPU agent
+2025/09/24 23:13:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:02 Would send sleep command to GPU agent
+2025/09/24 23:14:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:07 Would send sleep command to GPU agent
+2025/09/24 23:14:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:12 Would send sleep command to GPU agent
+2025/09/24 23:14:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:17 Would send sleep command to GPU agent
+2025/09/24 23:14:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:22 Would send sleep command to GPU agent
+2025/09/24 23:14:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:27 Would send sleep command to GPU agent
+2025/09/24 23:14:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:32 Would send sleep command to GPU agent
+2025/09/24 23:14:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:37 Would send sleep command to GPU agent
+2025/09/24 23:14:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:42 Would send sleep command to GPU agent
+2025/09/24 23:14:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:47 Would send sleep command to GPU agent
+2025/09/24 23:14:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:52 Would send sleep command to GPU agent
+2025/09/24 23:14:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:14:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:14:57 Would send sleep command to GPU agent
+2025/09/24 23:14:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:02 Would send sleep command to GPU agent
+2025/09/24 23:15:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:07 Would send sleep command to GPU agent
+2025/09/24 23:15:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:12 Would send sleep command to GPU agent
+2025/09/24 23:15:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:17 Would send sleep command to GPU agent
+2025/09/24 23:15:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:22 Would send sleep command to GPU agent
+2025/09/24 23:15:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:27 Would send sleep command to GPU agent
+2025/09/24 23:15:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:32 Would send sleep command to GPU agent
+2025/09/24 23:15:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:37 Would send sleep command to GPU agent
+2025/09/24 23:15:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:42 Would send sleep command to GPU agent
+2025/09/24 23:15:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:47 Would send sleep command to GPU agent
+2025/09/24 23:15:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:52 Would send sleep command to GPU agent
+2025/09/24 23:15:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:15:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:15:57 Would send sleep command to GPU agent
+2025/09/24 23:15:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:02 Would send sleep command to GPU agent
+2025/09/24 23:16:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:07 Would send sleep command to GPU agent
+2025/09/24 23:16:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:12 Would send sleep command to GPU agent
+2025/09/24 23:16:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:17 Would send sleep command to GPU agent
+2025/09/24 23:16:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:22 Would send sleep command to GPU agent
+2025/09/24 23:16:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:27 Would send sleep command to GPU agent
+2025/09/24 23:16:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:32 Would send sleep command to GPU agent
+2025/09/24 23:16:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:37 Would send sleep command to GPU agent
+2025/09/24 23:16:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:42 Would send sleep command to GPU agent
+2025/09/24 23:16:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:47 Would send sleep command to GPU agent
+2025/09/24 23:16:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:52 Would send sleep command to GPU agent
+2025/09/24 23:16:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:16:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:16:57 Would send sleep command to GPU agent
+2025/09/24 23:16:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:02 Would send sleep command to GPU agent
+2025/09/24 23:17:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:07 Would send sleep command to GPU agent
+2025/09/24 23:17:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:12 Would send sleep command to GPU agent
+2025/09/24 23:17:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:17 Would send sleep command to GPU agent
+2025/09/24 23:17:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:22 Would send sleep command to GPU agent
+2025/09/24 23:17:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:27 Would send sleep command to GPU agent
+2025/09/24 23:17:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:32 Would send sleep command to GPU agent
+2025/09/24 23:17:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:37 Would send sleep command to GPU agent
+2025/09/24 23:17:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:42 Would send sleep command to GPU agent
+2025/09/24 23:17:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:47 Would send sleep command to GPU agent
+2025/09/24 23:17:47 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:49 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:51 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:52 Would send sleep command to GPU agent
+2025/09/24 23:17:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:53 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:55 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:17:57 Would send sleep command to GPU agent
+2025/09/24 23:17:57 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:17:59 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:01 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:02 Would send sleep command to GPU agent
+2025/09/24 23:18:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:03 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:05 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:07 Would send sleep command to GPU agent
+2025/09/24 23:18:07 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:09 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:11 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:12 Would send sleep command to GPU agent
+2025/09/24 23:18:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:13 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:15 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:17 Would send sleep command to GPU agent
+2025/09/24 23:18:17 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:19 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:21 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:22 Would send sleep command to GPU agent
+2025/09/24 23:18:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:23 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:25 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:27 Would send sleep command to GPU agent
+2025/09/24 23:18:27 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:29 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:31 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:32 Would send sleep command to GPU agent
+2025/09/24 23:18:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:33 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:35 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:37 Would send sleep command to GPU agent
+2025/09/24 23:18:37 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:39 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:41 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:42 Would send sleep command to GPU agent
+2025/09/24 23:18:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:43 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:45 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:47 Would send sleep command to GPU agent
+2025/09/24 23:18:47 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:49 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:51 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:52 Would send sleep command to GPU agent
+2025/09/24 23:18:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:53 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:55 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:18:57 Would send sleep command to GPU agent
+2025/09/24 23:18:57 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:18:59 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:01 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:02 Would send sleep command to GPU agent
+2025/09/24 23:19:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:03 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:05 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:07 Would send sleep command to GPU agent
+2025/09/24 23:19:07 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:09 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:11 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:12 Would send sleep command to GPU agent
+2025/09/24 23:19:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:13 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:15 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:17 Would send sleep command to GPU agent
+2025/09/24 23:19:17 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:19 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:21 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:22 Would send sleep command to GPU agent
+2025/09/24 23:19:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:23 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:25 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:27 Would send sleep command to GPU agent
+2025/09/24 23:19:27 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:29 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:31 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:32 Would send sleep command to GPU agent
+2025/09/24 23:19:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:33 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:35 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:37 Would send sleep command to GPU agent
+2025/09/24 23:19:37 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:39 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:41 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:42 Would send sleep command to GPU agent
+2025/09/24 23:19:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:43 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:45 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:47 Would send sleep command to GPU agent
+2025/09/24 23:19:47 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:49 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:51 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:52 Would send sleep command to GPU agent
+2025/09/24 23:19:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:53 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:55 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:57 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:19:57 Would send sleep command to GPU agent
+2025/09/24 23:19:57 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:19:59 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:01 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:02 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:02 Would send sleep command to GPU agent
+2025/09/24 23:20:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:03 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:05 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:07 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:07 Would send sleep command to GPU agent
+2025/09/24 23:20:07 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:09 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:11 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:12 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:12 Would send sleep command to GPU agent
+2025/09/24 23:20:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:13 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:15 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:17 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:17 Would send sleep command to GPU agent
+2025/09/24 23:20:17 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:19 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:21 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:22 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:22 Would send sleep command to GPU agent
+2025/09/24 23:20:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:23 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:25 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:27 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:27 Would send sleep command to GPU agent
+2025/09/24 23:20:27 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:29 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:31 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:32 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:32 Would send sleep command to GPU agent
+2025/09/24 23:20:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:33 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:35 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:37 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:37 Would send sleep command to GPU agent
+2025/09/24 23:20:37 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:39 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:41 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:42 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:42 Would send sleep command to GPU agent
+2025/09/24 23:20:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:43 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:45 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:47 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:47 Would send sleep command to GPU agent
+2025/09/24 23:20:47 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:49 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:51 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:52 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:20:52 Would send sleep command to GPU agent
+2025/09/24 23:20:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:20:53 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:35:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:35:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:35:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:35:55 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:35:55 Would send sleep command to GPU agent
+2025/09/24 23:35:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:35:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:35:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:35:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:00 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:00 Would send sleep command to GPU agent
+2025/09/24 23:36:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:05 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:05 Would send sleep command to GPU agent
+2025/09/24 23:36:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:10 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:10 Would send sleep command to GPU agent
+2025/09/24 23:36:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:15 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:15 Would send sleep command to GPU agent
+2025/09/24 23:36:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:20 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:20 Would send sleep command to GPU agent
+2025/09/24 23:36:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:25 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:25 Would send sleep command to GPU agent
+2025/09/24 23:36:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:30 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:30 Would send sleep command to GPU agent
+2025/09/24 23:36:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:35 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:35 Would send sleep command to GPU agent
+2025/09/24 23:36:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:40 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:40 Would send sleep command to GPU agent
+2025/09/24 23:36:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:45 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:45 Would send sleep command to GPU agent
+2025/09/24 23:36:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:50 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:50 Would send sleep command to GPU agent
+2025/09/24 23:36:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:55 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:36:55 Would send sleep command to GPU agent
+2025/09/24 23:36:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:36:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:00 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:00 Would send sleep command to GPU agent
+2025/09/24 23:37:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:05 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:05 Would send sleep command to GPU agent
+2025/09/24 23:37:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:10 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:10 Would send sleep command to GPU agent
+2025/09/24 23:37:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:15 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:15 Would send sleep command to GPU agent
+2025/09/24 23:37:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:20 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:20 Would send sleep command to GPU agent
+2025/09/24 23:37:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:25 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:25 Would send sleep command to GPU agent
+2025/09/24 23:37:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:30 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:30 Would send sleep command to GPU agent
+2025/09/24 23:37:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:35 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:35 Would send sleep command to GPU agent
+2025/09/24 23:37:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:40 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:40 Would send sleep command to GPU agent
+2025/09/24 23:37:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:45 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:45 Would send sleep command to GPU agent
+2025/09/24 23:37:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:50 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:50 Would send sleep command to GPU agent
+2025/09/24 23:37:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:55 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:37:55 Would send sleep command to GPU agent
+2025/09/24 23:37:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:37:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:00 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:00 Would send sleep command to GPU agent
+2025/09/24 23:38:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:05 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:05 Would send sleep command to GPU agent
+2025/09/24 23:38:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:10 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:10 Would send sleep command to GPU agent
+2025/09/24 23:38:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:15 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:15 Would send sleep command to GPU agent
+2025/09/24 23:38:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:20 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:20 Would send sleep command to GPU agent
+2025/09/24 23:38:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:25 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:25 Would send sleep command to GPU agent
+2025/09/24 23:38:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:30 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:30 Would send sleep command to GPU agent
+2025/09/24 23:38:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:35 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:35 Would send sleep command to GPU agent
+2025/09/24 23:38:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:40 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:40 Would send sleep command to GPU agent
+2025/09/24 23:38:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:45 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:45 Would send sleep command to GPU agent
+2025/09/24 23:38:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:50 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:50 Would send sleep command to GPU agent
+2025/09/24 23:38:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:55 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:38:55 Would send sleep command to GPU agent
+2025/09/24 23:38:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:38:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:00 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:00 Would send sleep command to GPU agent
+2025/09/24 23:39:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:05 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:05 Would send sleep command to GPU agent
+2025/09/24 23:39:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:10 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:10 Would send sleep command to GPU agent
+2025/09/24 23:39:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:15 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:15 Would send sleep command to GPU agent
+2025/09/24 23:39:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:20 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:20 Would send sleep command to GPU agent
+2025/09/24 23:39:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:25 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:25 Would send sleep command to GPU agent
+2025/09/24 23:39:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:30 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:30 Would send sleep command to GPU agent
+2025/09/24 23:39:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:35 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:35 Would send sleep command to GPU agent
+2025/09/24 23:39:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:40 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:40 Would send sleep command to GPU agent
+2025/09/24 23:39:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:45 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:45 Would send sleep command to GPU agent
+2025/09/24 23:39:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:50 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:50 Would send sleep command to GPU agent
+2025/09/24 23:39:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:55 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:39:55 Would send sleep command to GPU agent
+2025/09/24 23:39:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:39:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:00 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:00 Would send sleep command to GPU agent
+2025/09/24 23:40:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:05 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:05 Would send sleep command to GPU agent
+2025/09/24 23:40:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:10 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:10 Would send sleep command to GPU agent
+2025/09/24 23:40:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:15 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:15 Would send sleep command to GPU agent
+2025/09/24 23:40:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:20 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:20 Would send sleep command to GPU agent
+2025/09/24 23:40:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:25 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:25 Would send sleep command to GPU agent
+2025/09/24 23:40:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:30 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:30 Would send sleep command to GPU agent
+2025/09/24 23:40:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:35 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:35 Would send sleep command to GPU agent
+2025/09/24 23:40:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:40 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:40 Would send sleep command to GPU agent
+2025/09/24 23:40:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:45 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:45 Would send sleep command to GPU agent
+2025/09/24 23:40:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:50 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:50 Would send sleep command to GPU agent
+2025/09/24 23:40:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:55 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:40:55 Would send sleep command to GPU agent
+2025/09/24 23:40:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:40:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:00 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:00 Would send sleep command to GPU agent
+2025/09/24 23:41:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:05 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:05 Would send sleep command to GPU agent
+2025/09/24 23:41:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:10 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:10 Would send sleep command to GPU agent
+2025/09/24 23:41:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:15 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:15 Would send sleep command to GPU agent
+2025/09/24 23:41:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:16 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:18 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:20 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:20 Would send sleep command to GPU agent
+2025/09/24 23:41:20 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:22 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:24 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:25 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:25 Would send sleep command to GPU agent
+2025/09/24 23:41:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:26 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:28 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:30 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:30 Would send sleep command to GPU agent
+2025/09/24 23:41:30 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:32 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:34 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:35 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:35 Would send sleep command to GPU agent
+2025/09/24 23:41:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:36 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:38 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:40 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:40 Would send sleep command to GPU agent
+2025/09/24 23:41:40 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:42 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:44 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:45 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:45 Would send sleep command to GPU agent
+2025/09/24 23:41:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:46 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:48 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:50 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:50 Would send sleep command to GPU agent
+2025/09/24 23:41:50 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:52 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:54 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:55 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:41:55 Would send sleep command to GPU agent
+2025/09/24 23:41:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:56 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:41:58 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:00 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:42:00 Would send sleep command to GPU agent
+2025/09/24 23:42:00 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:02 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:04 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:05 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:42:05 Would send sleep command to GPU agent
+2025/09/24 23:42:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:06 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:08 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:10 No jobs in queue. Predicting idle period. Sending sleep command.
+2025/09/24 23:42:10 Would send sleep command to GPU agent
+2025/09/24 23:42:10 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:12 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
+2025/09/24 23:42:14 Logged telemetry for NVIDIA GeForce GTX 1650 Ti on gpu-0
