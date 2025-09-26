@@ -160,8 +160,8 @@ def main():
     parser.add_argument('--max-depth', type=int, default=3, help='Maximum ray bounce depth')
     parser.add_argument('--device', type=str, default='auto', help='Device to use')
     parser.add_argument('--batch-size', type=int, default=256, help='Rays to trace per batch')
-    parser.add_argument('--quality-target', type=float, default=0.95, help='Quality convergence target (0-1)')
-    parser.add_argument('--min-samples', type=int, default=5, help='Minimum samples before checking convergence')
+    parser.add_argument('--quality-target', type=float, default=0.999, help='Quality convergence target (0-1)')
+    parser.add_argument('--min-samples', type=int, default=30, help='Minimum samples before checking convergence')
     parser.add_argument('--max-runtime', type=int, default=60, help='Maximum runtime in seconds')
     args = parser.parse_args()
 
@@ -275,9 +275,10 @@ def main():
                         indexing='ij'
                     )
 
-                    # Add random jitter for anti-aliasing
-                    u = (x_coords + torch.rand_like(x_coords)) / args.width
-                    v = (y_coords + torch.rand_like(y_coords)) / args.height
+                    # Add stronger jitter for more variation between samples
+                    jitter_factor = 1.5  # Increase randomness
+                    u = (x_coords + torch.rand_like(x_coords) * jitter_factor) / args.width
+                    v = (y_coords + torch.rand_like(y_coords) * jitter_factor) / args.height
 
                     # Calculate ray directions
                     ray_direction = (lower_left_corner.unsqueeze(0).unsqueeze(0) +
@@ -325,8 +326,8 @@ def main():
                 mean_diff = torch.mean(diff).item()
                 max_diff = torch.max(diff).item()
 
-                # Quality score: lower difference = higher quality
-                quality_score = 1.0 - min(mean_diff, 1.0)
+                # Much stricter quality score: amplify differences
+                quality_score = 1.0 - min(mean_diff * 50, 1.0)  # Make convergence much harder
 
                 # Check if convergence target is reached
                 if quality_score >= args.quality_target:

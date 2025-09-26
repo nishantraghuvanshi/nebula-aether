@@ -13,6 +13,11 @@ export default function Dashboard() {
   const [jobQueue, setJobQueue] = useState<any[]>([]);
   const [completedJobs, setCompletedJobs] = useState<any[]>([]);
 
+  // Multi-job submission state
+  const [selectedJobs, setSelectedJobs] = useState<Array<{id: string, name: string, type: string, quantity: number}>>([]);
+  const [showJobSelector, setShowJobSelector] = useState(false);
+  const [tempJobSelection, setTempJobSelection] = useState({ id: '', quantity: 1 });
+
   // Available job definitions
   const availableJobs = [
     { id: 'neural-network-training', name: 'Neural Network Training', type: 'training' },
@@ -51,6 +56,91 @@ export default function Dashboard() {
       }
     } catch (error) {
       setSubmitStatus(`Error: ${error}`);
+      setTimeout(() => setSubmitStatus(''), 5000);
+    }
+  };
+
+  // Multi-job submission functions
+  const addJobToSelection = () => {
+    if (!tempJobSelection.id) {
+      setSubmitStatus('Please select a job first!');
+      setTimeout(() => setSubmitStatus(''), 3000);
+      return;
+    }
+
+    const jobDetails = availableJobs.find(job => job.id === tempJobSelection.id);
+    if (!jobDetails) return;
+
+    const newJob = {
+      id: jobDetails.id,
+      name: jobDetails.name,
+      type: jobDetails.type,
+      quantity: tempJobSelection.quantity
+    };
+
+    setSelectedJobs(prev => [...prev, newJob]);
+    setTempJobSelection({ id: '', quantity: 1 });
+    setShowJobSelector(false);
+  };
+
+  const removeJobFromSelection = (index: number) => {
+    setSelectedJobs(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const clearAllJobs = () => {
+    setSelectedJobs([]);
+  };
+
+  const submitMultipleJobs = async () => {
+    if (selectedJobs.length === 0) {
+      setSubmitStatus('Please add some jobs first!');
+      setTimeout(() => setSubmitStatus(''), 3000);
+      return;
+    }
+
+    setSubmitStatus('Submitting multiple jobs...');
+    let successCount = 0;
+    let failCount = 0;
+
+    try {
+      // Submit each job with its specified quantity
+      for (const job of selectedJobs) {
+        for (let i = 0; i < job.quantity; i++) {
+          try {
+            const response = await fetch('http://localhost:8080/submit', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ id: job.id }),
+            });
+
+            if (response.ok) {
+              successCount++;
+            } else {
+              failCount++;
+            }
+
+            // Small delay between submissions to avoid overwhelming the server
+            await new Promise(resolve => setTimeout(resolve, 100));
+          } catch (error) {
+            failCount++;
+          }
+        }
+      }
+
+      const totalJobs = selectedJobs.reduce((sum, job) => sum + job.quantity, 0);
+
+      if (failCount === 0) {
+        setSubmitStatus(`Successfully submitted ${successCount} jobs!`);
+        setSelectedJobs([]); // Clear the selection
+      } else {
+        setSubmitStatus(`Submitted ${successCount}/${totalJobs} jobs. ${failCount} failed.`);
+      }
+
+      setTimeout(() => setSubmitStatus(''), 5000);
+    } catch (error) {
+      setSubmitStatus(`Error submitting jobs: ${error}`);
       setTimeout(() => setSubmitStatus(''), 5000);
     }
   };
@@ -146,48 +236,405 @@ export default function Dashboard() {
 
       <p>Carbon Intensity: {state.carbon_intensity.toFixed(0)} gCO2/kWh</p>
 
-      {/* Job Submission Form */}
-      <div style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-        <h3 style={{ marginTop: 0, color: '#333' }}>Submit GPU Job</h3>
-        <form onSubmit={submitJob} style={{ display: 'flex', gap: '1rem', alignItems: 'end', flexWrap: 'wrap' }}>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#333' }}>Select Job:</label>
-            <select
-              value={jobForm.id}
-              onChange={(e) => setJobForm({ id: e.target.value })}
-              style={{ padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px', minWidth: '250px' }}
-            >
-              {availableJobs.map(job => (
-                <option key={job.id} value={job.id}>
-                  {job.name} ({job.type})
-                </option>
-              ))}
-            </select>
+      {/* Modern Job Submission Interface */}
+      <div style={{
+        marginBottom: '2rem',
+        padding: '2rem',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        borderRadius: '16px',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+        color: 'white'
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h3 style={{
+            margin: 0,
+            fontSize: '1.8rem',
+            fontWeight: '700',
+            background: 'linear-gradient(45deg, #fff, #e0e7ff)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
+            🚀 GPU Job Submission
+          </h3>
+          <p style={{ margin: '0.5rem 0 0 0', opacity: 0.9, fontSize: '1rem' }}>
+            Deploy workloads across your GPU cluster
+          </p>
+        </div>
+
+        {/* Action Cards Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+
+          {/* Quick Submit Card */}
+          <div style={{
+            background: 'rgba(255,255,255,0.1)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '12px',
+            padding: '1.5rem',
+            border: '1px solid rgba(255,255,255,0.2)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                background: 'linear-gradient(45deg, #4facfe, #00f2fe)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: '0.75rem',
+                fontSize: '1.2rem'
+              }}>
+                ⚡
+              </div>
+              <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Quick Submit</h4>
+            </div>
+            <form onSubmit={submitJob} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  opacity: 0.9
+                }}>
+                  Select Job Type
+                </label>
+                <select
+                  value={jobForm.id}
+                  onChange={(e) => setJobForm({ id: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: 'none',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                    color: '#333',
+                    fontSize: '0.9rem',
+                    fontWeight: '500'
+                  }}
+                >
+                  {availableJobs.map(job => (
+                    <option key={job.id} value={job.id}>
+                      {job.name} ({job.type})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                type="submit"
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  color: 'white',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  transition: 'all 0.2s ease',
+                  backdropFilter: 'blur(10px)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = 'rgba(255,255,255,0.3)';
+                  e.target.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'rgba(255,255,255,0.2)';
+                  e.target.style.transform = 'translateY(0)';
+                }}
+              >
+                Submit Job
+              </button>
+            </form>
           </div>
-          <button
-            type="submit"
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Submit Job
-          </button>
-        </form>
+
+          {/* Batch Submit Card */}
+          <div style={{
+            background: 'rgba(255,255,255,0.1)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '12px',
+            padding: '1.5rem',
+            border: '1px solid rgba(255,255,255,0.2)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                background: 'linear-gradient(45deg, #fa709a, #fee140)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: '0.75rem',
+                fontSize: '1.2rem'
+              }}>
+                📦
+              </div>
+              <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>Batch Submit</h4>
+            </div>
+
+            {!showJobSelector ? (
+              <button
+                onClick={() => setShowJobSelector(true)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1.5rem',
+                  background: 'linear-gradient(45deg, #a8edea, #fed6e3)',
+                  color: '#333',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              >
+                ➕ Add Job to Batch
+              </button>
+            ) : (
+              <div style={{
+                background: 'rgba(255,255,255,0.95)',
+                borderRadius: '8px',
+                padding: '1rem',
+                color: '#333'
+              }}>
+                <div style={{ marginBottom: '1rem' }}>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    color: '#555'
+                  }}>
+                    Job Type
+                  </label>
+                  <select
+                    value={tempJobSelection.id}
+                    onChange={(e) => setTempJobSelection(prev => ({ ...prev, id: e.target.value }))}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem',
+                      border: '1px solid #ddd',
+                      borderRadius: '6px',
+                      fontSize: '0.9rem'
+                    }}
+                  >
+                    <option value="">Choose a job...</option>
+                    {availableJobs.map(job => (
+                      <option key={job.id} value={job.id}>
+                        {job.name} ({job.type})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div style={{ marginBottom: '1rem' }}>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    color: '#555'
+                  }}>
+                    Quantity
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={tempJobSelection.quantity}
+                    onChange={(e) => setTempJobSelection(prev => ({ ...prev, quantity: parseInt(e.target.value) || 1 }))}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem',
+                      border: '1px solid #ddd',
+                      borderRadius: '6px',
+                      fontSize: '0.9rem'
+                    }}
+                  />
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button
+                    onClick={addJobToSelection}
+                    style={{
+                      flex: 1,
+                      padding: '0.5rem',
+                      backgroundColor: '#28a745',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: '600'
+                    }}
+                  >
+                    ✓ Add
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowJobSelector(false);
+                      setTempJobSelection({ id: '', quantity: 1 });
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '0.5rem',
+                      backgroundColor: '#6c757d',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem',
+                      fontWeight: '600'
+                    }}
+                  >
+                    ✕ Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Selected Jobs Queue */}
+        {selectedJobs.length > 0 && (
+          <div style={{
+            background: 'rgba(255,255,255,0.1)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '12px',
+            padding: '1.5rem',
+            border: '1px solid rgba(255,255,255,0.2)',
+            marginBottom: '1.5rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600' }}>
+                📋 Batch Queue ({selectedJobs.reduce((sum, job) => sum + job.quantity, 0)} jobs)
+              </h4>
+              <button
+                onClick={clearAllJobs}
+                style={{
+                  padding: '0.4rem 0.8rem',
+                  backgroundColor: 'rgba(220, 53, 69, 0.8)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  fontWeight: '600'
+                }}
+              >
+                🗑️ Clear
+              </button>
+            </div>
+            <div style={{
+              maxHeight: '200px',
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem'
+            }}>
+              {selectedJobs.map((job, index) => (
+                <div key={index} style={{
+                  background: 'rgba(255,255,255,0.9)',
+                  borderRadius: '8px',
+                  padding: '0.75rem',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  color: '#333'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{
+                      background: 'linear-gradient(45deg, #667eea, #764ba2)',
+                      color: 'white',
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '12px',
+                      fontSize: '0.75rem',
+                      fontWeight: '600'
+                    }}>
+                      ×{job.quantity}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: '600', fontSize: '0.9rem' }}>{job.name}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#666' }}>{job.type}</div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeJobFromSelection(index)}
+                    style={{
+                      padding: '0.25rem 0.5rem',
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '0.7rem'
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Submit Button */}
+        {selectedJobs.length > 0 && (
+          <div style={{ textAlign: 'center' }}>
+            <button
+              onClick={submitMultipleJobs}
+              style={{
+                padding: '1rem 2rem',
+                background: 'linear-gradient(45deg, #11998e, #38ef7d)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                fontSize: '1.1rem',
+                fontWeight: '700',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+              }}
+            >
+              🚀 Submit All Jobs ({selectedJobs.reduce((sum, job) => sum + job.quantity, 0)})
+            </button>
+          </div>
+        )}
+
+        {/* Status Messages */}
         {submitStatus && (
-          <p style={{
-            marginTop: '1rem',
-            padding: '0.5rem',
-            backgroundColor: submitStatus.includes('Error') ? '#f8d7da' : '#d4edda',
-            color: submitStatus.includes('Error') ? '#721c24' : '#155724',
-            borderRadius: '4px'
+          <div style={{
+            marginTop: '1.5rem',
+            padding: '1rem',
+            background: submitStatus.includes('Error') || submitStatus.includes('failed')
+              ? 'rgba(248, 215, 218, 0.9)'
+              : 'rgba(212, 237, 218, 0.9)',
+            color: submitStatus.includes('Error') || submitStatus.includes('failed') ? '#721c24' : '#155724',
+            borderRadius: '8px',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            fontSize: '0.9rem',
+            fontWeight: '500',
+            textAlign: 'center'
           }}>
             {submitStatus}
-          </p>
+          </div>
         )}
       </div>
 
