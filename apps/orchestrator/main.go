@@ -477,6 +477,10 @@ var (
 	runningJobsByGpu = make(map[string][]Job)     // Currently running jobs per GPU
 	resourceMux      = &sync.RWMutex{}            // Mutex for resource tracking
 	jobAssignmentMux = &sync.Mutex{}              // Prevents race conditions in job assignment
+	// NEW: Enhanced logging system
+	jobFlowLogger *os.File    // Detailed job flow logging
+	aiLogger      *os.File    // AI decision logging
+	resourceLogger *os.File   // Resource tracking logging
 )
 
 // loadJobDefinitions loads job definitions from the JSON file
@@ -524,6 +528,120 @@ func loadJobDefinitions() error {
 
 	log.Printf("📋 Loaded %d job definitions", len(jobDefinitions))
 	return nil
+}
+
+// NEW: Enhanced logging system functions
+
+// initLoggingSystem initializes separate log files for different components
+func initLoggingSystem() error {
+	timestamp := time.Now().Format("2006-01-02_15-04-05")
+
+	// Create logs directory if it doesn't exist
+	os.MkdirAll("logs", 0755)
+
+	var err error
+
+	// Job flow logging - tracks job lifecycle
+	jobFlowLogger, err = os.OpenFile(fmt.Sprintf("logs/job_flow_%s.log", timestamp),
+		os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to create job flow log: %v", err)
+	}
+
+	// AI decision logging - tracks AI scheduling decisions
+	aiLogger, err = os.OpenFile(fmt.Sprintf("logs/ai_decisions_%s.log", timestamp),
+		os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to create AI log: %v", err)
+	}
+
+	// Resource tracking logging - tracks GPU resource usage
+	resourceLogger, err = os.OpenFile(fmt.Sprintf("logs/resources_%s.log", timestamp),
+		os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to create resource log: %v", err)
+	}
+
+	// Write headers
+	logJobFlow("SYSTEM", "INIT", "Job flow logging started", map[string]interface{}{})
+	logAIDecision("SYSTEM", "INIT", "AI decision logging started", map[string]interface{}{})
+	logResourceChange("SYSTEM", "INIT", "Resource tracking logging started", map[string]interface{}{})
+
+	log.Println("📋 Enhanced logging system initialized")
+	return nil
+}
+
+// logJobFlow logs job lifecycle events
+func logJobFlow(jobID, event, message string, data map[string]interface{}) {
+	if jobFlowLogger == nil {
+		return
+	}
+
+	logEntry := map[string]interface{}{
+		"timestamp": time.Now().Format("2006-01-02 15:04:05.000"),
+		"job_id":    jobID,
+		"event":     event,
+		"message":   message,
+		"data":      data,
+	}
+
+	if jsonData, err := json.Marshal(logEntry); err == nil {
+		fmt.Fprintf(jobFlowLogger, "%s\n", string(jsonData))
+		jobFlowLogger.Sync()
+	}
+}
+
+// logAIDecision logs AI scheduling decisions with full context
+func logAIDecision(jobID, decision, reason string, context map[string]interface{}) {
+	if aiLogger == nil {
+		return
+	}
+
+	logEntry := map[string]interface{}{
+		"timestamp": time.Now().Format("2006-01-02 15:04:05.000"),
+		"job_id":    jobID,
+		"decision":  decision,
+		"reason":    reason,
+		"context":   context,
+	}
+
+	if jsonData, err := json.Marshal(logEntry); err == nil {
+		fmt.Fprintf(aiLogger, "%s\n", string(jsonData))
+		aiLogger.Sync()
+	}
+}
+
+// logResourceChange logs GPU resource state changes
+func logResourceChange(gpuID, event, message string, resourceData map[string]interface{}) {
+	if resourceLogger == nil {
+		return
+	}
+
+	logEntry := map[string]interface{}{
+		"timestamp":     time.Now().Format("2006-01-02 15:04:05.000"),
+		"gpu_id":        gpuID,
+		"event":         event,
+		"message":       message,
+		"resource_data": resourceData,
+	}
+
+	if jsonData, err := json.Marshal(logEntry); err == nil {
+		fmt.Fprintf(resourceLogger, "%s\n", string(jsonData))
+		resourceLogger.Sync()
+	}
+}
+
+// closeLoggingSystem closes all log files
+func closeLoggingSystem() {
+	if jobFlowLogger != nil {
+		jobFlowLogger.Close()
+	}
+	if aiLogger != nil {
+		aiLogger.Close()
+	}
+	if resourceLogger != nil {
+		resourceLogger.Close()
+	}
 }
 
 // createJobRequirements creates job requirements from job definition
@@ -692,6 +810,22 @@ func reserveGpuResources(gpuID string, job Job) {
 	}
 	pendingJobsByGpu[gpuID] = append(pendingJobsByGpu[gpuID], job)
 
+	// ENHANCED LOGGING: Resource reservation
+	logResourceChange(gpuID, "RESOURCE_RESERVED", "Resources reserved for pending job", map[string]interface{}{
+		"job_id":             job.ID,
+		"job_type":           job.Type,
+		"reserved_memory_mb": job.MinMemoryMB,
+		"reserved_gpu_util":  job.ExpectedGpuUtil,
+		"pending_jobs_count": len(pendingJobsByGpu[gpuID]),
+		"total_reserved_memory_mb": func() int {
+			total := 0
+			for _, j := range pendingJobsByGpu[gpuID] {
+				total += j.MinMemoryMB
+			}
+			return total
+		}(),
+	})
+
 	log.Printf("🔒 Reserved resources on %s for job %s: %dMB memory, %d%% GPU util",
 		gpuID, job.ID, job.MinMemoryMB, job.ExpectedGpuUtil)
 }
@@ -714,6 +848,23 @@ func moveJobToPendingToRunning(gpuID string, jobID string) {
 				}
 				runningJobsByGpu[gpuID] = append(runningJobsByGpu[gpuID], job)
 
+				// ENHANCED LOGGING: Job state transition
+				logResourceChange(gpuID, "JOB_STARTED", "Job moved from pending to running", map[string]interface{}{
+					"job_id":             job.ID,
+					"job_type":           job.Type,
+					"memory_mb":          job.MinMemoryMB,
+					"gpu_util":           job.ExpectedGpuUtil,
+					"pending_jobs_count": len(pendingJobsByGpu[gpuID]),
+					"running_jobs_count": len(runningJobsByGpu[gpuID]),
+				})
+
+				logJobFlow(jobID, "STARTED", "Job execution started on GPU", map[string]interface{}{
+					"gpu_id":             gpuID,
+					"transition":         "pending_to_running",
+					"pending_jobs_count": len(pendingJobsByGpu[gpuID]),
+					"running_jobs_count": len(runningJobsByGpu[gpuID]),
+				})
+
 				log.Printf("🏃 Moved job %s from pending to running on %s", jobID, gpuID)
 				break
 			}
@@ -726,11 +877,17 @@ func releaseGpuResources(gpuID string, jobID string) {
 	resourceMux.Lock()
 	defer resourceMux.Unlock()
 
+	// Track which list the job was found in
+	releaseType := "unknown"
+	var releasedJob Job
+
 	// Remove from running jobs
 	if runningJobs, exists := runningJobsByGpu[gpuID]; exists {
 		for i, job := range runningJobs {
 			if job.ID == jobID {
 				runningJobsByGpu[gpuID] = append(runningJobs[:i], runningJobs[i+1:]...)
+				releaseType = "running"
+				releasedJob = job
 				log.Printf("🔓 Released resources on %s for completed job %s", gpuID, jobID)
 				break
 			}
@@ -742,10 +899,51 @@ func releaseGpuResources(gpuID string, jobID string) {
 		for i, job := range pendingJobs {
 			if job.ID == jobID {
 				pendingJobsByGpu[gpuID] = append(pendingJobs[:i], pendingJobs[i+1:]...)
+				if releaseType == "unknown" {
+					releaseType = "pending"
+					releasedJob = job
+				}
 				log.Printf("🔓 Released reserved resources on %s for job %s", gpuID, jobID)
 				break
 			}
 		}
+	}
+
+	// ENHANCED LOGGING: Resource release
+	if releaseType != "unknown" {
+		logResourceChange(gpuID, "RESOURCE_RELEASED", "Resources released after job completion", map[string]interface{}{
+			"job_id":             jobID,
+			"job_type":           releasedJob.Type,
+			"released_memory_mb": releasedJob.MinMemoryMB,
+			"released_gpu_util":  releasedJob.ExpectedGpuUtil,
+			"release_type":       releaseType,
+			"pending_jobs_count": len(pendingJobsByGpu[gpuID]),
+			"running_jobs_count": len(runningJobsByGpu[gpuID]),
+			"remaining_reserved_memory_mb": func() int {
+				total := 0
+				for _, j := range pendingJobsByGpu[gpuID] {
+					total += j.MinMemoryMB
+				}
+				for _, j := range runningJobsByGpu[gpuID] {
+					total += j.MinMemoryMB
+				}
+				return total
+			}(),
+		})
+
+		logJobFlow(jobID, "RESOURCES_RELEASED", "Job resources freed up", map[string]interface{}{
+			"gpu_id":             gpuID,
+			"release_type":       releaseType,
+			"pending_jobs_count": len(pendingJobsByGpu[gpuID]),
+			"running_jobs_count": len(runningJobsByGpu[gpuID]),
+		})
+	} else {
+		// Job not found in either list - log this anomaly
+		logResourceChange(gpuID, "RELEASE_ANOMALY", "Attempted to release resources for unknown job", map[string]interface{}{
+			"job_id":             jobID,
+			"pending_jobs_count": len(pendingJobsByGpu[gpuID]),
+			"running_jobs_count": len(runningJobsByGpu[gpuID]),
+		})
 	}
 }
 
@@ -1076,6 +1274,17 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	jobQueue = append(jobQueue, jobDef)
 	queueMux.Unlock()
 
+	// ENHANCED LOGGING: Job submission
+	logJobFlow(jobDef.ID, "SUBMITTED", "Job added to queue", map[string]interface{}{
+		"job_type":          jobDef.Type,
+		"job_name":          jobDef.Name,
+		"min_memory_mb":     jobDef.MinMemoryMB,
+		"expected_gpu_util": jobDef.ExpectedGpuUtil,
+		"max_duration_sec":  jobDef.MaxDurationSec,
+		"priority":          jobDef.Priority,
+		"queue_position":    len(jobQueue),
+	})
+
 	log.Printf("📥 Added job to queue: %s (%s) - %s", jobDef.ID, jobDef.Type, jobDef.Name)
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{
@@ -1187,11 +1396,41 @@ func handlePoll(w http.ResponseWriter, r *http.Request) {
 			prediction, err := askAICorePrediction(currentClusterState, nextJob)
 			if err != nil {
 				log.Printf("AI prediction failed: %v. Allowing job on requesting GPU %s", err, gpuID)
+
+				// ENHANCED LOGGING: AI prediction failure
+				logAIDecision(nextJob.ID, "PREDICTION_FAILED", "AI service unavailable", map[string]interface{}{
+					"requesting_gpu": gpuID,
+					"error":          err.Error(),
+					"fallback":       "allow_on_requesting_gpu",
+				})
 			} else {
+				// ENHANCED LOGGING: AI prediction success
+				aiContext := map[string]interface{}{
+					"requesting_gpu":       gpuID,
+					"recommended_gpu":      prediction.BestGpuID,
+					"scheduling_decision":  prediction.SchedulingDecision,
+					"estimated_wait_time":  prediction.EstimatedWaitTime,
+					"confidence_score":     prediction.ConfidenceScore,
+					"predicted_performance": prediction.PredictedPerf,
+					"thermal_risk":         prediction.ThermalRisk,
+					"memory_risk":          prediction.MemoryRisk,
+					"resource_availability": prediction.ResourceAvailability,
+				}
+
 				// NEW: Check scheduling decision first
 				if prediction.SchedulingDecision == "queue_short" || prediction.SchedulingDecision == "queue_long" {
 					log.Printf("📋 AI recommends queuing job %s: %s (wait: %ds)",
 						nextJob.ID, prediction.SchedulingReason, prediction.EstimatedWaitTime)
+
+					// ENHANCED LOGGING: Job queued by AI
+					logAIDecision(nextJob.ID, "QUEUE_DECISION", prediction.SchedulingReason, aiContext)
+					logJobFlow(nextJob.ID, "AI_QUEUED", "AI recommends queuing job", map[string]interface{}{
+						"decision":           prediction.SchedulingDecision,
+						"wait_time_seconds":  prediction.EstimatedWaitTime,
+						"reason":             prediction.SchedulingReason,
+						"requesting_gpu":     gpuID,
+					})
+
 					// Don't assign the job yet - AI says to wait for better resource conditions
 					w.Header().Set("Content-Type", "application/json")
 					json.NewEncoder(w).Encode(map[string]interface{}{
@@ -1205,6 +1444,15 @@ func handlePoll(w http.ResponseWriter, r *http.Request) {
 				// If AI says assign_now, check if this GPU is the optimal one
 				if prediction.BestGpuID != gpuID {
 					log.Printf("🚫 AI recommends GPU %s over %s for job %s. Job stays in queue.", prediction.BestGpuID, gpuID, nextJob.ID)
+
+					// ENHANCED LOGGING: GPU redirection
+					logAIDecision(nextJob.ID, "GPU_REDIRECT", "AI recommends different GPU", aiContext)
+					logJobFlow(nextJob.ID, "GPU_REDIRECT", "Job reserved for optimal GPU", map[string]interface{}{
+						"requesting_gpu":  gpuID,
+						"recommended_gpu": prediction.BestGpuID,
+						"confidence":      prediction.ConfidenceScore,
+					})
+
 					// Don't assign this job to this GPU, let the optimal GPU poll for it
 					w.Header().Set("Content-Type", "application/json")
 					json.NewEncoder(w).Encode(map[string]interface{}{
@@ -1214,6 +1462,15 @@ func handlePoll(w http.ResponseWriter, r *http.Request) {
 					return
 				} else {
 					log.Printf("✅ AI confirms GPU %s is optimal for job %s and ready for immediate assignment", gpuID, nextJob.ID)
+
+					// ENHANCED LOGGING: AI approval for assignment
+					logAIDecision(nextJob.ID, "ASSIGN_NOW", "AI approves immediate assignment", aiContext)
+					logJobFlow(nextJob.ID, "AI_APPROVED", "AI approves assignment to requesting GPU", map[string]interface{}{
+						"gpu_id":             gpuID,
+						"confidence":         prediction.ConfidenceScore,
+						"predicted_perf":     prediction.PredictedPerf,
+						"scheduling_decision": prediction.SchedulingDecision,
+					})
 				}
 			}
 		}
@@ -1272,6 +1529,12 @@ func handlePoll(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Initialize comprehensive logging system
+	if err := initLoggingSystem(); err != nil {
+		log.Fatalf("Failed to initialize logging system: %v", err)
+	}
+	defer closeLoggingSystem()
+
 	// Load job definitions
 	if err := loadJobDefinitions(); err != nil {
 		log.Printf("Warning: Failed to load job definitions: %v", err)
@@ -1279,7 +1542,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:11941")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:17696")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}

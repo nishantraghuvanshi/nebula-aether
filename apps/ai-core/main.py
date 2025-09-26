@@ -8,6 +8,7 @@ import pandas as pd
 import os
 import asyncio
 import logging
+import json
 from datetime import datetime
 from training_pipeline import TrainingPipeline
 
@@ -20,6 +21,63 @@ pipeline_task = None
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Enhanced logging system for AI Core
+prediction_logger = None
+scheduling_logger = None
+error_logger = None
+
+def init_ai_logging():
+    """Initialize structured logging for AI Core decisions"""
+    global prediction_logger, scheduling_logger, error_logger
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+    # Create logs directory if it doesn't exist
+    os.makedirs("logs", exist_ok=True)
+
+    # Prediction logging - detailed GPU evaluations and selections
+    prediction_logger = logging.getLogger("ai_predictions")
+    prediction_handler = logging.FileHandler(f"logs/ai_predictions_{timestamp}.log")
+    prediction_formatter = logging.Formatter('%(message)s')
+    prediction_handler.setFormatter(prediction_formatter)
+    prediction_logger.addHandler(prediction_handler)
+    prediction_logger.setLevel(logging.INFO)
+
+    # Scheduling decision logging - queue/assign decisions with reasoning
+    scheduling_logger = logging.getLogger("ai_scheduling")
+    scheduling_handler = logging.FileHandler(f"logs/ai_scheduling_{timestamp}.log")
+    scheduling_formatter = logging.Formatter('%(message)s')
+    scheduling_handler.setFormatter(scheduling_formatter)
+    scheduling_logger.addHandler(scheduling_handler)
+    scheduling_logger.setLevel(logging.INFO)
+
+    # Error and anomaly logging
+    error_logger = logging.getLogger("ai_errors")
+    error_handler = logging.FileHandler(f"logs/ai_errors_{timestamp}.log")
+    error_formatter = logging.Formatter('%(message)s')
+    error_handler.setFormatter(error_formatter)
+    error_logger.addHandler(error_handler)
+    error_logger.setLevel(logging.WARNING)
+
+    # Log initialization
+    log_structured(prediction_logger, "SYSTEM", "INIT", "AI prediction logging started", {})
+    log_structured(scheduling_logger, "SYSTEM", "INIT", "AI scheduling logging started", {})
+    log_structured(error_logger, "SYSTEM", "INIT", "AI error logging started", {})
+
+    logger.info("📋 AI Core structured logging initialized")
+
+def log_structured(log_instance, request_id, event, message, data):
+    """Log structured JSON entries"""
+    if log_instance:
+        log_entry = {
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3],
+            "request_id": request_id,
+            "event": event,
+            "message": message,
+            "data": data
+        }
+        log_instance.info(json.dumps(log_entry))
 
 # Enhanced GPU Candidate with all telemetry features
 class GpuCandidate(BaseModel):
@@ -459,7 +517,14 @@ def make_scheduling_decision(best_candidate: GpuCandidate, job_requirements: Opt
 
 @app.post("/predict")
 def predict(request: PredictionRequest) -> PredictionResponse:
+    request_id = f"req_{datetime.now().strftime('%H%M%S')}_{len(request.candidates)}"
     if not request.candidates:
+        # ENHANCED LOGGING: No candidates available
+        log_structured(error_logger, request_id, "NO_CANDIDATES", "No GPU candidates available for prediction", {
+            "job_type": request.job_type,
+            "has_requirements": request.job_requirements is not None
+        })
+
         return PredictionResponse(
             best_gpu_id="",
             confidence_score=0.0,
@@ -476,6 +541,14 @@ def predict(request: PredictionRequest) -> PredictionResponse:
     # Get appropriate model and scaler for job type (with A/B testing)
     model, scaler, model_version = model_manager.get_model_and_scaler(request.job_type)
     if model is None or scaler is None:
+        # ENHANCED LOGGING: Model unavailable
+        log_structured(error_logger, request_id, "MODEL_UNAVAILABLE", "No suitable model or scaler available", {
+            "job_type": request.job_type,
+            "model_available": model is not None,
+            "scaler_available": scaler is not None,
+            "candidates_count": len(request.candidates)
+        })
+
         return PredictionResponse(
             best_gpu_id="",
             confidence_score=0.0,
@@ -489,12 +562,39 @@ def predict(request: PredictionRequest) -> PredictionResponse:
             scheduling_reason="AI models not available for scheduling analysis"
         )
 
+    # ENHANCED LOGGING: Start prediction process
+    log_structured(prediction_logger, request_id, "PREDICTION_START", "Starting GPU evaluation process", {
+        "job_type": request.job_type,
+        "candidates_count": len(request.candidates),
+        "model_version": model_version,
+        "job_requirements": request.job_requirements.dict() if request.job_requirements else None,
+        "candidates": [{
+            "gpu_id": c.gpu_id,
+            "gpu_name": c.gpu_name,
+            "gpu_temp": c.gpu_temp,
+            "gpu_util": c.utilization_gpu,
+            "mem_used_mb": c.gpu_mem_used,
+            "mem_total_mb": c.gpu_mem_total,
+            "memory_util_pct": (c.gpu_mem_used / c.gpu_mem_total) * 100,
+            "throttling": c.throttling_reasons
+        } for c in request.candidates]
+    })
+
     # Evaluate all GPU candidates
     gpu_evaluations = []
 
     for candidate in request.candidates:
         evaluation = evaluate_gpu_candidate(candidate, request.job_type, request.job_requirements, model, scaler)
         gpu_evaluations.append((candidate.gpu_id, evaluation))
+
+        # ENHANCED LOGGING: Individual GPU evaluation
+        log_structured(prediction_logger, request_id, "GPU_EVALUATED", f"Evaluated GPU {candidate.gpu_id}", {
+            "gpu_id": candidate.gpu_id,
+            "performance_score": evaluation['performance_score'],
+            "thermal_risk": evaluation['thermal_risk'],
+            "memory_risk": evaluation['memory_risk'],
+            "derived_features": evaluation['derived_features']
+        })
 
     # Select best GPU
     best_gpu_id, best_eval = max(gpu_evaluations, key=lambda x: x[1]['performance_score'])
@@ -519,8 +619,41 @@ def predict(request: PredictionRequest) -> PredictionResponse:
     # NEW: Get the best candidate object for scheduling analysis
     best_candidate = next(c for c in request.candidates if c.gpu_id == best_gpu_id)
 
+    # ENHANCED LOGGING: GPU selection results
+    log_structured(prediction_logger, request_id, "GPU_SELECTION", f"Selected best GPU: {best_gpu_id}", {
+        "best_gpu_id": best_gpu_id,
+        "best_score": best_eval['performance_score'],
+        "all_scores": {gpu_id: eval_data['performance_score'] for gpu_id, eval_data in gpu_evaluations},
+        "performance_ranking": sorted([(gpu_id, eval_data['performance_score']) for gpu_id, eval_data in gpu_evaluations],
+                                     key=lambda x: x[1], reverse=True)
+    })
+
     # NEW: Make intelligent scheduling decision
     scheduling_info = make_scheduling_decision(best_candidate, request.job_requirements, best_eval)
+
+    # ENHANCED LOGGING: Scheduling decision analysis
+    log_structured(scheduling_logger, request_id, "SCHEDULING_DECISION", f"Made scheduling decision: {scheduling_info['scheduling_decision']}", {
+        "job_type": request.job_type,
+        "best_gpu_id": best_gpu_id,
+        "scheduling_decision": scheduling_info['scheduling_decision'],
+        "estimated_wait_time": scheduling_info['estimated_wait_time'],
+        "scheduling_reason": scheduling_info['scheduling_reason'],
+        "resource_availability": scheduling_info['resource_availability'],
+        "gpu_state": {
+            "temperature": best_candidate.gpu_temp,
+            "gpu_utilization": best_candidate.utilization_gpu,
+            "memory_used_mb": best_candidate.gpu_mem_used,
+            "memory_total_mb": best_candidate.gpu_mem_total,
+            "memory_utilization_pct": (best_candidate.gpu_mem_used / best_candidate.gpu_mem_total) * 100,
+            "throttling_reasons": best_candidate.throttling_reasons
+        },
+        "job_requirements": {
+            "min_memory_mb": request.job_requirements.min_memory_mb if request.job_requirements else 0,
+            "expected_gpu_util": request.job_requirements.expected_gpu_util if request.job_requirements else 0,
+            "max_duration_sec": request.job_requirements.max_duration_sec if request.job_requirements else 0,
+            "priority": request.job_requirements.priority if request.job_requirements else "normal"
+        }
+    })
 
     # Add scheduling information to reasons
     reasons.append(f"🧠 Scheduling: {scheduling_info['scheduling_reason']}")
@@ -537,6 +670,20 @@ def predict(request: PredictionRequest) -> PredictionResponse:
     # Enhanced logging for scheduling decisions
     logger.info(f"🎯 Job Scheduling Decision: {best_gpu_id} → {scheduling_info['scheduling_decision']} "
                 f"(wait: {scheduling_info['estimated_wait_time']}s)")
+
+    # ENHANCED LOGGING: Final prediction response
+    log_structured(prediction_logger, request_id, "PREDICTION_COMPLETE", "Prediction process completed", {
+        "best_gpu_id": best_gpu_id,
+        "confidence_score": best_eval['performance_score'] / 100.0,
+        "predicted_performance": best_eval['performance_score'],
+        "thermal_risk": best_eval['thermal_risk'],
+        "memory_risk": best_eval['memory_risk'],
+        "scheduling_decision": scheduling_info['scheduling_decision'],
+        "estimated_wait_time": scheduling_info['estimated_wait_time'],
+        "model_version": model_version,
+        "total_candidates": len(request.candidates),
+        "processing_time_ms": (datetime.now().timestamp() * 1000) % 1000  # Simple timing approximation
+    })
 
     return PredictionResponse(
         best_gpu_id=best_gpu_id,
@@ -759,6 +906,9 @@ async def start_training_pipeline():
 async def startup_event():
     """FastAPI startup event"""
     logger.info("🚀 AI Core starting...")
+
+    # Initialize comprehensive logging system
+    init_ai_logging()
 
     # Check if training pipeline should be enabled
     enable_training = os.getenv('ENABLE_TRAINING_PIPELINE', 'true').lower() == 'true'

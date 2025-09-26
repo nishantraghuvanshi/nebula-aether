@@ -42,3 +42,12 @@ yarn-error.log*
 
 #temp scripts
 continue_setup.sh
+
+# Enhanced logging system - runtime generated logs
+logs/
+apps/orchestrator/logs/
+apps/ai-core/logs/
+
+# Process ID files
+.orchestrator.pid
+.dashboard.pid
