@@ -3,6 +3,13 @@ set -e
 
 echo "🌟 Starting Complete Nebula Aether System..."
 
+# Check dependencies
+echo "🔍 Checking dependencies..."
+command -v docker >/dev/null 2>&1 || { echo "❌ Docker not installed"; exit 1; }
+command -v ngrok >/dev/null 2>&1 || { echo "❌ Ngrok not installed"; exit 1; }
+command -v go >/dev/null 2>&1 || { echo "❌ Go not installed"; exit 1; }
+command -v npm >/dev/null 2>&1 || { echo "❌ Node.js/npm not installed"; exit 1; }
+
 # Kill existing processes
 echo "🧹 Cleaning up existing processes..."
 pkill -f "go run" 2>/dev/null || true
