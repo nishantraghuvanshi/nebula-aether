@@ -518,7 +518,7 @@ async fn run_mock_mode() {
         os_info
     );
 
-    let nats_url = "0.tcp.in.ngrok.io:12133";
+    let nats_url = "0.tcp.in.ngrok.io:11188";
     match async_nats::connect(nats_url).await {
         Ok(client) => {
             println!("Connected to NATS server at {}.", nats_url);
@@ -538,7 +538,7 @@ async fn run_mock_mode() {
             let poll_client = command_client.clone();
             tokio::spawn(async move {
                 let http_client = reqwest::Client::new();
-                let orchestrator_url = "https://4f92dbd8d0b6.ngrok-free.app";
+                let orchestrator_url = "https://69d7308b40ac.ngrok-free.app";
                 // Generate unique GPU ID based on hostname
                 let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                     std::process::Command::new("hostname")
@@ -619,7 +619,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Connect to NATS server
-    let nats_url = "0.tcp.in.ngrok.io:12133";
+    let nats_url = "0.tcp.in.ngrok.io:11188";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
@@ -662,7 +662,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
         let jobs_for_commands = active_jobs.clone();
         tokio::spawn(async move {
             let http_client = reqwest::Client::new();
-            let orchestrator_url = "https://4f92dbd8d0b6.ngrok-free.app";
+            let orchestrator_url = "https://69d7308b40ac.ngrok-free.app";
             // Generate unique GPU ID based on hostname + GPU index
             let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                 std::process::Command::new("hostname")
@@ -850,7 +850,11 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
                     ThrottleReasons::empty() // Safe enum default
                 });
 
+                // Create standardized GPU ID
+                let gpu_id = format!("{}:gpu-{}", hostname, i);
+
                 let telemetry = GpuTelemetry {
+                    gpu_id: gpu_id.clone(),
                     gpu_name,
                     utilization_gpu: utilization_rates.gpu,
                     utilization_memory_controller: utilization_rates.memory,
@@ -864,7 +868,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
                     throttling_reasons: format!("{:?}", throttle_reasons),
                 };
 
-                let subject = format!("aether.telemetry.{}:gpu-{}", hostname, i);
+                let subject = format!("aether.telemetry.{}", gpu_id);
                 let payload = serde_json::to_vec(&telemetry).unwrap();
                 if let Err(err) = client.publish(subject.clone(), payload.into()).await {
                     eprintln!("Failed to publish to NATS: {}", err);
@@ -884,6 +888,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
 #[derive(Serialize, Debug)]
 struct GpuTelemetry {
     // Identification
+    gpu_id: String,
     gpu_name: String,
 
     // Performance & Utilization

@@ -9,20 +9,21 @@ import torch
 import time
 import argparse
 import math
+from math import gamma
 
 def main():
     parser = argparse.ArgumentParser(description='Monte Carlo Pi Estimation')
-    parser.add_argument('--samples-per-round', type=int, default=100_000_000, help='Number of random samples per round')
+    parser.add_argument('--samples-per-round', type=int, default=1_000_000_000, help='Number of random samples per round')
     parser.add_argument('--device', type=str, default='auto', help='Device to use')
-    parser.add_argument('--target-accuracy', type=float, default=99.5, help='Target accuracy percentage (e.g., 99.5 for 99.5%)')
-    parser.add_argument('--complexity', type=int, default=4, help='Computational complexity multiplier')
-    parser.add_argument('--max-rounds', type=int, default=50, help='Maximum number of rounds to prevent infinite loops')
+    parser.add_argument('--target-accuracy', type=float, default=99.95, help='Target accuracy percentage (e.g., 99.95 for 99.95%)')
+    parser.add_argument('--dimensions', type=int, default=10, help='Number of dimensions for hypersphere estimation')
+    parser.add_argument('--max-rounds', type=int, default=10, help='Maximum number of rounds to prevent infinite loops')
     args = parser.parse_args()
 
     print(f"🎲 Starting Monte Carlo Pi Estimation")
     print(f"   Samples per round: {args.samples_per_round:,}")
     print(f"   Target accuracy: {args.target_accuracy}%")
-    print(f"   Complexity: {args.complexity}x")
+    print(f"   Dimensions: {args.dimensions}D hypersphere")
     print(f"   Max rounds: {args.max_rounds}")
 
     # Device selection with optimization
@@ -76,31 +77,42 @@ def main():
                 current_batch = min(batch_size, current_samples - round_processed)
                 batch_count += 1
 
-                # Generate random points in [0,1] x [0,1] square
-                x = torch.rand(current_batch, device=device, dtype=torch.float32)
-                y = torch.rand(current_batch, device=device, dtype=torch.float32)
+                # Generate random points in high-dimensional unit hypercube [-1,1]^n
+                points = torch.rand(current_batch, args.dimensions, device=device, dtype=torch.float32) * 2.0 - 1.0
 
-                # Add computational complexity for longer runtime
-                for complexity_iter in range(args.complexity):
-                    # Use operations that preserve uniform distribution
-                    temp_x = x * 2.0 - 1.0  # Scale to [-1,1]
-                    temp_y = y * 2.0 - 1.0
-                    
-                    # Perform heavy computation without changing distribution
-                    _ = torch.sqrt(temp_x * temp_x + temp_y * temp_y)  # Distance calculation
-                    _ = torch.atan2(temp_y, temp_x)  # Angle calculation
-                    
-                    # Keep original uniform distribution intact
-                    # x and y remain unchanged for the actual Monte Carlo calculation
+                # Calculate squared distances from origin for each point
+                # This is the computationally intensive part - sum of squares across all dimensions
+                distances_squared = torch.sum(points * points, dim=1)
 
-                # Check which points fall inside unit circle
-                # Distance from origin: sqrt(x^2 + y^2) <= 1
-                # Optimized: x^2 + y^2 <= 1 (avoid sqrt)
-                distances_squared = x*x + y*y
-                inside_circle = distances_squared <= 1.0
+                # Check which points fall inside unit hypersphere
+                # For n-dimensional hypersphere: x₁² + x₂² + ... + xₙ² ≤ 1
+                inside_hypersphere = distances_squared <= 1.0
 
-                # Count points inside circle
-                batch_inside = torch.sum(inside_circle).item()
+                # Convert hypersphere estimation to π estimation
+                # The ratio of points inside hypersphere gives us the volume ratio
+                # For 2D: π/4, for higher dimensions we use the theoretical ratio to back-calculate π
+                batch_inside_hypersphere = torch.sum(inside_hypersphere).item()
+                hypersphere_ratio = batch_inside_hypersphere / current_batch
+
+                # Convert n-dimensional result back to π estimation
+                # Using the mathematical relationship between n-sphere volumes
+                if args.dimensions == 2:
+                    # Standard 2D case: π = 4 * (points inside circle / total points)
+                    batch_inside = batch_inside_hypersphere
+                else:
+                    # For n-dimensions, use gamma function relationship to estimate π
+                    # V_n = π^(n/2) / Γ(n/2 + 1) * r^n
+                    # We solve for π given the measured volume ratio
+                    n = args.dimensions
+                    theoretical_ratio = math.pi**(n/2) / gamma(n/2 + 1) / (2**n)
+
+                    # Back-calculate what π would be based on our measurement
+                    if hypersphere_ratio > 0:
+                        estimated_pi_factor = (hypersphere_ratio * (2**n) * gamma(n/2 + 1))**(2/n)
+                        # Scale to contribute to overall π estimation (weight by theoretical accuracy)
+                        batch_inside = int(current_batch * estimated_pi_factor / 4)
+                    else:
+                        batch_inside = 0
                 round_inside += batch_inside
                 round_processed += current_batch
                 total_inside += batch_inside
@@ -119,7 +131,7 @@ def main():
                           f"(error: {error:.6f})")
 
                 # Cleanup batch data
-                del x, y, distances_squared, inside_circle
+                del points, distances_squared, inside_hypersphere
 
                 # Small delay for system stability
                 time.sleep(0.01)
@@ -162,7 +174,7 @@ def main():
         # Performance metrics
         samples_per_sec = total_processed / total_time
         throughput_gbps = (total_processed * 8) / total_time / 1e9  # 8 bytes per sample (2 floats)
-        effective_tflops = (total_processed * args.complexity * 10) / total_time / 1e12  # Rough FLOPS estimate
+        effective_tflops = (total_processed * args.dimensions * 10) / total_time / 1e12  # Rough FLOPS estimate
 
         print(f"\n🎉 Monte Carlo simulation completed!")
         print(f"⏱️ Total time: {total_time:.2f} seconds")

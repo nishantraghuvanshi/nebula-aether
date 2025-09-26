@@ -20,6 +20,7 @@ import (
 
 // This struct must match the Rust agent's GpuTelemetry struct
 type GpuTelemetry struct {
+	GpuID                       string `json:"gpu_id"`
 	GpuName                     string `json:"gpu_name"`
 	UtilizationGpu              uint32 `json:"utilization_gpu"`
 	UtilizationMemoryController uint32 `json:"utilization_memory_controller"`
@@ -649,19 +650,69 @@ func handlePoll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get the next job from the queue
-	job := jobQueue[0]
-	jobQueue = jobQueue[1:]
+	// Get the next job from the queue (but don't remove it yet)
+	nextJob := jobQueue[0]
 	queueMux.Unlock()
 
-	log.Printf("📤 Polling agent %s retrieved job: %s", gpuID, job.ID)
+	// Check if this GPU is suitable for the job using AI prediction
+	clusterStateMux.RLock()
+	currentClusterState := make(map[string]GpuState, len(clusterState))
+	for id, state := range clusterState {
+		currentClusterState[id] = state
+	}
+	clusterStateMux.RUnlock()
+
+	// Ensure the requesting GPU is in our cluster state
+	_, gpuExists := currentClusterState[gpuID]
+	if !gpuExists {
+		log.Printf("⚠️ GPU %s not found in cluster state, allowing job assignment", gpuID)
+		// Allow the job to proceed for unknown GPUs (fallback behavior)
+	} else {
+		// Use AI to determine the best GPU for this job
+		if len(currentClusterState) > 1 {
+			log.Printf("🤖 Using AI to evaluate job %s for GPU %s", nextJob.ID, gpuID)
+
+			bestGpuID, err := askAICoreCandidates(currentClusterState, nextJob)
+			if err != nil {
+				log.Printf("AI prediction failed: %v. Allowing job on requesting GPU %s", err, gpuID)
+			} else if bestGpuID != gpuID {
+				log.Printf("🚫 AI recommends GPU %s over %s for job %s. Job stays in queue.", bestGpuID, gpuID, nextJob.ID)
+				// Don't assign this job to this GPU, let the optimal GPU poll for it
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(map[string]interface{}{
+					"job": nil,
+					"message": fmt.Sprintf("job %s reserved for optimal GPU %s", nextJob.ID, bestGpuID),
+				})
+				return
+			} else {
+				log.Printf("✅ AI confirms GPU %s is optimal for job %s", gpuID, nextJob.ID)
+			}
+		}
+	}
+
+	// Remove the job from queue now that we're assigning it
+	queueMux.Lock()
+	if len(jobQueue) > 0 && jobQueue[0].ID == nextJob.ID {
+		jobQueue = jobQueue[1:]
+		log.Printf("📤 Polling agent %s assigned job: %s", gpuID, nextJob.ID)
+	} else {
+		// Job was taken by another agent, return no job
+		queueMux.Unlock()
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"job": nil,
+			"message": "job was assigned to another agent",
+		})
+		return
+	}
+	queueMux.Unlock()
 
 	// Convert to JobExecution format
 	jobExecution := JobExecution{
-		JobID:  job.ID,
-		Type:   job.Type,
-		Script: job.Script,
-		Args:   job.Args,
+		JobID:  nextJob.ID,
+		Type:   nextJob.Type,
+		Script: nextJob.Script,
+		Args:   nextJob.Args,
 		GpuID:  gpuID,
 	}
 
@@ -680,7 +731,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:12133")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:11188")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
@@ -701,38 +752,46 @@ func main() {
 
 	// Subscribe to telemetry for all GPUs
 	sub, err := nc.Subscribe("aether.telemetry.*", func(msg *nats.Msg) {
-		// Example subject: aether.telemetry.gpu-0
-		parts := strings.Split(msg.Subject, ".")
-		gpuID := parts[len(parts)-1]
 		var telemetry GpuTelemetry
 		err := json.Unmarshal(msg.Data, &telemetry)
 		if err != nil {
-			log.Printf("Error decoding message: %v", err)
+			log.Printf("Error decoding telemetry message: %v", err)
 			return
 		}
 
-		// Insert the data into the database
+		// Use GPU ID from telemetry data (more reliable than parsing subject)
+		gpuID := telemetry.GpuID
+		if gpuID == "" {
+			log.Printf("Warning: Telemetry missing gpu_id field, falling back to subject parsing")
+			parts := strings.Split(msg.Subject, ".")
+			gpuID = parts[len(parts)-1]
+		}
+
+		// Insert the complete telemetry data into the database
 		_, err = conn.Exec(context.Background(),
-			`INSERT INTO gpu_telemetry (time, gpu_name, temperature_c, memory_used_mb, memory_total_mb, 
-			utilization_gpu, utilization_memory_controller, power_draw_w, clock_gpu_mhz, clock_mem_mhz, 
-			performance_state, throttling_reasons, gpu_id) 
-			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+			`INSERT INTO gpu_telemetry (
+				time, gpu_id, gpu_name,
+				utilization_gpu, utilization_memory_controller, performance_state,
+				clock_gpu_mhz, clock_mem_mhz,
+				memory_used_mb, memory_total_mb,
+				temperature_c, power_draw_w, throttling_reasons
+			) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
 			time.Now(),
+			gpuID,
 			telemetry.GpuName,
-			telemetry.TemperatureC,
-			telemetry.MemoryUsedMb,
-			telemetry.MemoryTotalMb,
 			telemetry.UtilizationGpu,
 			telemetry.UtilizationMemoryController,
-			telemetry.PowerDrawW,
+			telemetry.PerformanceState,
 			telemetry.ClockGpuMhz,
 			telemetry.ClockMemMhz,
-			telemetry.PerformanceState,
+			telemetry.MemoryUsedMb,
+			telemetry.MemoryTotalMb,
+			telemetry.TemperatureC,
+			telemetry.PowerDrawW,
 			telemetry.ThrottlingReasons,
-			gpuID,
 		)
 		if err != nil {
-			log.Printf("Error inserting data: %v", err)
+			log.Printf("Error inserting telemetry data for %s: %v", gpuID, err)
 			return
 		}
 
@@ -758,7 +817,9 @@ func main() {
 		}
 		clusterStateMux.Unlock()
 
-		log.Printf("Logged telemetry for %s on %s", telemetry.GpuName, gpuID)
+		log.Printf("📊 Telemetry logged for %s (%s): Util=%d%%, Temp=%d°C, Mem=%d/%dMB",
+			gpuID, telemetry.GpuName, telemetry.UtilizationGpu, telemetry.TemperatureC,
+			telemetry.MemoryUsedMb, telemetry.MemoryTotalMb)
 	})
 	if err != nil {
 		log.Fatalf("Error subscribing to NATS: %v", err)
