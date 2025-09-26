@@ -472,6 +472,11 @@ var (
 	activeJobStatus = make(map[string]JobStatus)  // Current job status by job ID
 	completedJobs   = make([]JobStatus, 0)        // Recently completed jobs
 	jobStatusMux    = &sync.RWMutex{}
+	// NEW: Resource tracking for intelligent scheduling
+	pendingJobsByGpu = make(map[string][]Job)     // Jobs assigned but not yet started per GPU
+	runningJobsByGpu = make(map[string][]Job)     // Currently running jobs per GPU
+	resourceMux      = &sync.RWMutex{}            // Mutex for resource tracking
+	jobAssignmentMux = &sync.Mutex{}              // Prevents race conditions in job assignment
 )
 
 // loadJobDefinitions loads job definitions from the JSON file
@@ -561,15 +566,30 @@ func askAICorePrediction(cluster map[string]GpuState, job Job) (*PredictionRespo
 
 	candidates := make([]GpuCandidate, 0, len(cluster))
 	for id, s := range cluster {
+		// NEW: Calculate projected resource usage including pending/running jobs
+		currentMem, projectedMem, currentCompute, projectedCompute := calculateGpuResourceUsage(id, s)
+
+		// Use projected values for AI decision making to prevent resource conflicts
+		adjustedMemUsed := uint64(projectedMem)
+		adjustedGpuUtil := uint32(projectedCompute)
+
+		// Ensure values don't exceed maximums
+		if adjustedMemUsed > s.MemTotal {
+			adjustedMemUsed = s.MemTotal
+		}
+		if adjustedGpuUtil > 100 {
+			adjustedGpuUtil = 100
+		}
+
 		candidates = append(candidates, GpuCandidate{
 			GpuID:   id,
 			GpuName: s.GpuName,
 
-			// Core telemetry - all fields from enhanced struct
+			// Core telemetry - enhanced with projected resource usage
 			Temp:                        s.Temp,
-			MemUsed:                     s.MemUsed,
+			MemUsed:                     adjustedMemUsed,  // NEW: Use projected memory
 			MemTotal:                    s.MemTotal,
-			UtilizationGpu:              s.UtilizationGpu,
+			UtilizationGpu:              adjustedGpuUtil,  // NEW: Use projected compute
 			UtilizationMemoryController: s.UtilizationMemoryController,
 			PowerDrawW:                  s.PowerDrawW,
 			ThrottlingReasons:           s.ThrottlingReasons,
@@ -581,6 +601,12 @@ func askAICorePrediction(cluster map[string]GpuState, job Job) (*PredictionRespo
 			// Performance state
 			PerformanceState: s.PerformanceState,
 		})
+
+		// Enhanced logging for resource projection
+		resourceSummary := getGpuResourceSummary(id, s)
+		log.Printf("🔮 GPU %s resource projection: Current: %.0fMB/%.0f%%, Projected: %.0fMB/%.0f%% (P:%0.f R:%.0f)",
+			id, currentMem, currentCompute, projectedMem, projectedCompute,
+			resourceSummary["pending_jobs"], resourceSummary["running_jobs"])
 	}
 
 	request := PredictionRequest{
@@ -619,6 +645,129 @@ func askAICorePrediction(cluster map[string]GpuState, job Job) (*PredictionRespo
 	}
 
 	return &predictionResp, nil
+}
+
+// NEW: Resource management functions for intelligent scheduling
+
+// calculateGpuResourceUsage calculates current and projected resource usage for a GPU
+func calculateGpuResourceUsage(gpuID string, gpuState GpuState) (currentMemory, projectedMemory, currentCompute, projectedCompute float64) {
+	resourceMux.RLock()
+	defer resourceMux.RUnlock()
+
+	// Current resource usage from telemetry
+	currentMemory = float64(gpuState.MemUsed)
+	currentCompute = float64(gpuState.UtilizationGpu)
+
+	// Add pending jobs resource requirements
+	projectedMemory = currentMemory
+	projectedCompute = currentCompute
+
+	// Add memory and compute from pending jobs
+	if pendingJobs, exists := pendingJobsByGpu[gpuID]; exists {
+		for _, job := range pendingJobs {
+			projectedMemory += float64(job.MinMemoryMB)
+			projectedCompute += float64(job.ExpectedGpuUtil)
+		}
+	}
+
+	// Add memory and compute from running jobs
+	if runningJobs, exists := runningJobsByGpu[gpuID]; exists {
+		for _, job := range runningJobs {
+			projectedMemory += float64(job.MinMemoryMB) * 0.5 // Running jobs may use less than peak
+			projectedCompute += float64(job.ExpectedGpuUtil) * 0.7 // Reduce estimated impact for running jobs
+		}
+	}
+
+	return currentMemory, projectedMemory, currentCompute, projectedCompute
+}
+
+// reserveGpuResources reserves resources when assigning a job to a GPU
+func reserveGpuResources(gpuID string, job Job) {
+	resourceMux.Lock()
+	defer resourceMux.Unlock()
+
+	// Add to pending jobs list
+	if pendingJobsByGpu[gpuID] == nil {
+		pendingJobsByGpu[gpuID] = make([]Job, 0)
+	}
+	pendingJobsByGpu[gpuID] = append(pendingJobsByGpu[gpuID], job)
+
+	log.Printf("🔒 Reserved resources on %s for job %s: %dMB memory, %d%% GPU util",
+		gpuID, job.ID, job.MinMemoryMB, job.ExpectedGpuUtil)
+}
+
+// moveJobToPendingToRunning moves a job from pending to running when it starts
+func moveJobToPendingToRunning(gpuID string, jobID string) {
+	resourceMux.Lock()
+	defer resourceMux.Unlock()
+
+	// Find and remove from pending
+	if pendingJobs, exists := pendingJobsByGpu[gpuID]; exists {
+		for i, job := range pendingJobs {
+			if job.ID == jobID {
+				// Remove from pending
+				pendingJobsByGpu[gpuID] = append(pendingJobs[:i], pendingJobs[i+1:]...)
+
+				// Add to running
+				if runningJobsByGpu[gpuID] == nil {
+					runningJobsByGpu[gpuID] = make([]Job, 0)
+				}
+				runningJobsByGpu[gpuID] = append(runningJobsByGpu[gpuID], job)
+
+				log.Printf("🏃 Moved job %s from pending to running on %s", jobID, gpuID)
+				break
+			}
+		}
+	}
+}
+
+// releaseGpuResources releases resources when a job completes
+func releaseGpuResources(gpuID string, jobID string) {
+	resourceMux.Lock()
+	defer resourceMux.Unlock()
+
+	// Remove from running jobs
+	if runningJobs, exists := runningJobsByGpu[gpuID]; exists {
+		for i, job := range runningJobs {
+			if job.ID == jobID {
+				runningJobsByGpu[gpuID] = append(runningJobs[:i], runningJobs[i+1:]...)
+				log.Printf("🔓 Released resources on %s for completed job %s", gpuID, jobID)
+				break
+			}
+		}
+	}
+
+	// Also check pending jobs (in case job was killed before starting)
+	if pendingJobs, exists := pendingJobsByGpu[gpuID]; exists {
+		for i, job := range pendingJobs {
+			if job.ID == jobID {
+				pendingJobsByGpu[gpuID] = append(pendingJobs[:i], pendingJobs[i+1:]...)
+				log.Printf("🔓 Released reserved resources on %s for job %s", gpuID, jobID)
+				break
+			}
+		}
+	}
+}
+
+// getGpuResourceSummary returns a summary of resource usage for dashboard/logging
+func getGpuResourceSummary(gpuID string, gpuState GpuState) map[string]interface{} {
+	currentMem, projectedMem, currentCompute, projectedCompute := calculateGpuResourceUsage(gpuID, gpuState)
+
+	resourceMux.RLock()
+	pendingCount := len(pendingJobsByGpu[gpuID])
+	runningCount := len(runningJobsByGpu[gpuID])
+	resourceMux.RUnlock()
+
+	return map[string]interface{}{
+		"current_memory_mb":    currentMem,
+		"projected_memory_mb":  projectedMem,
+		"current_compute_pct":  currentCompute,
+		"projected_compute_pct": projectedCompute,
+		"pending_jobs":         pendingCount,
+		"running_jobs":         runningCount,
+		"memory_available_mb":  float64(gpuState.MemTotal) - projectedMem,
+		"compute_available_pct": 100.0 - projectedCompute,
+	}
 }
 
 // askAICoreCandidates sends all GPU candidates to the AI service and gets the best GPU ID
@@ -1070,13 +1219,13 @@ func handlePoll(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Remove the job from queue now that we're assigning it
+	// ATOMIC JOB ASSIGNMENT - Prevent race conditions
+	jobAssignmentMux.Lock()
+	defer jobAssignmentMux.Unlock()
+
+	// Double-check job is still available after getting the lock
 	queueMux.Lock()
-	if len(jobQueue) > 0 && jobQueue[0].ID == nextJob.ID {
-		jobQueue = jobQueue[1:]
-		log.Printf("📤 Polling agent %s assigned job: %s", gpuID, nextJob.ID)
-	} else {
-		// Job was taken by another agent, return no job
+	if len(jobQueue) == 0 || jobQueue[0].ID != nextJob.ID {
 		queueMux.Unlock()
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
@@ -1085,7 +1234,26 @@ func handlePoll(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	// Remove the job from queue now that we're assigning it
+	jobQueue = jobQueue[1:]
 	queueMux.Unlock()
+
+	// NEW: Reserve resources immediately upon assignment
+	reserveGpuResources(gpuID, nextJob)
+
+	// Log resource usage after assignment
+	clusterStateMux.RLock()
+	if gpuState, exists := clusterState[gpuID]; exists {
+		resourceSummary := getGpuResourceSummary(gpuID, gpuState)
+		log.Printf("📊 Post-assignment resources for %s: %.0fMB/%.0fMB memory (%.1f%% projected), %.0f%% compute (%.1f%% projected)",
+			gpuID, resourceSummary["current_memory_mb"], float64(gpuState.MemTotal),
+			resourceSummary["projected_memory_mb"].(float64)/float64(gpuState.MemTotal)*100,
+			resourceSummary["current_compute_pct"], resourceSummary["projected_compute_pct"])
+	}
+	clusterStateMux.RUnlock()
+
+	log.Printf("📤 Polling agent %s assigned job: %s (resources reserved)", gpuID, nextJob.ID)
 
 	// Convert to JobExecution format
 	jobExecution := JobExecution{
@@ -1111,7 +1279,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:18649")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:11888")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
@@ -1263,6 +1431,29 @@ func main() {
 		jobStatusMux.Unlock()
 
 		log.Printf("📊 Job status update: %s - %s (%s)", status.JobID, status.Status, status.Message)
+
+		// NEW: Resource tracking based on job status changes
+		gpuID := status.GpuID
+		jobID := status.JobID
+
+		switch status.Status {
+		case "running":
+			// Job started running - move from pending to running
+			moveJobToPendingToRunning(gpuID, jobID)
+
+		case "completed", "failed", "killed":
+			// Job finished - release all resources
+			releaseGpuResources(gpuID, jobID)
+
+			// Log current resource state after release
+			clusterStateMux.RLock()
+			if gpuState, exists := clusterState[gpuID]; exists {
+				resourceSummary := getGpuResourceSummary(gpuID, gpuState)
+				log.Printf("📊 Post-completion resources for %s: %.0f pending jobs, %.0f running jobs, %.0fMB available memory",
+					gpuID, resourceSummary["pending_jobs"], resourceSummary["running_jobs"], resourceSummary["memory_available_mb"])
+			}
+			clusterStateMux.RUnlock()
+		}
 
 		// Move completed/failed jobs to completed jobs list
 		if status.Status == "completed" || status.Status == "failed" || status.Status == "killed" {

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/moksh/Desktop/c/nebula/nebula-aether/apps/ai-core/main.py", line 12, in <module>
+    from training_pipeline import TrainingPipeline
+  File "/Users/moksh/Desktop/c/nebula/nebula-aether/apps/ai-core/training_pipeline.py", line 16, in <module>
+    import psycopg2
+ModuleNotFoundError: No module named 'psycopg2'
