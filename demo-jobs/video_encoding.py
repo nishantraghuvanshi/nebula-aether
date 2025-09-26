@@ -59,19 +59,42 @@ def simulate_motion_estimation(current_frame, reference_frame, block_size=16):
     """
     batch_size, height, width = current_frame.shape
 
-    # Create random motion vectors
+    # Simplified motion compensation - just return a warped version of the reference frame
+    # Create a small random displacement for the entire frame
+    displacement_h = torch.randint(-8, 9, (batch_size,), device=current_frame.device, dtype=torch.float32)
+    displacement_w = torch.randint(-8, 9, (batch_size,), device=current_frame.device, dtype=torch.float32)
+
+    # Create a simple compensated frame by shifting the reference frame slightly
+    compensated = torch.zeros_like(current_frame)
+
+    for b in range(batch_size):
+        # Simple translation compensation
+        h_shift = int(displacement_h[b].item())
+        w_shift = int(displacement_w[b].item())
+
+        # Calculate valid region after shift
+        h_start = max(0, h_shift)
+        h_end = min(height, height + h_shift)
+        w_start = max(0, w_shift)
+        w_end = min(width, width + w_shift)
+
+        ref_h_start = max(0, -h_shift)
+        ref_h_end = ref_h_start + (h_end - h_start)
+        ref_w_start = max(0, -w_shift)
+        ref_w_end = ref_w_start + (w_end - w_start)
+
+        # Copy the shifted region
+        if h_end > h_start and w_end > w_start:
+            compensated[b, h_start:h_end, w_start:w_end] = reference_frame[b, ref_h_start:ref_h_end, ref_w_start:ref_w_end]
+
+    # Create dummy motion vectors for return value
     num_blocks_h = height // block_size
     num_blocks_w = width // block_size
+    motion_vectors = torch.stack([displacement_w.unsqueeze(-1).expand(-1, num_blocks_h * num_blocks_w),
+                                  displacement_h.unsqueeze(-1).expand(-1, num_blocks_h * num_blocks_w)], dim=-1)
+    motion_vectors = motion_vectors.view(batch_size, num_blocks_h, num_blocks_w, 2)
 
-    motion_vectors = torch.randint(-16, 17, (batch_size, num_blocks_h, num_blocks_w, 2),
-                                  device=current_frame.device, dtype=torch.float32)
-
-    # Simulate motion compensation
-    compensated = F.grid_sample(reference_frame.unsqueeze(1),
-                               motion_vectors.view(batch_size, -1, 1, 2),
-                               mode='bilinear', align_corners=True)
-
-    return compensated.squeeze(1), motion_vectors
+    return compensated, motion_vectors
 
 def main():
     parser = argparse.ArgumentParser(description='Video Encoding Benchmark')

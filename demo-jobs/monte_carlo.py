@@ -17,8 +17,13 @@ def main():
     parser.add_argument('--device', type=str, default='auto', help='Device to use')
     parser.add_argument('--target-accuracy', type=float, default=99.95, help='Target accuracy percentage (e.g., 99.95 for 99.95%)')
     parser.add_argument('--dimensions', type=int, default=10, help='Number of dimensions for hypersphere estimation')
+    parser.add_argument('--complexity', type=int, help='Alias for --dimensions (backward compatibility)')
     parser.add_argument('--max-rounds', type=int, default=10, help='Maximum number of rounds to prevent infinite loops')
     args = parser.parse_args()
+
+    # Handle backward compatibility: use complexity if provided, otherwise use dimensions
+    if args.complexity is not None:
+        args.dimensions = args.complexity
 
     print(f"🎲 Starting Monte Carlo Pi Estimation")
     print(f"   Samples per round: {args.samples_per_round:,}")

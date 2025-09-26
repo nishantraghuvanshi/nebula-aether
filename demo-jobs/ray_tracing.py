@@ -181,15 +181,21 @@ def main():
     parser = argparse.ArgumentParser(description='Ray Tracing Benchmark')
     parser.add_argument('--width', type=int, default=800, help='Image width in pixels')
     parser.add_argument('--height', type=int, default=600, help='Image height in pixels')
-    parser.add_argument('--samples', type=int, default=50, help='Samples per pixel')
+    parser.add_argument('--samples', type=int, default=50, help='Maximum samples per pixel')
     parser.add_argument('--max-depth', type=int, default=8, help='Maximum ray bounce depth')
     parser.add_argument('--device', type=str, default='auto', help='Device to use')
     parser.add_argument('--batch-size', type=int, default=1024, help='Rays to trace per batch')
+    parser.add_argument('--quality-target', type=float, default=0.95, help='Quality convergence target (0-1)')
+    parser.add_argument('--min-samples', type=int, default=5, help='Minimum samples before checking convergence')
+    parser.add_argument('--max-runtime', type=int, default=60, help='Maximum runtime in seconds')
     args = parser.parse_args()
 
     print(f"🌟 Starting Ray Tracing Benchmark")
     print(f"   Resolution: {args.width}x{args.height}")
-    print(f"   Samples per pixel: {args.samples}")
+    print(f"   Max samples per pixel: {args.samples}")
+    print(f"   Quality target: {args.quality_target:.1%}")
+    print(f"   Min samples: {args.min_samples}")
+    print(f"   Max runtime: {args.max_runtime}s")
     print(f"   Max ray depth: {args.max_depth}")
     print(f"   Batch size: {args.batch_size}")
 
@@ -236,28 +242,51 @@ def main():
 
         # Initialize image buffer
         image = torch.zeros(args.height, args.width, 3, device=device, dtype=torch.float32)
+        previous_image = torch.zeros_like(image)
 
         rays_traced = 0
         start_time = time.time()
-
-        print(f"🚀 Starting ray tracing...")
-
-        # Add timeout safety
-        max_runtime = 60  # 1 minute max
         timeout_start = time.time()
 
+        print(f"🚀 Starting ray tracing...")
+        print(f"🎯 Will stop when quality target {args.quality_target:.1%} is reached or {args.max_runtime}s timeout")
+
         # Process image in batches of rays
+        actual_samples = 0
+        convergence_achieved = False
+        termination_reason = "max_samples"
+
         for sample in range(args.samples):
             # Safety timeout check
-            if time.time() - timeout_start > max_runtime:
-                print(f"⏰ Ray tracing timeout after {max_runtime}s - stopping early")
+            if time.time() - timeout_start > args.max_runtime:
+                print(f"⏰ Ray tracing timeout after {args.max_runtime}s - stopping early")
+                termination_reason = "timeout"
                 break
+
             sample_start = time.time()
 
+            # Store previous image for convergence check
+            if sample >= args.min_samples:
+                previous_image.copy_(image)
+
+            batch_timeout = False
             for y_start in range(0, args.height, args.batch_size):
+                # Check timeout in inner loops too
+                if time.time() - timeout_start > args.max_runtime:
+                    print(f"⏰ Timeout during batch processing - stopping early")
+                    termination_reason = "timeout"
+                    batch_timeout = True
+                    break
+
                 y_end = min(y_start + args.batch_size, args.height)
 
                 for x_start in range(0, args.width, args.batch_size):
+                    # Check timeout more frequently
+                    if time.time() - timeout_start > args.max_runtime:
+                        termination_reason = "timeout"
+                        batch_timeout = True
+                        break
+
                     x_end = min(x_start + args.batch_size, args.width)
 
                     # Create batch of rays
@@ -304,15 +333,50 @@ def main():
                     if rays_traced % (args.batch_size * 10) == 0:
                         time.sleep(0.01)
 
+                if batch_timeout:
+                    break
+
+            if batch_timeout:
+                break
+
+            actual_samples = sample + 1
+
+            # Quality convergence check after minimum samples
+            if sample >= args.min_samples:
+                # Calculate image difference (convergence metric)
+                diff = torch.abs(image - previous_image)
+                mean_diff = torch.mean(diff).item()
+                max_diff = torch.max(diff).item()
+
+                # Quality score: lower difference = higher quality
+                quality_score = 1.0 - min(mean_diff, 1.0)
+
+                # Check if convergence target is reached
+                if quality_score >= args.quality_target:
+                    convergence_achieved = True
+                    termination_reason = "convergence"
+                    print(f"🎯 Quality target {args.quality_target:.1%} achieved! (Current: {quality_score:.1%})")
+                    print(f"   Mean pixel change: {mean_diff:.4f}, Max change: {max_diff:.4f}")
+                    print(f"   Converged after {actual_samples} samples")
+                    break
+
             # Sample progress
             sample_time = time.time() - sample_start
             elapsed = time.time() - start_time
 
-            if (sample + 1) % max(1, args.samples // 10) == 0:
+            # Report progress more frequently, including quality metrics
+            if (sample + 1) % max(1, min(5, args.samples // 10)) == 0 or sample >= args.min_samples:
                 rays_per_sec = rays_traced / elapsed if elapsed > 0 else 0
-                print(f"⚡ Sample {sample + 1}/{args.samples} - "
-                      f"{rays_per_sec:,.0f} rays/sec - "
-                      f"Sample time: {sample_time:.2f}s")
+
+                if sample >= args.min_samples:
+                    print(f"⚡ Sample {sample + 1}/{args.samples} - "
+                          f"{rays_per_sec:,.0f} rays/sec - "
+                          f"Quality: {quality_score:.1%} - "
+                          f"Time: {sample_time:.2f}s")
+                else:
+                    print(f"⚡ Sample {sample + 1}/{args.samples} - "
+                          f"{rays_per_sec:,.0f} rays/sec - "
+                          f"Time: {sample_time:.2f}s (building up...)")
 
         # Synchronize GPU operations
         if device.type == 'cuda':
@@ -323,17 +387,27 @@ def main():
         # Apply gamma correction (simplified)
         image = torch.sqrt(torch.clamp(image, 0, 1))
 
-        # Calculate final statistics
-        total_rays_traced = total_pixels * args.samples
-        rays_per_sec = total_rays_traced / total_time
-        pixels_per_sec = total_pixels / total_time
+        # Calculate final statistics based on actual work done
+        total_rays_traced = rays_traced  # Use actual rays traced, not theoretical maximum
+        rays_per_sec = total_rays_traced / total_time if total_time > 0 else 0
+        pixels_per_sec = total_pixels / total_time if total_time > 0 else 0
 
         # Estimate computational complexity
         estimated_operations_per_ray = args.max_depth * len(spheres) * 10  # Rough estimate
         total_operations = total_rays_traced * estimated_operations_per_ray
-        operations_per_sec = total_operations / total_time / 1e9  # GFLOPS
+        operations_per_sec = total_operations / total_time / 1e9 if total_time > 0 else 0  # GFLOPS
 
-        print(f"\n🎉 Ray tracing completed!")
+        # Report completion status
+        if termination_reason == "convergence":
+            print(f"\n🎉 Ray tracing completed via quality convergence!")
+            print(f"🎯 Achieved {args.quality_target:.1%} quality target in {actual_samples} samples")
+        elif termination_reason == "timeout":
+            print(f"\n⏰ Ray tracing completed via timeout!")
+            print(f"🕒 Stopped after {args.max_runtime}s with {actual_samples} samples")
+        else:
+            print(f"\n🎉 Ray tracing completed after maximum samples!")
+            print(f"📊 Completed all {actual_samples} samples")
+
         print(f"⏱️ Total time: {total_time:.2f} seconds")
         print(f"📊 Performance:")
         print(f"   Rays traced: {total_rays_traced:,}")
@@ -342,9 +416,11 @@ def main():
         print(f"   Estimated GFLOPS: {operations_per_sec:.2f}")
         print(f"\n🎨 Rendering details:")
         print(f"   Resolution: {args.width}x{args.height}")
-        print(f"   Samples per pixel: {args.samples}")
+        print(f"   Actual samples per pixel: {actual_samples}")
+        print(f"   Max possible samples: {args.samples}")
         print(f"   Max bounce depth: {args.max_depth}")
         print(f"   Scene complexity: {len(spheres)} objects")
+        print(f"   Termination reason: {termination_reason}")
 
         # Memory cleanup
         if device.type == 'cuda':
@@ -363,7 +439,7 @@ def main():
         return 1
 
     print(f"✨ Ray tracing benchmark completed successfully!")
-    print(f"🌟 Rendered {args.width}x{args.height} image with {args.samples} samples per pixel")
+    print(f"🌟 Rendered {args.width}x{args.height} image with task-based termination")
     return 0
 
 if __name__ == "__main__":
