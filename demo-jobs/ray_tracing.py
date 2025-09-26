@@ -64,17 +64,11 @@ def random_unit_vector(shape, device):
     # Simple normalization (avoiding while loop for efficiency)
     return random_vec / torch.sqrt(torch.clamp(length_squared, min=0.001))
 
-def trace_ray(ray_origin, ray_direction, spheres, depth, max_depth, device):
+def trace_ray_simple(ray_origin, ray_direction, spheres, device):
     """
-    Recursive ray tracing function with depth limiting for performance
+    Simplified non-recursive ray tracing for performance
+    Single bounce with direct lighting only
     """
-    if depth >= max_depth:
-        # Return sky color (gradient)
-        t = 0.5 * (ray_direction[..., 1] + 1.0)
-        sky_color = (1.0 - t).unsqueeze(-1) * torch.tensor([1.0, 1.0, 1.0], device=device) + \
-                   t.unsqueeze(-1) * torch.tensor([0.5, 0.7, 1.0], device=device)
-        return sky_color
-
     closest_t = torch.full(ray_origin.shape[:-1], float('inf'), device=device)
     hit_sphere_idx = torch.full(ray_origin.shape[:-1], -1, device=device, dtype=torch.long)
 
@@ -90,19 +84,18 @@ def trace_ray(ray_origin, ray_direction, spheres, depth, max_depth, device):
     # Check if ray hit anything
     ray_hit = closest_t < float('inf')
 
+    # Initialize with sky color
+    t = 0.5 * (ray_direction[..., 1] + 1.0)
+    final_color = (1.0 - t).unsqueeze(-1) * torch.tensor([1.0, 1.0, 1.0], device=device) + \
+                 t.unsqueeze(-1) * torch.tensor([0.5, 0.7, 1.0], device=device)
+
     if not torch.any(ray_hit):
-        # No hit, return sky color
-        t = 0.5 * (ray_direction[..., 1] + 1.0)
-        sky_color = (1.0 - t).unsqueeze(-1) * torch.tensor([1.0, 1.0, 1.0], device=device) + \
-                   t.unsqueeze(-1) * torch.tensor([0.5, 0.7, 1.0], device=device)
-        return sky_color
+        return final_color
 
     # Calculate hit point and normal
     hit_point = ray_origin + closest_t.unsqueeze(-1) * ray_direction
 
-    # Get material properties of hit sphere
-    final_color = torch.zeros(ray_origin.shape[:-1] + (3,), device=device)
-
+    # Simple lighting model - just apply sphere color with basic lighting
     for i, sphere in enumerate(spheres):
         sphere_mask = (hit_sphere_idx == i) & ray_hit
         if not torch.any(sphere_mask):
@@ -110,43 +103,25 @@ def trace_ray(ray_origin, ray_direction, spheres, depth, max_depth, device):
 
         # Calculate surface normal
         normal = (hit_point - sphere.center.unsqueeze(0)) / sphere.radius
-
-        # Ensure normal points toward ray origin
         normal = torch.where((torch.sum(ray_direction * normal, dim=-1, keepdim=True) > 0),
                            -normal, normal)
 
-        if sphere.material_type == 0:  # Diffuse material
-            # Lambertian reflection
-            target = hit_point + normal + random_unit_vector(hit_point.shape[:-1], device)
-            scattered_direction = target - hit_point
+        # Simple lighting: ambient + diffuse
+        light_dir = torch.tensor([0.5, 1.0, 0.5], device=device, dtype=torch.float32)
+        light_dir = light_dir / torch.norm(light_dir)
 
-            # Recursive ray trace
-            scattered_color = trace_ray(hit_point, scattered_direction, spheres, depth + 1, max_depth, device)
-            material_color = 0.5 * scattered_color * sphere.color.unsqueeze(0)
+        # Diffuse lighting
+        ndotl = torch.clamp(torch.sum(normal * light_dir.unsqueeze(0).unsqueeze(0), dim=-1), 0.0, 1.0)
 
-        elif sphere.material_type == 1:  # Metal material
-            # Perfect reflection
-            reflected = ray_direction - 2 * torch.sum(ray_direction * normal, dim=-1, keepdim=True) * normal
+        # Material color with simple lighting
+        ambient = 0.3
+        diffuse = 0.7 * ndotl
+        lighting = ambient + diffuse
 
-            # Add some roughness
-            fuzz = 0.1
-            reflected = reflected + fuzz * random_unit_vector(reflected.shape[:-1], device)
-
-            # Recursive ray trace
-            scattered_color = trace_ray(hit_point, reflected, spheres, depth + 1, max_depth, device)
-            material_color = scattered_color * sphere.color.unsqueeze(0)
-
-        else:  # Glass material
-            ref_idx = 1.5
-            cos_theta = torch.min(-torch.sum(ray_direction * normal, dim=-1),
-                                torch.ones_like(closest_t))
-
-            reflect_prob = fresnel_reflectance(cos_theta, ref_idx)
-
-            # Simplified: always reflect for glass (proper refraction is complex)
-            reflected = ray_direction - 2 * torch.sum(ray_direction * normal, dim=-1, keepdim=True) * normal
-            scattered_color = trace_ray(hit_point, reflected, spheres, depth + 1, max_depth, device)
-            material_color = scattered_color
+        # Expand sphere color to match batch dimensions
+        sphere_color_expanded = sphere.color.unsqueeze(0).unsqueeze(0).expand(hit_point.shape[0], hit_point.shape[1], -1)
+        material_color = sphere_color_expanded * lighting.unsqueeze(-1)
+        material_color = torch.clamp(material_color, 0.0, 1.0)
 
         # Apply material color where this sphere was hit
         final_color = torch.where(sphere_mask.unsqueeze(-1), material_color, final_color)
@@ -181,10 +156,10 @@ def main():
     parser = argparse.ArgumentParser(description='Ray Tracing Benchmark')
     parser.add_argument('--width', type=int, default=800, help='Image width in pixels')
     parser.add_argument('--height', type=int, default=600, help='Image height in pixels')
-    parser.add_argument('--samples', type=int, default=10, help='Maximum samples per pixel')
+    parser.add_argument('--samples', type=int, default=20, help='Maximum samples per pixel')
     parser.add_argument('--max-depth', type=int, default=3, help='Maximum ray bounce depth')
     parser.add_argument('--device', type=str, default='auto', help='Device to use')
-    parser.add_argument('--batch-size', type=int, default=64, help='Rays to trace per batch')
+    parser.add_argument('--batch-size', type=int, default=256, help='Rays to trace per batch')
     parser.add_argument('--quality-target', type=float, default=0.95, help='Quality convergence target (0-1)')
     parser.add_argument('--min-samples', type=int, default=5, help='Minimum samples before checking convergence')
     parser.add_argument('--max-runtime', type=int, default=60, help='Maximum runtime in seconds')
@@ -316,8 +291,8 @@ def main():
                     # Ray origins (all from camera)
                     ray_origin = origin.unsqueeze(0).unsqueeze(0).expand(batch_height, batch_width, -1)
 
-                    # Trace rays
-                    color = trace_ray(ray_origin, ray_direction, spheres, 0, args.max_depth, device)
+                    # Trace rays (simplified single-bounce)
+                    color = trace_ray_simple(ray_origin, ray_direction, spheres, device)
 
                     # Accumulate color (average over samples)
                     if sample == 0:
@@ -329,14 +304,11 @@ def main():
 
                     rays_traced += batch_height * batch_width
 
-                    # Small delay for system stability and more frequent timeout checks
-                    if rays_traced % (args.batch_size * 2) == 0:
-                        time.sleep(0.001)  # Reduced delay
-                        # Additional timeout check
-                        if time.time() - timeout_start > args.max_runtime:
-                            termination_reason = "timeout"
-                            batch_timeout = True
-                            break
+                    # Frequent timeout checks (every batch)
+                    if time.time() - timeout_start > args.max_runtime:
+                        termination_reason = "timeout"
+                        batch_timeout = True
+                        break
 
                 if batch_timeout:
                     break
@@ -369,8 +341,8 @@ def main():
             sample_time = time.time() - sample_start
             elapsed = time.time() - start_time
 
-            # Report progress more frequently, including quality metrics
-            if (sample + 1) % max(1, min(2, args.samples // 5)) == 0 or sample >= args.min_samples:
+            # Report progress every few samples
+            if (sample + 1) % max(1, min(3, args.samples // 4)) == 0 or sample >= args.min_samples:
                 rays_per_sec = rays_traced / elapsed if elapsed > 0 else 0
 
                 if sample >= args.min_samples:

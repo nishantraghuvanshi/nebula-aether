@@ -65,7 +65,7 @@
     "name": "Ray Tracing Benchmark",
     "description": "Path tracing with reflections and global illumination - modern graphics workload",
     "script": "ray_tracing.py",
-    "args": ["--width", "800", "--height", "600", "--samples", "20", "--max-depth", "4", "--batch-size", "64", "--max-runtime", "300"],
+    "args": ["--width", "800", "--height", "600", "--samples", "50", "--batch-size", "256", "--max-runtime", "180", "--quality-target", "0.99", "--min-samples", "15"],
     "min_memory_mb": 3072,
     "max_duration_sec": 420,
     "priority": "normal",
