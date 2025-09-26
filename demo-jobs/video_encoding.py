@@ -133,7 +133,15 @@ def main():
 
         print(f"🚀 Starting encoding process...")
 
+        # Add timeout safety
+        max_runtime = 60  # 1 minute max
+        timeout_start = time.time()
+
         while frames_processed < args.frames:
+            # Safety timeout check
+            if time.time() - timeout_start > max_runtime:
+                print(f"⏰ Video encoding timeout after {max_runtime}s - stopping early")
+                break
             batch_start = time.time()
 
             # Determine current batch size (handle remainder)
@@ -155,13 +163,12 @@ def main():
             block_size = 8
             encoded_blocks = []
 
-            # Process frames in smaller chunks to avoid memory issues
-            chunk_height, chunk_width = min(height, 128), min(width, 128)
-            for h in range(0, chunk_height, block_size):
-                for w in range(0, chunk_width, block_size):
-                    # Extract 8x8 blocks from the chunk
-                    h_end = min(h + block_size, chunk_height)
-                    w_end = min(w + block_size, chunk_width)
+            # Process frames in 8x8 blocks across the entire frame
+            for h in range(0, height, block_size):
+                for w in range(0, width, block_size):
+                    # Extract 8x8 blocks from the frame
+                    h_end = min(h + block_size, height)
+                    w_end = min(w + block_size, width)
 
                     block = residual[:current_batch_size, h:h_end, w:w_end]
 

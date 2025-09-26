@@ -12,11 +12,11 @@ import math
 
 def main():
     parser = argparse.ArgumentParser(description='Monte Carlo Pi Estimation')
-    parser.add_argument('--samples-per-round', type=int, default=50_000_000, help='Number of random samples per round')
+    parser.add_argument('--samples-per-round', type=int, default=100_000_000, help='Number of random samples per round')
     parser.add_argument('--device', type=str, default='auto', help='Device to use')
-    parser.add_argument('--target-accuracy', type=float, default=98.0, help='Target accuracy percentage (e.g., 98.0 for 98.0%)')
-    parser.add_argument('--complexity', type=int, default=2, help='Computational complexity multiplier')
-    parser.add_argument('--max-rounds', type=int, default=100, help='Maximum number of rounds to prevent infinite loops')
+    parser.add_argument('--target-accuracy', type=float, default=99.5, help='Target accuracy percentage (e.g., 99.5 for 99.5%)')
+    parser.add_argument('--complexity', type=int, default=4, help='Computational complexity multiplier')
+    parser.add_argument('--max-rounds', type=int, default=50, help='Maximum number of rounds to prevent infinite loops')
     args = parser.parse_args()
 
     print(f"🎲 Starting Monte Carlo Pi Estimation")

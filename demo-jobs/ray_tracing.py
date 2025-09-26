@@ -242,8 +242,16 @@ def main():
 
         print(f"🚀 Starting ray tracing...")
 
+        # Add timeout safety
+        max_runtime = 60  # 1 minute max
+        timeout_start = time.time()
+
         # Process image in batches of rays
         for sample in range(args.samples):
+            # Safety timeout check
+            if time.time() - timeout_start > max_runtime:
+                print(f"⏰ Ray tracing timeout after {max_runtime}s - stopping early")
+                break
             sample_start = time.time()
 
             for y_start in range(0, args.height, args.batch_size):

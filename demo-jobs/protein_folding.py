@@ -295,7 +295,15 @@ def main():
         step_times = []
         start_time = time.time()
 
+        # Add timeout safety
+        max_runtime = 60  # 1 minute max
+        timeout_start = time.time()
+
         for step in range(args.steps):
+            # Safety timeout check
+            if time.time() - timeout_start > max_runtime:
+                print(f"⏰ Protein folding timeout after {max_runtime}s - stopping early")
+                break
             step_start = time.time()
 
             # Calculate all forces

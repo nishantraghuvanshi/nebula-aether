@@ -259,7 +259,15 @@ def main():
         tokens_processed = 0
         start_time = time.time()
 
+        # Add timeout safety
+        max_runtime = 60  # 1 minute max
+        timeout_start = time.time()
+
         for step in range(args.training_steps):
+            # Safety timeout check
+            if time.time() - timeout_start > max_runtime:
+                print(f"⏰ LLM fine-tuning timeout after {max_runtime}s - stopping early")
+                break
             step_start = time.time()
 
             # Generate synthetic batch
