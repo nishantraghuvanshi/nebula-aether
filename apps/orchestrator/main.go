@@ -164,14 +164,19 @@ type PredictionRequest struct {
 	JobRequirements *JobRequirements  `json:"job_requirements,omitempty"`
 }
 
-// Enhanced PredictionResponse
+// Enhanced PredictionResponse with intelligent scheduling
 type PredictionResponse struct {
-	BestGpuID           string    `json:"best_gpu_id"`
-	ConfidenceScore     float64   `json:"confidence_score"`
-	PredictedPerf       float64   `json:"predicted_performance"`
-	ThermalRisk         float64   `json:"thermal_risk"`
-	MemoryRisk          float64   `json:"memory_risk"`
-	Reasons             []string  `json:"reasons"`
+	BestGpuID           string                 `json:"best_gpu_id"`
+	ConfidenceScore     float64                `json:"confidence_score"`
+	PredictedPerf       float64                `json:"predicted_performance"`
+	ThermalRisk         float64                `json:"thermal_risk"`
+	MemoryRisk          float64                `json:"memory_risk"`
+	Reasons             []string               `json:"reasons"`
+	// NEW: Intelligent scheduling fields
+	SchedulingDecision  string                 `json:"scheduling_decision"`  // "assign_now", "queue_short", "queue_long"
+	EstimatedWaitTime   int                    `json:"estimated_wait_time"`  // seconds
+	ResourceAvailability map[string]float64    `json:"resource_availability"`
+	SchedulingReason    string                 `json:"scheduling_reason"`
 }
 
 // DashboardUpdate packages full cluster info for the dashboard
@@ -550,8 +555,83 @@ func createJobRequirements(job Job) *JobRequirements {
 	}
 }
 
+// askAICorePrediction sends all GPU candidates to the AI service and gets full scheduling prediction
+func askAICorePrediction(cluster map[string]GpuState, job Job) (*PredictionResponse, error) {
+	aiCoreURL := "http://localhost:8000/predict"
+
+	candidates := make([]GpuCandidate, 0, len(cluster))
+	for id, s := range cluster {
+		candidates = append(candidates, GpuCandidate{
+			GpuID:   id,
+			GpuName: s.GpuName,
+
+			// Core telemetry - all fields from enhanced struct
+			Temp:                        s.Temp,
+			MemUsed:                     s.MemUsed,
+			MemTotal:                    s.MemTotal,
+			UtilizationGpu:              s.UtilizationGpu,
+			UtilizationMemoryController: s.UtilizationMemoryController,
+			PowerDrawW:                  s.PowerDrawW,
+			ThrottlingReasons:           s.ThrottlingReasons,
+
+			// Clock speeds
+			ClockGpuMhz: s.ClockGpuMhz,
+			ClockMemMhz: s.ClockMemMhz,
+
+			// Performance state
+			PerformanceState: s.PerformanceState,
+		})
+	}
+
+	request := PredictionRequest{
+		Candidates:      candidates,
+		JobType:         job.Type,
+		JobRequirements: createJobRequirements(job),
+	}
+
+	requestBody, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := http.Post(aiCoreURL, "application/json", bytes.NewBuffer(requestBody))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var predictionResp PredictionResponse
+	if err := json.NewDecoder(resp.Body).Decode(&predictionResp); err != nil {
+		return nil, err
+	}
+
+	// Log enhanced prediction results including scheduling
+	log.Printf("🤖 AI Prediction Results:")
+	log.Printf("   Selected GPU: %s", predictionResp.BestGpuID)
+	log.Printf("   Confidence: %.1f%%", predictionResp.ConfidenceScore*100)
+	log.Printf("   Predicted Performance: %.1f%%", predictionResp.PredictedPerf)
+	log.Printf("   Thermal Risk: %.1f%%", predictionResp.ThermalRisk*100)
+	log.Printf("   Memory Risk: %.1f%%", predictionResp.MemoryRisk*100)
+	log.Printf("   📋 Scheduling Decision: %s (wait: %ds)", predictionResp.SchedulingDecision, predictionResp.EstimatedWaitTime)
+	log.Printf("   📋 Scheduling Reason: %s", predictionResp.SchedulingReason)
+	for _, reason := range predictionResp.Reasons {
+		log.Printf("   %s", reason)
+	}
+
+	return &predictionResp, nil
+}
+
 // askAICoreCandidates sends all GPU candidates to the AI service and gets the best GPU ID
 func askAICoreCandidates(cluster map[string]GpuState, job Job) (string, error) {
+	prediction, err := askAICorePrediction(cluster, job)
+	if err != nil {
+		return "", err
+	}
+	return prediction.BestGpuID, nil
+}
+
+// Legacy function - keeping for compatibility
+func askAICoreCandidatesLegacy(cluster map[string]GpuState, job Job) (string, error) {
 	aiCoreURL := "http://localhost:8000/predict"
 
 	candidates := make([]GpuCandidate, 0, len(cluster))
@@ -951,24 +1031,41 @@ func handlePoll(w http.ResponseWriter, r *http.Request) {
 		log.Printf("⚠️ GPU %s not found in cluster state, allowing job assignment", gpuID)
 		// Allow the job to proceed for unknown GPUs (fallback behavior)
 	} else {
-		// Use AI to determine the best GPU for this job
+		// Use AI to determine the best GPU and scheduling decision for this job
 		if len(currentClusterState) > 1 {
 			log.Printf("🤖 Using AI to evaluate job %s for GPU %s", nextJob.ID, gpuID)
 
-			bestGpuID, err := askAICoreCandidates(currentClusterState, nextJob)
+			prediction, err := askAICorePrediction(currentClusterState, nextJob)
 			if err != nil {
 				log.Printf("AI prediction failed: %v. Allowing job on requesting GPU %s", err, gpuID)
-			} else if bestGpuID != gpuID {
-				log.Printf("🚫 AI recommends GPU %s over %s for job %s. Job stays in queue.", bestGpuID, gpuID, nextJob.ID)
-				// Don't assign this job to this GPU, let the optimal GPU poll for it
-				w.Header().Set("Content-Type", "application/json")
-				json.NewEncoder(w).Encode(map[string]interface{}{
-					"job": nil,
-					"message": fmt.Sprintf("job %s reserved for optimal GPU %s", nextJob.ID, bestGpuID),
-				})
-				return
 			} else {
-				log.Printf("✅ AI confirms GPU %s is optimal for job %s", gpuID, nextJob.ID)
+				// NEW: Check scheduling decision first
+				if prediction.SchedulingDecision == "queue_short" || prediction.SchedulingDecision == "queue_long" {
+					log.Printf("📋 AI recommends queuing job %s: %s (wait: %ds)",
+						nextJob.ID, prediction.SchedulingReason, prediction.EstimatedWaitTime)
+					// Don't assign the job yet - AI says to wait for better resource conditions
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(map[string]interface{}{
+						"job": nil,
+						"message": fmt.Sprintf("job %s queued by AI scheduler: %s (estimated wait: %ds)",
+							nextJob.ID, prediction.SchedulingReason, prediction.EstimatedWaitTime),
+					})
+					return
+				}
+
+				// If AI says assign_now, check if this GPU is the optimal one
+				if prediction.BestGpuID != gpuID {
+					log.Printf("🚫 AI recommends GPU %s over %s for job %s. Job stays in queue.", prediction.BestGpuID, gpuID, nextJob.ID)
+					// Don't assign this job to this GPU, let the optimal GPU poll for it
+					w.Header().Set("Content-Type", "application/json")
+					json.NewEncoder(w).Encode(map[string]interface{}{
+						"job": nil,
+						"message": fmt.Sprintf("job %s reserved for optimal GPU %s", nextJob.ID, prediction.BestGpuID),
+					})
+					return
+				} else {
+					log.Printf("✅ AI confirms GPU %s is optimal for job %s and ready for immediate assignment", gpuID, nextJob.ID)
+				}
 			}
 		}
 	}
@@ -1014,7 +1111,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:19675")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:18649")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}

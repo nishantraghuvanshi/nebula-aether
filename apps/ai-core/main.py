@@ -62,6 +62,11 @@ class PredictionResponse(BaseModel):
     thermal_risk: float
     memory_risk: float
     reasons: List[str]
+    # NEW: Intelligent scheduling decisions
+    scheduling_decision: str  # "assign_now", "queue_short", "queue_long"
+    estimated_wait_time: int  # seconds
+    resource_availability: Dict[str, float]  # Available memory, compute capacity
+    scheduling_reason: str  # Why this scheduling decision was made
 
 # Enhanced Model manager for different job types
 class ModelManager:
@@ -352,6 +357,106 @@ def evaluate_gpu_candidate(candidate: GpuCandidate, job_type: str, job_requireme
             'derived_features': derived
         }
 
+def make_scheduling_decision(best_candidate: GpuCandidate, job_requirements: Optional[JobRequirements],
+                           best_eval: Dict) -> Dict[str, any]:
+    """
+    Intelligent scheduling decision based on resource availability and predicted conflicts
+    Returns scheduling decision, wait time estimate, and reasoning
+    """
+
+    # Calculate resource availability
+    memory_available_mb = best_candidate.gpu_mem_total - best_candidate.gpu_mem_used
+    memory_utilization = (best_candidate.gpu_mem_used / best_candidate.gpu_mem_total) * 100
+    gpu_utilization = best_candidate.utilization_gpu
+
+    # Get job requirements (use defaults if not provided)
+    required_memory = job_requirements.min_memory_mb if job_requirements else 1024
+    expected_util = job_requirements.expected_gpu_util if job_requirements else 50
+    max_duration = job_requirements.max_duration_sec if job_requirements else 300
+
+    # Resource availability analysis
+    resource_availability = {
+        "available_memory_mb": float(memory_available_mb),
+        "available_memory_pct": float(100 - memory_utilization),
+        "available_compute_pct": float(100 - gpu_utilization),
+        "thermal_headroom": float(85 - best_candidate.gpu_temp)  # Assume 85°C thermal limit
+    }
+
+    # INTELLIGENT SCHEDULING LOGIC
+
+    # 1. Memory conflict detection
+    memory_conflict = memory_available_mb < (required_memory * 1.2)  # 20% safety margin
+
+    # 2. Compute conflict detection
+    compute_conflict = (gpu_utilization + expected_util) > 85  # 85% max utilization
+
+    # 3. Thermal conflict detection
+    thermal_conflict = best_candidate.gpu_temp > 75 or "THERMAL" in best_candidate.throttling_reasons.upper()
+
+    # 4. Multiple jobs detection (high utilization = likely other jobs running)
+    likely_other_jobs = gpu_utilization > 30 and memory_utilization > 40
+
+    # DECISION MATRIX
+
+    # Safe to assign immediately
+    if (not memory_conflict and not compute_conflict and not thermal_conflict and
+        gpu_utilization < 20 and memory_utilization < 60):
+        return {
+            "scheduling_decision": "assign_now",
+            "estimated_wait_time": 0,
+            "resource_availability": resource_availability,
+            "scheduling_reason": f"✅ Resources available: {memory_available_mb}MB free, {100-gpu_utilization}% compute free, {85-best_candidate.gpu_temp}°C thermal headroom"
+        }
+
+    # Short wait (jobs likely to complete soon)
+    elif likely_other_jobs and not thermal_conflict and max_duration < 600:
+        estimated_wait = min(300, max_duration // 2)  # Estimate half duration of current jobs
+        return {
+            "scheduling_decision": "queue_short",
+            "estimated_wait_time": estimated_wait,
+            "resource_availability": resource_availability,
+            "scheduling_reason": f"⏱️ Short queue: Current job likely finishing soon. Memory: {memory_available_mb}MB/{required_memory}MB needed, GPU: {gpu_utilization}% busy"
+        }
+
+    # Memory insufficient - longer wait needed
+    elif memory_conflict:
+        estimated_wait = max(300, max_duration)  # Wait for current job to complete
+        return {
+            "scheduling_decision": "queue_long",
+            "estimated_wait_time": estimated_wait,
+            "resource_availability": resource_availability,
+            "scheduling_reason": f"🚫 Memory insufficient: Need {required_memory}MB, only {memory_available_mb}MB available. Wait for job completion."
+        }
+
+    # Compute overload - wait for current jobs
+    elif compute_conflict:
+        estimated_wait = max(180, max_duration // 3)  # Wait for some compute to free up
+        return {
+            "scheduling_decision": "queue_short",
+            "estimated_wait_time": estimated_wait,
+            "resource_availability": resource_availability,
+            "scheduling_reason": f"⚡ Compute conflict: Current {gpu_utilization}% + expected {expected_util}% exceeds safe limit. Wait for resources."
+        }
+
+    # Thermal issues - wait for cooling
+    elif thermal_conflict:
+        estimated_wait = 120  # Wait for thermal conditions to improve
+        return {
+            "scheduling_decision": "queue_short",
+            "estimated_wait_time": estimated_wait,
+            "resource_availability": resource_availability,
+            "scheduling_reason": f"🌡️ Thermal concern: {best_candidate.gpu_temp}°C temperature, throttling: {best_candidate.throttling_reasons}. Wait for cooling."
+        }
+
+    # Default to short queue for unknown conditions
+    else:
+        return {
+            "scheduling_decision": "queue_short",
+            "estimated_wait_time": 180,
+            "resource_availability": resource_availability,
+            "scheduling_reason": "⚠️ Conservative queuing: Resource utilization suggests waiting for better conditions"
+        }
+
 @app.post("/predict")
 def predict(request: PredictionRequest) -> PredictionResponse:
     if not request.candidates:
@@ -361,7 +466,11 @@ def predict(request: PredictionRequest) -> PredictionResponse:
             predicted_performance=0.0,
             thermal_risk=1.0,
             memory_risk=1.0,
-            reasons=["No GPU candidates available"]
+            reasons=["No GPU candidates available"],
+            scheduling_decision="queue_long",
+            estimated_wait_time=600,
+            resource_availability={},
+            scheduling_reason="No GPUs available for scheduling"
         )
 
     # Get appropriate model and scaler for job type (with A/B testing)
@@ -373,7 +482,11 @@ def predict(request: PredictionRequest) -> PredictionResponse:
             predicted_performance=0.0,
             thermal_risk=1.0,
             memory_risk=1.0,
-            reasons=["No suitable model or scaler available"]
+            reasons=["No suitable model or scaler available"],
+            scheduling_decision="queue_long",
+            estimated_wait_time=600,
+            resource_availability={},
+            scheduling_reason="AI models not available for scheduling analysis"
         )
 
     # Evaluate all GPU candidates
@@ -403,6 +516,15 @@ def predict(request: PredictionRequest) -> PredictionResponse:
     for reason in reasons:
         print(f"  {reason}")
 
+    # NEW: Get the best candidate object for scheduling analysis
+    best_candidate = next(c for c in request.candidates if c.gpu_id == best_gpu_id)
+
+    # NEW: Make intelligent scheduling decision
+    scheduling_info = make_scheduling_decision(best_candidate, request.job_requirements, best_eval)
+
+    # Add scheduling information to reasons
+    reasons.append(f"🧠 Scheduling: {scheduling_info['scheduling_reason']}")
+
     # Record prediction outcome for A/B testing evaluation
     predicted_performance = best_eval['performance_score']
     is_successful_prediction = predicted_performance >= 70.0  # Consider 70%+ as successful
@@ -412,13 +534,22 @@ def predict(request: PredictionRequest) -> PredictionResponse:
     if model_version and 'v' in model_version and not model_version.endswith('v1.0'):
         logger.info(f"🧪 A/B test prediction: {model_version} → {predicted_performance:.1f}% performance")
 
+    # Enhanced logging for scheduling decisions
+    logger.info(f"🎯 Job Scheduling Decision: {best_gpu_id} → {scheduling_info['scheduling_decision']} "
+                f"(wait: {scheduling_info['estimated_wait_time']}s)")
+
     return PredictionResponse(
         best_gpu_id=best_gpu_id,
         confidence_score=best_eval['performance_score'] / 100.0,
         predicted_performance=best_eval['performance_score'],
         thermal_risk=best_eval['thermal_risk'],
         memory_risk=best_eval['memory_risk'],
-        reasons=reasons
+        reasons=reasons,
+        # NEW: Intelligent scheduling fields
+        scheduling_decision=scheduling_info['scheduling_decision'],
+        estimated_wait_time=scheduling_info['estimated_wait_time'],
+        resource_availability=scheduling_info['resource_availability'],
+        scheduling_reason=scheduling_info['scheduling_reason']
     )
 
 # ==================== TRAINING PIPELINE ENDPOINTS ====================
