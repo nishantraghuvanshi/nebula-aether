@@ -14,14 +14,16 @@ def main():
     parser = argparse.ArgumentParser(description='Monte Carlo Pi Estimation')
     parser.add_argument('--samples-per-round', type=int, default=50_000_000, help='Number of random samples per round')
     parser.add_argument('--device', type=str, default='auto', help='Device to use')
-    parser.add_argument('--target-accuracy', type=float, default=99.95, help='Target accuracy percentage (e.g., 99.95 for 99.95%)')
+    parser.add_argument('--target-accuracy', type=float, default=98.0, help='Target accuracy percentage (e.g., 98.0 for 98.0%)')
     parser.add_argument('--complexity', type=int, default=2, help='Computational complexity multiplier')
+    parser.add_argument('--max-rounds', type=int, default=100, help='Maximum number of rounds to prevent infinite loops')
     args = parser.parse_args()
 
     print(f"🎲 Starting Monte Carlo Pi Estimation")
     print(f"   Samples per round: {args.samples_per_round:,}")
     print(f"   Target accuracy: {args.target_accuracy}%")
     print(f"   Complexity: {args.complexity}x")
+    print(f"   Max rounds: {args.max_rounds}")
 
     # Device selection with optimization
     if args.device == 'auto':
@@ -137,6 +139,10 @@ def main():
             # Check if we've reached target accuracy
             if accuracy_percent >= args.target_accuracy:
                 print(f"🎯 Target accuracy of {args.target_accuracy}% achieved! ({accuracy_percent:.4f}%)")
+                break
+            elif round_count >= args.max_rounds:
+                print(f"⏰ Maximum rounds ({args.max_rounds}) reached. Stopping simulation.")
+                print(f"   Current accuracy: {accuracy_percent:.4f}% (target: {args.target_accuracy}%)")
                 break
             else:
                 accuracy_gap = args.target_accuracy - accuracy_percent
