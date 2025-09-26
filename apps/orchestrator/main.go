@@ -1012,7 +1012,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:17812")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:15970")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
@@ -1049,35 +1049,8 @@ func main() {
 			gpuID = parts[len(parts)-1]
 		}
 
-		// Insert the complete telemetry data into the database
-		_, err = conn.Exec(context.Background(),
-			`INSERT INTO gpu_telemetry (
-				time, gpu_id, gpu_name,
-				utilization_gpu, utilization_memory_controller, performance_state,
-				clock_gpu_mhz, clock_mem_mhz,
-				memory_used_mb, memory_total_mb,
-				temperature_c, power_draw_w, throttling_reasons
-			) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
-			time.Now(),
-			gpuID,
-			telemetry.GpuName,
-			telemetry.UtilizationGpu,
-			telemetry.UtilizationMemoryController,
-			telemetry.PerformanceState,
-			telemetry.ClockGpuMhz,
-			telemetry.ClockMemMhz,
-			telemetry.MemoryUsedMb,
-			telemetry.MemoryTotalMb,
-			telemetry.TemperatureC,
-			telemetry.PowerDrawW,
-			telemetry.ThrottlingReasons,
-		)
-		if err != nil {
-			log.Printf("Error inserting telemetry data for %s: %v", gpuID, err)
-			return
-		}
-
-		// Update the cluster state for this GPU with all telemetry fields
+		// CRITICAL FIX: Update cluster state IMMEDIATELY (non-blocking)
+		// This ensures dashboard gets fresh data even if database is busy
 		clusterStateMux.Lock()
 		clusterState[gpuID] = GpuState{
 			// Core telemetry
@@ -1102,6 +1075,51 @@ func main() {
 		log.Printf("📊 Telemetry logged for %s (%s): Util=%d%%, Temp=%d°C, Mem=%d/%dMB",
 			gpuID, telemetry.GpuName, telemetry.UtilizationGpu, telemetry.TemperatureC,
 			telemetry.MemoryUsedMb, telemetry.MemoryTotalMb)
+
+		// Insert telemetry data into database ASYNCHRONOUSLY to prevent blocking
+		go func(tel GpuTelemetry, id string) {
+			// Retry logic for database insertions
+			maxRetries := 3
+			for attempt := 1; attempt <= maxRetries; attempt++ {
+				_, err = conn.Exec(context.Background(),
+					`INSERT INTO gpu_telemetry (
+						time, gpu_id, gpu_name,
+						utilization_gpu, utilization_memory_controller, performance_state,
+						clock_gpu_mhz, clock_mem_mhz,
+						memory_used_mb, memory_total_mb,
+						temperature_c, power_draw_w, throttling_reasons
+					) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+					time.Now(),
+					id,
+					tel.GpuName,
+					tel.UtilizationGpu,
+					tel.UtilizationMemoryController,
+					tel.PerformanceState,
+					tel.ClockGpuMhz,
+					tel.ClockMemMhz,
+					tel.MemoryUsedMb,
+					tel.MemoryTotalMb,
+					tel.TemperatureC,
+					tel.PowerDrawW,
+					tel.ThrottlingReasons,
+				)
+				if err == nil {
+					// Success - exit retry loop
+					break
+				}
+
+				// Log error, but only spam log on final attempt
+				if attempt == maxRetries {
+					log.Printf("❌ Failed to insert telemetry for %s after %d attempts: %v", id, maxRetries, err)
+				} else if attempt == 1 {
+					// Log first failure at debug level
+					log.Printf("⚠️ Telemetry insert attempt %d failed for %s (retrying): %v", attempt, id, err)
+				}
+
+				// Brief delay before retry to let database settle
+				time.Sleep(time.Duration(attempt*50) * time.Millisecond)
+			}
+		}(telemetry, gpuID)
 	})
 	if err != nil {
 		log.Fatalf("Error subscribing to NATS: %v", err)
