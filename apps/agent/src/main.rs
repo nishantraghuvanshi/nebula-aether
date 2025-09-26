@@ -51,64 +51,338 @@ fn log_job_event(event: &str, job_id: &str, details: &str) {
     }
 }
 
-fn extract_job_summary(stdout: &[u8]) -> String {
+fn extract_performance_metrics(stdout: &[u8], job_type: &str, start_time: u64, end_time: u64) -> (PerformanceMetrics, String) {
     let output = String::from_utf8_lossy(stdout);
     let lines: Vec<&str> = output.lines().collect();
-
-    // Look for key performance metrics in different job types
+    let mut metrics = PerformanceMetrics::new();
     let mut summary_parts = Vec::new();
 
-    // Look for completion messages and key metrics
-    for line in lines.iter().rev().take(20) {  // Check last 20 lines for summary info
-        let line = line.trim();
+    // Calculate actual completion time
+    metrics.completion_time_sec = Some((end_time - start_time) as f64);
 
-        // Job completion indicators
-        if line.contains("completed successfully") || line.contains("benchmark completed") {
-            summary_parts.push("SUCCESS".to_string());
-        }
-
-        // Performance metrics - look for common patterns
-        if line.contains("Steps/second:") || line.contains("FPS") || line.contains("samples/sec") {
-            // Extract performance numbers
-            if let Some(perf) = line.split(':').nth(1) {
-                summary_parts.push(format!("Perf:{}", perf.trim()));
-            }
-        }
-
-        // Look for accuracy or final results
-        if line.contains("accuracy:") || line.contains("Final") || line.contains("estimate:") {
-            if let Some(result) = line.split(':').nth(1) {
-                let result = result.trim();
-                if result.len() < 50 {  // Keep summaries short
-                    summary_parts.push(format!("Result:{}", result));
-                }
-            }
-        }
-
-        // Look for memory usage
-        if line.contains("Peak GPU memory:") || line.contains("memory:") {
-            if let Some(mem) = line.split(':').nth(1) {
-                summary_parts.push(format!("Mem:{}", mem.trim()));
-            }
-        }
-
-        // Model/job specific info
-        if line.contains("frames") || line.contains("residues") || line.contains("parameters") {
-            if line.len() < 80 {
-                summary_parts.push(line.to_string());
-            }
-        }
+    // Parse output based on job type
+    match job_type {
+        "training" => extract_training_metrics(&mut metrics, &lines, &mut summary_parts),
+        "inference" => extract_inference_metrics(&mut metrics, &lines, &mut summary_parts),
+        "compute" => extract_compute_metrics(&mut metrics, &lines, &mut summary_parts),
+        "simulation" => extract_simulation_metrics(&mut metrics, &lines, &mut summary_parts),
+        "rendering" => extract_rendering_metrics(&mut metrics, &lines, &mut summary_parts),
+        "encoding" => extract_encoding_metrics(&mut metrics, &lines, &mut summary_parts),
+        "scientific" => extract_scientific_metrics(&mut metrics, &lines, &mut summary_parts),
+        "llm" => extract_llm_metrics(&mut metrics, &lines, &mut summary_parts),
+        "memory" => extract_memory_metrics(&mut metrics, &lines, &mut summary_parts),
+        _ => extract_generic_metrics(&mut metrics, &lines, &mut summary_parts),
     }
 
-    if summary_parts.is_empty() {
+    // Extract common metrics across all job types
+    extract_common_metrics(&mut metrics, &lines, &mut summary_parts);
+
+    let summary = if summary_parts.is_empty() {
         if output.is_empty() {
-            "No output".to_string()
+            "No output captured".to_string()
         } else {
-            format!("Output: {} lines", lines.len())
+            format!("Completed in {:.2}s with {} lines of output",
+                   metrics.completion_time_sec.unwrap_or(0.0), lines.len())
         }
     } else {
         summary_parts.join(" | ")
+    };
+
+    (metrics, summary)
+}
+
+fn extract_training_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        // Training-specific patterns
+        if line.contains("samples/sec") || line.contains("Steps/second") {
+            if let Some(rate) = extract_number_from_pattern(line, &["samples/sec", "Steps/second"]) {
+                metrics.samples_per_second = Some(rate);
+                summary.push(format!("Rate:{:.1} samples/sec", rate));
+            }
+        }
+
+        if line.contains("Accuracy:") || line.contains("accuracy:") {
+            if let Some(acc) = extract_percentage_from_line(line) {
+                metrics.accuracy = Some(acc);
+                summary.push(format!("Acc:{:.2}%", acc));
+            }
+        }
+
+        if line.contains("Epoch") && line.contains("completed") {
+            if let Some(epochs) = extract_number_from_pattern(line, &["Epoch"]) {
+                metrics.iterations_completed = Some(epochs as u64);
+            }
+        }
+
+        if line.contains("Loss:") {
+            if let Some(loss) = extract_number_from_pattern(line, &["Loss:"]) {
+                metrics.final_result = Some(format!("Loss: {:.4}", loss));
+            }
+        }
     }
+}
+
+fn extract_inference_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        if line.contains("samples/sec") || line.contains("Throughput:") {
+            if let Some(rate) = extract_number_from_pattern(line, &["samples/sec", "Throughput:"]) {
+                metrics.throughput = Some(rate);
+                summary.push(format!("Throughput:{:.1}/sec", rate));
+            }
+        }
+
+        if line.contains("confidence:") || line.contains("Average confidence:") {
+            if let Some(conf) = extract_number_from_pattern(line, &["confidence:"]) {
+                metrics.accuracy = Some(conf * 100.0);
+                summary.push(format!("Conf:{:.3}", conf));
+            }
+        }
+
+        if line.contains("Processing batch") {
+            if let Some(batches) = extract_number_from_pattern(line, &["batch"]) {
+                metrics.batches_processed = Some(batches as u64);
+            }
+        }
+    }
+}
+
+fn extract_simulation_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        // Monte Carlo and simulation patterns
+        if line.contains("samples/sec") || line.contains("Performance:") {
+            if let Some(rate) = extract_number_from_pattern(line, &["samples/sec", "Performance:"]) {
+                metrics.samples_per_second = Some(rate);
+                summary.push(format!("Perf:{:.0} samples/sec", rate));
+            }
+        }
+
+        if line.contains("π estimate:") || line.contains("estimate:") {
+            if let Some(result) = extract_number_from_pattern(line, &["estimate:"]) {
+                metrics.final_result = Some(format!("π ≈ {:.6}", result));
+            }
+        }
+
+        if line.contains("Accuracy:") && line.contains("%") {
+            if let Some(acc) = extract_percentage_from_line(line) {
+                metrics.accuracy = Some(acc);
+                summary.push(format!("Accuracy:{:.2}%", acc));
+            }
+        }
+
+        if line.contains("Rounds completed:") {
+            if let Some(rounds) = extract_number_from_pattern(line, &["Rounds completed:"]) {
+                metrics.iterations_completed = Some(rounds as u64);
+            }
+        }
+
+        if line.contains("TFLOPS") {
+            if let Some(flops) = extract_number_from_pattern(line, &["TFLOPS"]) {
+                metrics.computational_efficiency = Some(flops / 10.0); // Normalize to 0-1 scale
+                summary.push(format!("Compute:{:.2} TFLOPS", flops));
+            }
+        }
+    }
+}
+
+fn extract_compute_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        if line.contains("GFLOPS") || line.contains("TFLOPS") {
+            if let Some(flops) = extract_number_from_pattern(line, &["GFLOPS", "TFLOPS"]) {
+                metrics.throughput = Some(flops);
+                summary.push(format!("FLOPS:{:.2}", flops));
+            }
+        }
+
+        if line.contains("Iteration") && line.contains("completed") {
+            if let Some(iter) = extract_number_from_pattern(line, &["Iteration"]) {
+                metrics.iterations_completed = Some(iter as u64);
+            }
+        }
+    }
+}
+
+fn extract_rendering_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        if line.contains("FPS") || line.contains("frames/sec") {
+            if let Some(fps) = extract_number_from_pattern(line, &["FPS", "frames/sec"]) {
+                metrics.throughput = Some(fps);
+                summary.push(format!("FPS:{:.1}", fps));
+            }
+        }
+
+        if line.contains("frames") && line.contains("processed") {
+            if let Some(frames) = extract_number_from_pattern(line, &["frames"]) {
+                metrics.frames_processed = Some(frames as u64);
+            }
+        }
+
+        if line.contains("samples") && line.contains("per pixel") {
+            if let Some(quality) = extract_number_from_pattern(line, &["samples"]) {
+                metrics.quality_score = Some(quality / 100.0);
+            }
+        }
+    }
+}
+
+fn extract_encoding_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        if line.contains("frames") && (line.contains("encoded") || line.contains("processed")) {
+            if let Some(frames) = extract_number_from_pattern(line, &["frames"]) {
+                metrics.frames_processed = Some(frames as u64);
+            }
+        }
+
+        if line.contains("fps") || line.contains("FPS") {
+            if let Some(fps) = extract_number_from_pattern(line, &["fps", "FPS"]) {
+                metrics.throughput = Some(fps);
+                summary.push(format!("Encoding:{:.1} fps", fps));
+            }
+        }
+    }
+}
+
+fn extract_scientific_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        if line.contains("residues") || line.contains("steps") {
+            if let Some(steps) = extract_number_from_pattern(line, &["residues", "steps"]) {
+                metrics.iterations_completed = Some(steps as u64);
+            }
+        }
+
+        if line.contains("ns/day") || line.contains("timesteps/sec") {
+            if let Some(rate) = extract_number_from_pattern(line, &["ns/day", "timesteps/sec"]) {
+                metrics.throughput = Some(rate);
+                summary.push(format!("Rate:{:.1}", rate));
+            }
+        }
+    }
+}
+
+fn extract_llm_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        if line.contains("tokens/sec") || line.contains("tokens per second") {
+            if let Some(rate) = extract_number_from_pattern(line, &["tokens/sec", "tokens per second"]) {
+                metrics.throughput = Some(rate);
+                summary.push(format!("Tokens:{:.1}/sec", rate));
+            }
+        }
+
+        if line.contains("training steps") || line.contains("steps") {
+            if let Some(steps) = extract_number_from_pattern(line, &["steps"]) {
+                metrics.iterations_completed = Some(steps as u64);
+            }
+        }
+
+        if line.contains("perplexity") {
+            if let Some(perp) = extract_number_from_pattern(line, &["perplexity"]) {
+                metrics.quality_score = Some(1.0 / perp.max(1.0)); // Lower perplexity = better quality
+            }
+        }
+    }
+}
+
+fn extract_memory_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        if line.contains("GB/s") || line.contains("bandwidth") {
+            if let Some(bw) = extract_number_from_pattern(line, &["GB/s", "bandwidth"]) {
+                metrics.throughput = Some(bw);
+                summary.push(format!("BW:{:.1} GB/s", bw));
+            }
+        }
+
+        if line.contains("allocation") && line.contains("successful") {
+            metrics.memory_efficiency = Some(1.0);
+            summary.push("Memory allocation: SUCCESS".to_string());
+        }
+    }
+}
+
+fn extract_generic_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(30) {
+        let line = line.trim();
+
+        // Generic performance indicators
+        if line.contains("completed successfully") {
+            summary.push("SUCCESS".to_string());
+        }
+
+        if line.contains("performance:") || line.contains("Performance:") {
+            if let Some(perf) = extract_number_from_pattern(line, &["performance:", "Performance:"]) {
+                metrics.throughput = Some(perf);
+            }
+        }
+    }
+}
+
+fn extract_common_metrics(metrics: &mut PerformanceMetrics, lines: &[&str], summary: &mut Vec<String>) {
+    for line in lines.iter().rev().take(50) {
+        let line = line.trim();
+
+        // Memory usage patterns
+        if line.contains("Peak GPU memory:") || line.contains("memory:") && line.contains("MB") {
+            if let Some(mem) = extract_number_from_pattern(line, &["memory:", "Peak GPU memory:"]) {
+                metrics.peak_memory_usage_mb = Some(mem as u64);
+                summary.push(format!("Mem:{:.0}MB", mem));
+            }
+        }
+
+        // Error patterns
+        if line.contains("error") || line.contains("failed") || line.contains("Error") {
+            metrics.error_rate = Some(1.0);
+        }
+
+        // Success patterns
+        if line.contains("completed successfully") || line.contains("SUCCESS") {
+            summary.push("✅ COMPLETED".to_string());
+        }
+    }
+}
+
+// Helper function to extract numbers from specific patterns
+fn extract_number_from_pattern(line: &str, patterns: &[&str]) -> Option<f64> {
+    for pattern in patterns {
+        if let Some(pos) = line.find(pattern) {
+            let after_pattern = &line[pos + pattern.len()..];
+            // Look for the first number after the pattern
+            let number_str: String = after_pattern.chars()
+                .skip_while(|c| !c.is_numeric() && *c != '.')
+                .take_while(|c| c.is_numeric() || *c == '.' || *c == ',' || *c == '_')
+                .collect();
+
+            if let Ok(num) = number_str.replace(',', "").replace('_', "").parse::<f64>() {
+                return Some(num);
+            }
+        }
+    }
+    None
+}
+
+// Helper function to extract percentage values
+fn extract_percentage_from_line(line: &str) -> Option<f64> {
+    // Look for patterns like "95.2%" or "accuracy: 95.2"
+    let cleaned = line.replace('%', "");
+    if let Some(num) = extract_number_from_pattern(&cleaned, &["accuracy:", "Accuracy:", ":"]) {
+        return Some(num);
+    }
+    None
 }
 
 fn create_fallback_script(job_type: &str) -> String {
@@ -243,11 +517,15 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
     let status = JobStatus {
         job_id: job.job_id.clone(),
         gpu_id: job.gpu_id.clone(),
+        job_type: Some(job.job_type.clone()),
         status: "started".to_string(),
         message: format!("Starting job execution: {}", job.script),
         start_time: Some(start_time),
         end_time: None,
         exit_code: None,
+        performance_metrics: None, // No performance data yet
+        job_summary: Some(format!("Starting {} job", job.job_type)),
+        raw_output_sample: None,
     };
     publish_job_status(&client, &status).await;
 
@@ -306,11 +584,15 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
     let status = JobStatus {
         job_id: job.job_id.clone(),
         gpu_id: job.gpu_id.clone(),
+        job_type: Some(job.job_type.clone()),
         status: "running".to_string(),
         message: "Job is running...".to_string(),
         start_time: Some(start_time),
         end_time: None,
         exit_code: None,
+        performance_metrics: None, // No performance data yet
+        job_summary: Some(format!("Executing {} on {}", job.job_type, job.gpu_id)),
+        raw_output_sample: None,
     };
     publish_job_status(&client, &status).await;
 
@@ -393,24 +675,51 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
                     println!("❌ Job stderr:\n{}", String::from_utf8_lossy(&output.stderr));
                 }
 
+                // Extract comprehensive performance metrics
+                let (performance_metrics, job_summary) = extract_performance_metrics(
+                    &output.stdout,
+                    &job.job_type,
+                    start_time,
+                    end_time
+                );
+
+                // Create sample of raw output for debugging (first 500 chars)
+                let raw_output_sample = if output.stdout.is_empty() {
+                    None
+                } else {
+                    let output_str = String::from_utf8_lossy(&output.stdout);
+                    Some(output_str.chars().take(500).collect::<String>())
+                };
+
                 let final_status = JobStatus {
                     job_id: job.job_id.clone(),
                     gpu_id: job.gpu_id.clone(),
+                    job_type: Some(job.job_type.clone()),
                     status: status_str.to_string(),
                     message: format!("{} (exit code: {})", message, exit_code),
                     start_time: Some(start_time),
                     end_time: Some(end_time),
                     exit_code: Some(exit_code),
+                    performance_metrics: Some(performance_metrics.clone()),
+                    job_summary: Some(job_summary.clone()),
+                    raw_output_sample,
                 };
 
                 publish_job_status(&client, &final_status).await;
                 println!("✅ Job {} completed with exit code: {}", job.job_id, exit_code);
 
-                // Log job completion with summary
+                // Enhanced logging with performance metrics
                 let runtime = end_time - start_time;
-                let stdout_summary = extract_job_summary(&output.stdout);
-                let log_details = format!("Exit: {} Runtime: {}s Summary: {}",
-                                        exit_code, runtime, stdout_summary);
+                let perf_summary = if let Some(throughput) = performance_metrics.throughput {
+                    format!("Throughput:{:.1}", throughput)
+                } else if let Some(samples) = performance_metrics.samples_per_second {
+                    format!("Rate:{:.1}/sec", samples)
+                } else {
+                    "No perf metrics".to_string()
+                };
+
+                let log_details = format!("Exit: {} Runtime: {}s {} | {}",
+                                        exit_code, runtime, perf_summary, job_summary);
 
                 if output.status.success() {
                     log_job_event("COMPLETED", &job.job_id, &log_details);
@@ -423,11 +732,15 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
                 let killed_status = JobStatus {
                     job_id: job.job_id.clone(),
                     gpu_id: job.gpu_id.clone(),
+                    job_type: Some(job.job_type.clone()),
                     status: "killed".to_string(),
                     message: "Job was killed by user".to_string(),
                     start_time: Some(start_time),
                     end_time: Some(end_time),
                     exit_code: Some(-9),
+                    performance_metrics: None, // No performance data for killed jobs
+                    job_summary: Some("Job terminated by user".to_string()),
+                    raw_output_sample: None,
                 };
 
                 publish_job_status(&client, &killed_status).await;
@@ -450,11 +763,15 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
             let error_status = JobStatus {
                 job_id: job.job_id.clone(),
                 gpu_id: job.gpu_id.clone(),
+                job_type: Some(job.job_type.clone()),
                 status: "failed".to_string(),
                 message: format!("Failed to spawn job: {}", e),
                 start_time: Some(start_time),
                 end_time: Some(end_time),
                 exit_code: Some(-1),
+                performance_metrics: None, // No performance data for failed spawn
+                job_summary: Some("Job failed to start".to_string()),
+                raw_output_sample: None,
             };
 
             publish_job_status(&client, &error_status).await;
@@ -518,7 +835,7 @@ async fn run_mock_mode() {
         os_info
     );
 
-    let nats_url = "0.tcp.in.ngrok.io:11188";
+    let nats_url = "0.tcp.in.ngrok.io:12596";
     match async_nats::connect(nats_url).await {
         Ok(client) => {
             println!("Connected to NATS server at {}.", nats_url);
@@ -538,7 +855,7 @@ async fn run_mock_mode() {
             let poll_client = command_client.clone();
             tokio::spawn(async move {
                 let http_client = reqwest::Client::new();
-                let orchestrator_url = "https://69d7308b40ac.ngrok-free.app";
+                let orchestrator_url = "https://b2d025222cd2.ngrok-free.app";
                 // Generate unique GPU ID based on hostname
                 let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                     std::process::Command::new("hostname")
@@ -619,7 +936,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Connect to NATS server
-    let nats_url = "0.tcp.in.ngrok.io:11188";
+    let nats_url = "0.tcp.in.ngrok.io:12596";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
@@ -662,7 +979,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
         let jobs_for_commands = active_jobs.clone();
         tokio::spawn(async move {
             let http_client = reqwest::Client::new();
-            let orchestrator_url = "https://69d7308b40ac.ngrok-free.app";
+            let orchestrator_url = "https://b2d025222cd2.ngrok-free.app";
             // Generate unique GPU ID based on hostname + GPU index
             let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                 std::process::Command::new("hostname")
@@ -748,11 +1065,15 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
                                             let status = JobStatus {
                                                 job_id: job_id.to_string(),
                                                 gpu_id: format!("{}:gpu-0", hostname_for_kill),
+                                                job_type: None, // Don't have job type in kill command context
                                                 status: "killed".to_string(),
                                                 message: "Job was terminated by kill command".to_string(),
                                                 start_time: None,
                                                 end_time: Some(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
                                                 exit_code: Some(-1),
+                                                performance_metrics: None, // No performance data for killed jobs
+                                                job_summary: Some("Terminated by user command".to_string()),
+                                                raw_output_sample: None,
                                             };
                                             publish_job_status(&command_nats_client, &status).await;
                                         }
@@ -923,13 +1244,73 @@ struct PollResponse {
     message: String,
 }
 
+#[derive(Serialize, Debug, Clone)]
+struct PerformanceMetrics {
+    // Core Performance Metrics
+    throughput: Option<f64>,             // Job-specific throughput (samples/sec, fps, etc.)
+    samples_per_second: Option<f64>,     // Processing rate
+    completion_time_sec: Option<f64>,    // Time to complete workload
+    accuracy: Option<f64>,               // Accuracy percentage for ML jobs
+
+    // Resource Efficiency
+    memory_efficiency: Option<f64>,      // Memory utilization efficiency (0-1)
+    computational_efficiency: Option<f64>, // GPU compute efficiency (0-1)
+    peak_memory_usage_mb: Option<u64>,   // Peak memory usage during job
+
+    // Job-Specific Metrics
+    frames_processed: Option<u64>,       // For video/rendering jobs
+    batches_processed: Option<u64>,      // For ML training jobs
+    iterations_completed: Option<u64>,   // For simulation jobs
+    final_result: Option<String>,        // Final numerical result
+
+    // Quality Metrics
+    error_rate: Option<f64>,             // Error rate for applicable jobs
+    convergence_achieved: Option<bool>,  // For optimization jobs
+    quality_score: Option<f64>,          // Overall quality metric
+
+    // Resource Usage Patterns
+    avg_gpu_utilization: Option<f64>,    // Average GPU usage during job
+    max_gpu_utilization: Option<f64>,    // Peak GPU usage
+    thermal_events: Option<u32>,         // Number of thermal issues
+}
+
+impl PerformanceMetrics {
+    fn new() -> Self {
+        PerformanceMetrics {
+            throughput: None,
+            samples_per_second: None,
+            completion_time_sec: None,
+            accuracy: None,
+            memory_efficiency: None,
+            computational_efficiency: None,
+            peak_memory_usage_mb: None,
+            frames_processed: None,
+            batches_processed: None,
+            iterations_completed: None,
+            final_result: None,
+            error_rate: None,
+            convergence_achieved: None,
+            quality_score: None,
+            avg_gpu_utilization: None,
+            max_gpu_utilization: None,
+            thermal_events: None,
+        }
+    }
+}
+
 #[derive(Serialize, Debug)]
 struct JobStatus {
     job_id: String,
     gpu_id: String,
+    job_type: Option<String>,            // Added for performance tracking
     status: String, // "started", "running", "completed", "failed"
     message: String,
     start_time: Option<u64>,
     end_time: Option<u64>,
     exit_code: Option<i32>,
+
+    // Enhanced Performance Data
+    performance_metrics: Option<PerformanceMetrics>,
+    job_summary: Option<String>,         // Human-readable summary
+    raw_output_sample: Option<String>,   // Sample of raw output for debugging
 }

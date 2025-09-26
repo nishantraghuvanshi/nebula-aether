@@ -57,15 +57,52 @@ type JobExecution struct {
 	GpuID  string   `json:"gpu_id"`
 }
 
-// JobStatus struct for receiving status updates
+// PerformanceMetrics struct to match Rust agent's performance data
+type PerformanceMetrics struct {
+	// Core Performance Metrics
+	Throughput         *float64 `json:"throughput,omitempty"`
+	SamplesPerSecond   *float64 `json:"samples_per_second,omitempty"`
+	CompletionTimeSec  *float64 `json:"completion_time_sec,omitempty"`
+	Accuracy           *float64 `json:"accuracy,omitempty"`
+
+	// Resource Efficiency
+	MemoryEfficiency         *float64 `json:"memory_efficiency,omitempty"`
+	ComputationalEfficiency  *float64 `json:"computational_efficiency,omitempty"`
+	PeakMemoryUsageMB        *uint64  `json:"peak_memory_usage_mb,omitempty"`
+
+	// Job-Specific Metrics
+	FramesProcessed      *uint64 `json:"frames_processed,omitempty"`
+	BatchesProcessed     *uint64 `json:"batches_processed,omitempty"`
+	IterationsCompleted  *uint64 `json:"iterations_completed,omitempty"`
+	FinalResult          *string `json:"final_result,omitempty"`
+
+	// Quality Metrics
+	ErrorRate           *float64 `json:"error_rate,omitempty"`
+	ConvergenceAchieved *bool    `json:"convergence_achieved,omitempty"`
+	QualityScore        *float64 `json:"quality_score,omitempty"`
+
+	// Resource Usage Patterns
+	AvgGpuUtilization *float64 `json:"avg_gpu_utilization,omitempty"`
+	MaxGpuUtilization *float64 `json:"max_gpu_utilization,omitempty"`
+	ThermalEvents     *uint32  `json:"thermal_events,omitempty"`
+}
+
+// Enhanced JobStatus struct for receiving comprehensive status updates
 type JobStatus struct {
 	JobID     string `json:"job_id"`
 	GpuID     string `json:"gpu_id"`
+	JobType   string `json:"job_type,omitempty"`   // Added for performance tracking
 	Status    string `json:"status"` // "started", "running", "completed", "failed"
 	Message   string `json:"message"`
 	StartTime *int64 `json:"start_time,omitempty"`
+	StartedAt *time.Time `json:"started_at,omitempty"` // Added for performance tracking
 	EndTime   *int64 `json:"end_time,omitempty"`
 	ExitCode  *int   `json:"exit_code,omitempty"`
+
+	// Enhanced Performance Data
+	PerformanceMetrics *PerformanceMetrics `json:"performance_metrics,omitempty"`
+	JobSummary         *string             `json:"job_summary,omitempty"`
+	RawOutputSample    *string             `json:"raw_output_sample,omitempty"`
 }
 
 // Represents the current state of a GPU, which we'll send to the AI
@@ -152,6 +189,249 @@ func mockCarbonIntensity() float64 {
 	return 100 + float64(time.Now().Unix()%400)
 }
 
+// storeJobPerformanceData stores comprehensive job performance data for AI training
+func storeJobPerformanceData(status JobStatus) error {
+	if dbConn == nil {
+		return fmt.Errorf("database connection not available")
+	}
+
+	// Calculate job duration and times
+	var durationSeconds *int
+	var startTime, endTime *time.Time
+	now := time.Now()
+	endTime = &now
+
+	// Convert StartTime (unix timestamp) to time.Time if available
+	if status.StartTime != nil {
+		t := time.Unix(*status.StartTime, 0)
+		startTime = &t
+		duration := int(endTime.Sub(t).Seconds())
+		durationSeconds = &duration
+	}
+
+	// Use StartedAt if available (fallback)
+	if status.StartedAt != nil {
+		startTime = status.StartedAt
+		duration := int(endTime.Sub(*status.StartedAt).Seconds())
+		durationSeconds = &duration
+	}
+
+	// Default job type if not provided
+	jobType := status.JobType
+	if jobType == "" {
+		jobType = "general" // default type
+	}
+
+	// Calculate derived performance metrics
+	var performanceScore, resourceEfficiency, thermalImpact, powerEfficiency, reliabilityScore *float64
+
+	if status.PerformanceMetrics != nil {
+		metrics := status.PerformanceMetrics
+
+		// Calculate performance score (0-100) based on job completion and throughput
+		var score float64 = 50 // baseline
+		if status.Status == "completed" {
+			score = 80 // successful completion
+			if metrics.Throughput != nil && *metrics.Throughput > 0 {
+				score += 20 // high throughput bonus
+			}
+		} else {
+			score = 20 // failed/killed jobs
+		}
+		performanceScore = &score
+
+		// Resource efficiency: utilization vs allocation
+		if metrics.MemoryEfficiency != nil {
+			resourceEfficiency = metrics.MemoryEfficiency
+		} else {
+			efficiency := 0.7 // default moderate efficiency
+			resourceEfficiency = &efficiency
+		}
+
+		// Thermal impact (0-1, lower is better) - use placeholder since MaxTemperature doesn't exist
+		impact := 0.5 // default moderate impact
+		thermalImpact = &impact
+
+		// Power efficiency: performance per watt - use placeholder since AvgPowerDraw doesn't exist
+		efficiency := 1.0 // default efficiency
+		powerEfficiency = &efficiency
+
+		// Reliability score based on completion status
+		reliability := 1.0
+		if status.Status == "failed" {
+			reliability = 0.0
+		} else if status.Status == "killed" {
+			reliability = 0.5
+		}
+		reliabilityScore = &reliability
+	}
+
+	// Set defaults if no performance metrics
+	if performanceScore == nil {
+		score := 50.0
+		performanceScore = &score
+	}
+	if resourceEfficiency == nil {
+		efficiency := 0.7
+		resourceEfficiency = &efficiency
+	}
+	if thermalImpact == nil {
+		impact := 0.5
+		thermalImpact = &impact
+	}
+	if powerEfficiency == nil {
+		efficiency := 1.0
+		powerEfficiency = &efficiency
+	}
+	if reliabilityScore == nil {
+		reliability := 1.0
+		reliabilityScore = &reliability
+	}
+
+	// Insert into job_performance table
+	_, err := dbConn.Exec(context.Background(),
+		`INSERT INTO job_performance (
+			job_id, gpu_id, job_type, start_time, end_time, duration_seconds, exit_code,
+			throughput, completion_time_sec, samples_per_second, memory_efficiency, computational_efficiency,
+			avg_gpu_utilization, max_gpu_utilization, avg_memory_utilization, max_memory_usage_mb,
+			avg_temperature, max_temperature, avg_power_draw, thermal_events,
+			performance_score, resource_efficiency, thermal_impact, power_efficiency, reliability_score
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)`,
+		status.JobID,
+		status.GpuID,
+		jobType,
+		startTime,
+		endTime,
+		durationSeconds,
+		status.ExitCode,
+		// Performance metrics (will be nil if not available)
+		getFloat64Ptr(status.PerformanceMetrics, "throughput"),
+		getFloat64Ptr(status.PerformanceMetrics, "completion_time_sec"),
+		getFloat64Ptr(status.PerformanceMetrics, "samples_per_second"),
+		getFloat64Ptr(status.PerformanceMetrics, "memory_efficiency"),
+		getFloat64Ptr(status.PerformanceMetrics, "computational_efficiency"),
+		getFloat64Ptr(status.PerformanceMetrics, "avg_gpu_utilization"),
+		getFloat64Ptr(status.PerformanceMetrics, "max_gpu_utilization"),
+		nil, // avg_memory_utilization - not available in struct
+		getInt64Ptr(status.PerformanceMetrics, "peak_memory_usage_mb"),
+		nil, // avg_temperature - not available in struct
+		nil, // max_temperature - not available in struct
+		nil, // avg_power_draw - not available in struct
+		getUint32Ptr(status.PerformanceMetrics, "thermal_events"),
+		performanceScore,
+		resourceEfficiency,
+		thermalImpact,
+		powerEfficiency,
+		reliabilityScore,
+	)
+
+	if err != nil {
+		return fmt.Errorf("failed to insert job performance data: %v", err)
+	}
+
+	// Also insert into training_data table for AI model training
+	startTimeStr := "null"
+	if startTime != nil {
+		startTimeStr = fmt.Sprintf(`"%s"`, startTime.Format(time.RFC3339))
+	}
+
+	featuresJSON := fmt.Sprintf(`{
+		"gpu_id": "%s",
+		"job_type": "%s",
+		"start_time": %s,
+		"system_load": 1
+	}`, status.GpuID, jobType, startTimeStr)
+
+	durationVal := 300 // default duration
+	if durationSeconds != nil {
+		durationVal = *durationSeconds
+	}
+
+	labelsJSON := fmt.Sprintf(`{
+		"performance_score": %f,
+		"resource_efficiency": %f,
+		"completion_status": "%s",
+		"duration_seconds": %d
+	}`, *performanceScore, *resourceEfficiency, status.Status, durationVal)
+
+	_, err = dbConn.Exec(context.Background(),
+		`INSERT INTO training_data (
+			job_id, gpu_id, features, labels, job_type, data_quality_score
+		) VALUES ($1, $2, $3, $4, $5, $6)`,
+		status.JobID,
+		status.GpuID,
+		featuresJSON,
+		labelsJSON,
+		jobType,
+		1.0, // high quality data from actual execution
+	)
+
+	if err != nil {
+		return fmt.Errorf("failed to insert training data: %v", err)
+	}
+
+	return nil
+}
+
+// Helper functions to safely extract values from PerformanceMetrics
+func getFloat64Ptr(metrics *PerformanceMetrics, field string) *float64 {
+	if metrics == nil {
+		return nil
+	}
+	switch field {
+	case "throughput":
+		return metrics.Throughput
+	case "completion_time_sec":
+		return metrics.CompletionTimeSec
+	case "samples_per_second":
+		return metrics.SamplesPerSecond
+	case "memory_efficiency":
+		return metrics.MemoryEfficiency
+	case "computational_efficiency":
+		return metrics.ComputationalEfficiency
+	case "avg_gpu_utilization":
+		return metrics.AvgGpuUtilization
+	case "max_gpu_utilization":
+		return metrics.MaxGpuUtilization
+	// Note: avg_memory_utilization and avg_power_draw don't exist in struct
+	}
+	return nil
+}
+
+func getIntPtr(metrics *PerformanceMetrics, field string) *int {
+	if metrics == nil {
+		return nil
+	}
+	// Note: temperature fields don't exist in PerformanceMetrics struct
+	// thermal_events is handled by getUint32Ptr
+	return nil
+}
+
+func getInt64Ptr(metrics *PerformanceMetrics, field string) *int64 {
+	if metrics == nil {
+		return nil
+	}
+	switch field {
+	case "peak_memory_usage_mb":
+		if metrics.PeakMemoryUsageMB != nil {
+			val := int64(*metrics.PeakMemoryUsageMB)
+			return &val
+		}
+	}
+	return nil
+}
+
+func getUint32Ptr(metrics *PerformanceMetrics, field string) *uint32 {
+	if metrics == nil {
+		return nil
+	}
+	switch field {
+	case "thermal_events":
+		return metrics.ThermalEvents
+	}
+	return nil
+}
+
 // checkAllAnomalies flags GPUs with simple heuristics
 func checkAllAnomalies(state map[string]GpuState) map[string]bool {
 	out := make(map[string]bool, len(state))
@@ -180,6 +460,7 @@ var (
 	latestGpuState  = GpuState{}
 	gpuStateMux     = &sync.RWMutex{}
 	natsClient      *nats.Conn
+	dbConn          *pgx.Conn        // Global database connection
 	jobDefinitions  = make(map[string]Job)        // Job definitions by ID
 	activeJobStatus = make(map[string]JobStatus)  // Current job status by job ID
 	completedJobs   = make([]JobStatus, 0)        // Recently completed jobs
@@ -731,7 +1012,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:11188")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:12596")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
@@ -747,7 +1028,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v", err)
 	}
-	defer conn.Close(context.Background())
+	dbConn = conn  // Set global connection
+	defer dbConn.Close(context.Background())
 	log.Println("Connected to TimescaleDB.")
 
 	// Subscribe to telemetry for all GPUs
@@ -844,6 +1126,15 @@ func main() {
 
 		// Move completed/failed jobs to completed jobs list
 		if status.Status == "completed" || status.Status == "failed" || status.Status == "killed" {
+			// Store job performance data for AI training
+			go func(completedStatus JobStatus) {
+				if err := storeJobPerformanceData(completedStatus); err != nil {
+					log.Printf("❌ Error storing job performance data for %s: %v", completedStatus.JobID, err)
+				} else {
+					log.Printf("💾 Stored performance data for job %s", completedStatus.JobID)
+				}
+			}(status)
+
 			// Add to completed jobs list (keep only last 10)
 			if len(completedJobs) >= 10 {
 				completedJobs = completedJobs[1:] // Remove oldest
