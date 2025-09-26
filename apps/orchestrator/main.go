@@ -15,6 +15,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/nats-io/nats.go"
 )
 
@@ -460,7 +461,8 @@ var (
 	latestGpuState  = GpuState{}
 	gpuStateMux     = &sync.RWMutex{}
 	natsClient      *nats.Conn
-	dbConn          *pgx.Conn        // Global database connection
+	dbConn          *pgx.Conn        // Legacy single connection (deprecated)
+	dbPool          *pgxpool.Pool    // Database connection pool for high-throughput operations
 	jobDefinitions  = make(map[string]Job)        // Job definitions by ID
 	activeJobStatus = make(map[string]JobStatus)  // Current job status by job ID
 	completedJobs   = make([]JobStatus, 0)        // Recently completed jobs
@@ -1012,7 +1014,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:15970")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:17605")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
@@ -1022,15 +1024,38 @@ func main() {
 	natsClient = nc
 	log.Println("Connected to NATS.")
 
-	// Connect to TimescaleDB
+	// Connect to TimescaleDB with connection pool
 	dbUrl := "postgres://aether:aether@localhost:5432/aether"
+
+	// Create connection pool configuration
+	poolConfig, err := pgxpool.ParseConfig(dbUrl)
+	if err != nil {
+		log.Fatalf("Unable to parse database URL: %v", err)
+	}
+
+	// Configure pool for high-throughput telemetry
+	poolConfig.MaxConns = 10         // Allow up to 10 concurrent connections
+	poolConfig.MinConns = 2          // Keep 2 connections always open
+	poolConfig.MaxConnLifetime = time.Hour
+	poolConfig.MaxConnIdleTime = time.Minute * 30
+
+	// Create the connection pool
+	pool, err := pgxpool.ConnectConfig(context.Background(), poolConfig)
+	if err != nil {
+		log.Fatalf("Unable to create connection pool: %v", err)
+	}
+	dbPool = pool
+	defer dbPool.Close()
+
+	// Also create single connection for legacy compatibility
 	conn, err := pgx.Connect(context.Background(), dbUrl)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v", err)
 	}
 	dbConn = conn  // Set global connection
 	defer dbConn.Close(context.Background())
-	log.Println("Connected to TimescaleDB.")
+
+	log.Println("Connected to TimescaleDB with connection pool (10 max connections).")
 
 	// Subscribe to telemetry for all GPUs
 	sub, err := nc.Subscribe("aether.telemetry.*", func(msg *nats.Msg) {
