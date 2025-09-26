@@ -289,8 +289,8 @@ func storeJobPerformanceData(status JobStatus) error {
 		reliabilityScore = &reliability
 	}
 
-	// Insert into job_performance table
-	_, err := dbConn.Exec(context.Background(),
+	// Insert into job_performance table using connection pool
+	_, err := dbPool.Exec(context.Background(),
 		`INSERT INTO job_performance (
 			job_id, gpu_id, job_type, start_time, end_time, duration_seconds, exit_code,
 			throughput, completion_time_sec, samples_per_second, memory_efficiency, computational_efficiency,
@@ -355,7 +355,7 @@ func storeJobPerformanceData(status JobStatus) error {
 		"duration_seconds": %d
 	}`, *performanceScore, *resourceEfficiency, status.Status, durationVal)
 
-	_, err = dbConn.Exec(context.Background(),
+	_, err = dbPool.Exec(context.Background(),
 		`INSERT INTO training_data (
 			job_id, gpu_id, features, labels, job_type, data_quality_score
 		) VALUES ($1, $2, $3, $4, $5, $6)`,
@@ -1014,7 +1014,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:10465")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:19675")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
@@ -1103,10 +1103,10 @@ func main() {
 
 		// Insert telemetry data into database ASYNCHRONOUSLY to prevent blocking
 		go func(tel GpuTelemetry, id string) {
-			// Retry logic for database insertions
+			// Retry logic for database insertions using connection pool
 			maxRetries := 3
 			for attempt := 1; attempt <= maxRetries; attempt++ {
-				_, err = conn.Exec(context.Background(),
+				_, err = dbPool.Exec(context.Background(),
 					`INSERT INTO gpu_telemetry (
 						time, gpu_id, gpu_name,
 						utilization_gpu, utilization_memory_controller, performance_state,
