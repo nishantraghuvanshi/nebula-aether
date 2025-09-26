@@ -19,6 +19,7 @@ def main():
     parser.add_argument('--dimensions', type=int, default=10, help='Number of dimensions for hypersphere estimation')
     parser.add_argument('--complexity', type=int, help='Alias for --dimensions (backward compatibility)')
     parser.add_argument('--max-rounds', type=int, default=10, help='Maximum number of rounds to prevent infinite loops')
+    parser.add_argument('--min-runtime', type=int, default=0, help='Minimum runtime in seconds before allowing early termination')
     args = parser.parse_args()
 
     # Handle backward compatibility: use complexity if provided, otherwise use dimensions
@@ -30,6 +31,7 @@ def main():
     print(f"   Target accuracy: {args.target_accuracy}%")
     print(f"   Dimensions: {args.dimensions}D hypersphere")
     print(f"   Max rounds: {args.max_rounds}")
+    print(f"   Min runtime: {args.min_runtime}s")
 
     # Device selection with optimization
     if args.device == 'auto':
@@ -153,10 +155,16 @@ def main():
             print(f"   Round π estimate: {4.0 * round_inside / round_processed:.6f}")
             print(f"   Overall accuracy: {accuracy_percent:.4f}%")
 
-            # Check if we've reached target accuracy
+            # Check if we've reached target accuracy and minimum runtime
             if accuracy_percent >= args.target_accuracy:
-                print(f"🎯 Target accuracy of {args.target_accuracy}% achieved! ({accuracy_percent:.4f}%)")
-                break
+                if elapsed_total >= args.min_runtime:
+                    print(f"🎯 Target accuracy of {args.target_accuracy}% achieved! ({accuracy_percent:.4f}%)")
+                    print(f"   Minimum runtime of {args.min_runtime}s also satisfied ({elapsed_total:.1f}s)")
+                    break
+                else:
+                    remaining_time = args.min_runtime - elapsed_total
+                    print(f"🎯 Target accuracy achieved but minimum runtime not met")
+                    print(f"   Need {remaining_time:.1f}s more to reach {args.min_runtime}s minimum runtime")
             elif round_count >= args.max_rounds:
                 print(f"⏰ Maximum rounds ({args.max_rounds}) reached. Stopping simulation.")
                 print(f"   Current accuracy: {accuracy_percent:.4f}% (target: {args.target_accuracy}%)")

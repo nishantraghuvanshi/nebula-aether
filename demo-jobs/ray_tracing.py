@@ -66,7 +66,7 @@ def random_unit_vector(shape, device):
 
 def trace_ray(ray_origin, ray_direction, spheres, depth, max_depth, device):
     """
-    Recursive ray tracing function
+    Recursive ray tracing function with depth limiting for performance
     """
     if depth >= max_depth:
         # Return sky color (gradient)
@@ -181,10 +181,10 @@ def main():
     parser = argparse.ArgumentParser(description='Ray Tracing Benchmark')
     parser.add_argument('--width', type=int, default=800, help='Image width in pixels')
     parser.add_argument('--height', type=int, default=600, help='Image height in pixels')
-    parser.add_argument('--samples', type=int, default=50, help='Maximum samples per pixel')
-    parser.add_argument('--max-depth', type=int, default=8, help='Maximum ray bounce depth')
+    parser.add_argument('--samples', type=int, default=10, help='Maximum samples per pixel')
+    parser.add_argument('--max-depth', type=int, default=3, help='Maximum ray bounce depth')
     parser.add_argument('--device', type=str, default='auto', help='Device to use')
-    parser.add_argument('--batch-size', type=int, default=1024, help='Rays to trace per batch')
+    parser.add_argument('--batch-size', type=int, default=64, help='Rays to trace per batch')
     parser.add_argument('--quality-target', type=float, default=0.95, help='Quality convergence target (0-1)')
     parser.add_argument('--min-samples', type=int, default=5, help='Minimum samples before checking convergence')
     parser.add_argument('--max-runtime', type=int, default=60, help='Maximum runtime in seconds')
@@ -329,9 +329,14 @@ def main():
 
                     rays_traced += batch_height * batch_width
 
-                    # Small delay for system stability
-                    if rays_traced % (args.batch_size * 10) == 0:
-                        time.sleep(0.01)
+                    # Small delay for system stability and more frequent timeout checks
+                    if rays_traced % (args.batch_size * 2) == 0:
+                        time.sleep(0.001)  # Reduced delay
+                        # Additional timeout check
+                        if time.time() - timeout_start > args.max_runtime:
+                            termination_reason = "timeout"
+                            batch_timeout = True
+                            break
 
                 if batch_timeout:
                     break
@@ -365,7 +370,7 @@ def main():
             elapsed = time.time() - start_time
 
             # Report progress more frequently, including quality metrics
-            if (sample + 1) % max(1, min(5, args.samples // 10)) == 0 or sample >= args.min_samples:
+            if (sample + 1) % max(1, min(2, args.samples // 5)) == 0 or sample >= args.min_samples:
                 rays_per_sec = rays_traced / elapsed if elapsed > 0 else 0
 
                 if sample >= args.min_samples:
