@@ -216,59 +216,103 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
                 jobs.insert(job.job_id.clone(), child);
             }
 
-            // Wait for the process to complete
-            let child = {
+            // Poll for process completion (allows kill to work)
+            let job_id_for_wait = job.job_id.clone();
+            let mut process_completed = false;
+            let mut final_output = None;
+
+            while !process_completed {
+                tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+
                 let mut jobs = active_jobs.lock().await;
-                jobs.remove(&job.job_id).unwrap()
-            };
+                if let Some(child) = jobs.get_mut(&job_id_for_wait) {
+                    // Check if process finished
+                    match child.try_wait() {
+                        Ok(Some(status)) => {
+                            // Process completed, get full child process to collect output
+                            let child = jobs.remove(&job_id_for_wait).unwrap();
+                            drop(jobs);
 
-            match child.wait_with_output().await {
-                Ok(output) => {
-                    let end_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
-                    let exit_code = output.status.code().unwrap_or(-1);
-
-                    let (status_str, message) = if output.status.success() {
-                        ("completed", "Job completed successfully")
-                    } else {
-                        ("failed", "Job execution failed")
-                    };
-
-                    // Print output for debugging
-                    if !output.stdout.is_empty() {
-                        println!("📊 Job stdout:\n{}", String::from_utf8_lossy(&output.stdout));
+                            // Get the output
+                            match child.wait_with_output().await {
+                                Ok(output) => {
+                                    final_output = Some(output);
+                                    process_completed = true;
+                                }
+                                Err(e) => {
+                                    println!("❌ Job {} failed to collect output: {}", job_id_for_wait, e);
+                                    // Create a simple output structure with the exit status
+                                    let simple_output = std::process::Output {
+                                        status,
+                                        stdout: Vec::new(),
+                                        stderr: format!("Failed to collect output: {}", e).into_bytes(),
+                                    };
+                                    final_output = Some(simple_output);
+                                    process_completed = true;
+                                }
+                            }
+                        }
+                        Ok(None) => {
+                            // Process still running
+                        }
+                        Err(e) => {
+                            println!("❌ Job {} try_wait error: {}", job_id_for_wait, e);
+                            jobs.remove(&job_id_for_wait);
+                            process_completed = true;
+                        }
                     }
-                    if !output.stderr.is_empty() {
-                        println!("❌ Job stderr:\n{}", String::from_utf8_lossy(&output.stderr));
-                    }
-
-                    let final_status = JobStatus {
-                        job_id: job.job_id.clone(),
-                        gpu_id: job.gpu_id.clone(),
-                        status: status_str.to_string(),
-                        message: format!("{} (exit code: {})", message, exit_code),
-                        start_time: Some(start_time),
-                        end_time: Some(end_time),
-                        exit_code: Some(exit_code),
-                    };
-
-                    publish_job_status(&client, &final_status).await;
-                    println!("✅ Job {} completed with exit code: {}", job.job_id, exit_code);
+                } else {
+                    // Job was killed (removed from active_jobs)
+                    process_completed = true;
                 }
-                Err(e) => {
-                    let end_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
-                    let error_status = JobStatus {
-                        job_id: job.job_id.clone(),
-                        gpu_id: job.gpu_id.clone(),
-                        status: "failed".to_string(),
-                        message: format!("Process error: {}", e),
-                        start_time: Some(start_time),
-                        end_time: Some(end_time),
-                        exit_code: Some(-1),
-                    };
+            }
 
-                    publish_job_status(&client, &error_status).await;
-                    println!("❌ Job {} process error: {}", job.job_id, e);
+            // Handle final output if process completed normally
+            if let Some(output) = final_output {
+                let end_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+                let exit_code = output.status.code().unwrap_or(-1);
+
+                let (status_str, message) = if output.status.success() {
+                    ("completed", "Job completed successfully")
+                } else {
+                    ("failed", "Job execution failed")
+                };
+
+                // Print output for debugging
+                if !output.stdout.is_empty() {
+                    println!("📊 Job stdout:\n{}", String::from_utf8_lossy(&output.stdout));
                 }
+                if !output.stderr.is_empty() {
+                    println!("❌ Job stderr:\n{}", String::from_utf8_lossy(&output.stderr));
+                }
+
+                let final_status = JobStatus {
+                    job_id: job.job_id.clone(),
+                    gpu_id: job.gpu_id.clone(),
+                    status: status_str.to_string(),
+                    message: format!("{} (exit code: {})", message, exit_code),
+                    start_time: Some(start_time),
+                    end_time: Some(end_time),
+                    exit_code: Some(exit_code),
+                };
+
+                publish_job_status(&client, &final_status).await;
+                println!("✅ Job {} completed with exit code: {}", job.job_id, exit_code);
+            } else {
+                // Job was killed - publish killed status
+                let end_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+                let killed_status = JobStatus {
+                    job_id: job.job_id.clone(),
+                    gpu_id: job.gpu_id.clone(),
+                    status: "killed".to_string(),
+                    message: "Job was killed by user".to_string(),
+                    start_time: Some(start_time),
+                    end_time: Some(end_time),
+                    exit_code: Some(-9),
+                };
+
+                publish_job_status(&client, &killed_status).await;
+                println!("🔪 Job {} was killed by user", job.job_id);
             }
 
             // Ensure job is removed from active jobs map when complete
@@ -418,55 +462,6 @@ async fn run_mock_mode() {
                 }
             });
 
-            // Add NATS command listener for kill commands
-            let command_active_jobs = active_jobs.clone();
-            let command_nats_client = client.clone();
-            tokio::spawn(async move {
-                println!("🎧 Starting NATS command listener for kill commands...");
-
-                match command_nats_client.subscribe("aether.commands.all").await {
-                    Ok(mut subscription) => {
-                        while let Some(message) = subscription.next().await {
-                            if let Ok(command) = String::from_utf8(message.payload.to_vec()) {
-                                if command.starts_with("kill_job:") {
-                                    let job_id = command.strip_prefix("kill_job:").unwrap_or("");
-                                    println!("🔪 Received kill command for job: {}", job_id);
-
-                                    // Kill the job process
-                                    let mut jobs = command_active_jobs.lock().await;
-                                    if let Some(mut child) = jobs.remove(job_id) {
-                                        match child.kill().await {
-                                            Ok(_) => {
-                                                println!("✅ Successfully killed job: {}", job_id);
-
-                                                // Send job killed status
-                                                let status = JobStatus {
-                                                    job_id: job_id.to_string(),
-                                                    gpu_id: "mock".to_string(), // Will be updated with proper GPU ID
-                                                    status: "killed".to_string(),
-                                                    message: "Job was terminated by kill command".to_string(),
-                                                    start_time: None,
-                                                    end_time: Some(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
-                                                    exit_code: Some(-1),
-                                                };
-                                                publish_job_status(&command_nats_client, &status).await;
-                                            }
-                                            Err(e) => {
-                                                println!("❌ Failed to kill job {}: {}", job_id, e);
-                                            }
-                                        }
-                                    } else {
-                                        println!("⚠️ Job {} not found in active jobs", job_id);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    Err(e) => {
-                        println!("❌ Failed to subscribe to command channel: {}", e);
-                    }
-                }
-            });
 
             // Don't simulate fake GPUs in mock mode - only provide HTTP polling for job execution
             println!("Mock mode: Skipping GPU telemetry simulation to avoid fake GPUs in dashboard");
