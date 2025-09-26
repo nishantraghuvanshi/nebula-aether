@@ -21,7 +21,11 @@ lsof -ti:5432 2>/dev/null | xargs kill -9 2>/dev/null || true  # TimescaleDB
 
 # Stop Docker services
 echo "🐳 Stopping Docker services..."
-docker compose down --remove-orphans
+if docker info >/dev/null 2>&1; then
+    docker compose down --remove-orphans
+else
+    echo "⚠️  Docker daemon not running - skipping Docker cleanup"
+fi
 
 # Clean up PID files
 rm -f .orchestrator.pid .dashboard.pid
@@ -29,7 +33,9 @@ rm -f .orchestrator.pid .dashboard.pid
 echo ""
 echo "✅ SYSTEM STOPPED SUCCESSFULLY!"
 echo "==============================="
-echo "🔍 Verify with: docker compose ps"
+if docker info >/dev/null 2>&1; then
+    echo "🔍 Verify with: docker compose ps"
+fi
 echo "🔍 Check ports: lsof -i :3000,:8080,:4222"
 echo ""
 echo "🚀 To restart: ./startup.sh"

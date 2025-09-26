@@ -1,11 +1,114 @@
 use serde::{Serialize, Deserialize};
-use std::time::Duration;
 use std::sync::Arc;
-use futures_util::StreamExt;
 use tokio::sync::Mutex;
 use tokio::process::{Command, Child};
 use std::time::{SystemTime, UNIX_EPOCH};
 use std::collections::HashMap;
+use std::fs::OpenOptions;
+use std::io::Write;
+use chrono::Local;
+
+const JOB_LOG_FILE: &str = "job_execution.log";
+
+fn init_job_log() {
+    // Clean/create job log file on startup
+    match std::fs::OpenOptions::new()
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(JOB_LOG_FILE)
+    {
+        Ok(mut file) => {
+            let startup_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+            writeln!(file, "=== Nebula Aether Job Log Started at {} ===", startup_time).ok();
+            writeln!(file, "Format: [TIMESTAMP] [EVENT] [JOB_ID] [DETAILS]").ok();
+            writeln!(file, "").ok();
+            println!("📝 Job log initialized: {}", JOB_LOG_FILE);
+        }
+        Err(e) => {
+            println!("⚠️  Failed to initialize job log: {}", e);
+        }
+    }
+}
+
+fn log_job_event(event: &str, job_id: &str, details: &str) {
+    let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+    let log_entry = format!("[{}] [{}] [{}] {}", timestamp, event, job_id, details);
+
+    // Print to console
+    match event {
+        "STARTED" => println!("🚀 {}", log_entry),
+        "COMPLETED" => println!("✅ {}", log_entry),
+        "FAILED" => println!("❌ {}", log_entry),
+        "KILLED" => println!("🔪 {}", log_entry),
+        _ => println!("📝 {}", log_entry),
+    }
+
+    // Append to log file
+    if let Ok(mut file) = OpenOptions::new().create(true).append(true).open(JOB_LOG_FILE) {
+        writeln!(file, "{}", log_entry).ok();
+    }
+}
+
+fn extract_job_summary(stdout: &[u8]) -> String {
+    let output = String::from_utf8_lossy(stdout);
+    let lines: Vec<&str> = output.lines().collect();
+
+    // Look for key performance metrics in different job types
+    let mut summary_parts = Vec::new();
+
+    // Look for completion messages and key metrics
+    for line in lines.iter().rev().take(20) {  // Check last 20 lines for summary info
+        let line = line.trim();
+
+        // Job completion indicators
+        if line.contains("completed successfully") || line.contains("benchmark completed") {
+            summary_parts.push("SUCCESS".to_string());
+        }
+
+        // Performance metrics - look for common patterns
+        if line.contains("Steps/second:") || line.contains("FPS") || line.contains("samples/sec") {
+            // Extract performance numbers
+            if let Some(perf) = line.split(':').nth(1) {
+                summary_parts.push(format!("Perf:{}", perf.trim()));
+            }
+        }
+
+        // Look for accuracy or final results
+        if line.contains("accuracy:") || line.contains("Final") || line.contains("estimate:") {
+            if let Some(result) = line.split(':').nth(1) {
+                let result = result.trim();
+                if result.len() < 50 {  // Keep summaries short
+                    summary_parts.push(format!("Result:{}", result));
+                }
+            }
+        }
+
+        // Look for memory usage
+        if line.contains("Peak GPU memory:") || line.contains("memory:") {
+            if let Some(mem) = line.split(':').nth(1) {
+                summary_parts.push(format!("Mem:{}", mem.trim()));
+            }
+        }
+
+        // Model/job specific info
+        if line.contains("frames") || line.contains("residues") || line.contains("parameters") {
+            if line.len() < 80 {
+                summary_parts.push(line.to_string());
+            }
+        }
+    }
+
+    if summary_parts.is_empty() {
+        if output.is_empty() {
+            "No output".to_string()
+        } else {
+            format!("Output: {} lines", lines.len())
+        }
+    } else {
+        summary_parts.join(" | ")
+    }
+}
 
 fn create_fallback_script(job_type: &str) -> String {
     match job_type {
@@ -146,6 +249,9 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
         exit_code: None,
     };
     publish_job_status(&client, &status).await;
+
+    // Log job started
+    log_job_event("STARTED", &job.job_id, &format!("Script: {} GPU: {}", job.script, job.gpu_id));
 
     // Determine device based on platform
     let device_arg = if cfg!(target_os = "macos") {
@@ -298,6 +404,18 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
 
                 publish_job_status(&client, &final_status).await;
                 println!("✅ Job {} completed with exit code: {}", job.job_id, exit_code);
+
+                // Log job completion with summary
+                let runtime = end_time - start_time;
+                let stdout_summary = extract_job_summary(&output.stdout);
+                let log_details = format!("Exit: {} Runtime: {}s Summary: {}",
+                                        exit_code, runtime, stdout_summary);
+
+                if output.status.success() {
+                    log_job_event("COMPLETED", &job.job_id, &log_details);
+                } else {
+                    log_job_event("FAILED", &job.job_id, &log_details);
+                }
             } else {
                 // Job was killed - publish killed status
                 let end_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
@@ -313,6 +431,11 @@ async fn execute_job(job: JobExecution, client: async_nats::Client, active_jobs:
 
                 publish_job_status(&client, &killed_status).await;
                 println!("🔪 Job {} was killed by user", job.job_id);
+
+                // Log job killed
+                let runtime = end_time - start_time;
+                let log_details = format!("Runtime: {}s (terminated by user)", runtime);
+                log_job_event("KILLED", &job.job_id, &log_details);
             }
 
             // Ensure job is removed from active jobs map when complete
@@ -380,7 +503,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 async fn run_mock_mode() {
-    // use tokio::time; // Unused import
+    // Initialize job logging on startup
+    init_job_log();
 
     let os_info = if cfg!(target_os = "macos") {
         "macOS"
@@ -393,7 +517,7 @@ async fn run_mock_mode() {
         os_info
     );
 
-    let nats_url = "0.tcp.in.ngrok.io:17962";
+    let nats_url = "0.tcp.in.ngrok.io:12133";
     match async_nats::connect(nats_url).await {
         Ok(client) => {
             println!("Connected to NATS server at {}.", nats_url);
@@ -413,7 +537,7 @@ async fn run_mock_mode() {
             let poll_client = command_client.clone();
             tokio::spawn(async move {
                 let http_client = reqwest::Client::new();
-                let orchestrator_url = "https://fa4f910983b7.ngrok-free.app";
+                let orchestrator_url = "https://4f92dbd8d0b6.ngrok-free.app";
                 // Generate unique GPU ID based on hostname
                 let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                     std::process::Command::new("hostname")
@@ -482,6 +606,9 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     use nvml_wrapper::Nvml;
     use tokio::time;
 
+    // Initialize job logging on startup
+    init_job_log();
+
     println!("Starting Aether Telemetry Agent with NVML...");
 
     // Set up NVIDIA driver environment
@@ -491,7 +618,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Connect to NATS server
-    let nats_url = "0.tcp.in.ngrok.io:17962";
+    let nats_url = "0.tcp.in.ngrok.io:12133";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
@@ -534,7 +661,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
         let jobs_for_commands = active_jobs.clone();
         tokio::spawn(async move {
             let http_client = reqwest::Client::new();
-            let orchestrator_url = "https://fa4f910983b7.ngrok-free.app";
+            let orchestrator_url = "https://4f92dbd8d0b6.ngrok-free.app";
             // Generate unique GPU ID based on hostname + GPU index
             let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                 std::process::Command::new("hostname")
@@ -612,6 +739,9 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
                                     match child.kill().await {
                                         Ok(_) => {
                                             println!("✅ Successfully killed job: {}", job_id);
+
+                                            // Log kill command execution
+                                            log_job_event("KILLED", job_id, "Killed by user command");
 
                                             // Send job killed status
                                             let status = JobStatus {
