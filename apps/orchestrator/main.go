@@ -219,11 +219,11 @@ func calculateLoadBalancingScore(gpuState GpuState, exists bool, avgUtilization,
 	loadBalancingBonus := 0.0
 
 	// Penalty for choosing overloaded GPU when others are available
-	if gpuState.UtilizationGpu > avgUtilization+20 {
+	if int(gpuState.UtilizationGpu) > avgUtilization+20 {
 		loadBalancingBonus -= 25.0 // Heavy penalty for bad load balancing
-	} else if gpuState.UtilizationGpu > avgUtilization+10 {
+	} else if int(gpuState.UtilizationGpu) > avgUtilization+10 {
 		loadBalancingBonus -= 15.0 // Moderate penalty
-	} else if gpuState.UtilizationGpu < avgUtilization-10 {
+	} else if int(gpuState.UtilizationGpu) < avgUtilization-10 {
 		loadBalancingBonus += 20.0 // Reward for using underutilized GPU
 	}
 
@@ -237,14 +237,14 @@ func calculateLoadBalancingScore(gpuState GpuState, exists bool, avgUtilization,
 	}
 
 	// Thermal efficiency bonus
-	if gpuState.TemperatureC < 60 {
+	if gpuState.Temp < 60 {
 		loadBalancingBonus += 10.0
-	} else if gpuState.TemperatureC > 75 {
+	} else if gpuState.Temp > 75 {
 		loadBalancingBonus -= 15.0
 	}
 
 	// Memory efficiency consideration
-	memoryUtil := float64(gpuState.MemoryUsedMb) / float64(gpuState.MemoryTotalMb) * 100
+	memoryUtil := float64(gpuState.MemUsed) / float64(gpuState.MemTotal) * 100
 	if memoryUtil < 70 {
 		loadBalancingBonus += 5.0
 	} else if memoryUtil > 90 {
@@ -252,7 +252,7 @@ func calculateLoadBalancingScore(gpuState GpuState, exists bool, avgUtilization,
 	}
 
 	// Duration factor - longer jobs need better load balancing
-	if duration > 180 && gpuState.UtilizationGpu > avgUtilization+15 {
+	if duration > 180 && int(gpuState.UtilizationGpu) > avgUtilization+15 {
 		loadBalancingBonus -= 10.0 // Extra penalty for long jobs on busy GPUs
 	}
 
@@ -446,12 +446,12 @@ func storeJobPerformanceData(status JobStatus) error {
 	minUtilization := 100
 
 	for _, state := range clusterState {
-		totalUtilization += state.UtilizationGpu
-		if state.UtilizationGpu > maxUtilization {
-			maxUtilization = state.UtilizationGpu
+		totalUtilization += int(state.UtilizationGpu)
+		if int(state.UtilizationGpu) > maxUtilization {
+			maxUtilization = int(state.UtilizationGpu)
 		}
-		if state.UtilizationGpu < minUtilization {
-			minUtilization = state.UtilizationGpu
+		if int(state.UtilizationGpu) < minUtilization {
+			minUtilization = int(state.UtilizationGpu)
 		}
 	}
 	clusterStateMux.RUnlock()
@@ -480,16 +480,16 @@ func storeJobPerformanceData(status JobStatus) error {
 		status.GpuID,
 		jobType,
 		startTimeStr,
-		func() int { if exists { return gpuState.UtilizationGpu } else { return 0 }}(),
-		func() int { if exists { return gpuState.MemoryUsedMb } else { return 0 }}(),
-		func() int { if exists { return gpuState.MemoryTotalMb } else { return 8192 }}(),
-		func() int { if exists { return gpuState.TemperatureC } else { return 50 }}(),
-		func() int { if exists { return gpuState.PowerDrawW } else { return 100 }}(),
-		func() float64 { if exists && gpuState.MemoryTotalMb > 0 { return float64(gpuState.MemoryUsedMb) / float64(gpuState.MemoryTotalMb) * 100 } else { return 0 }}(),
-		func() int { if exists { return max(83 - gpuState.TemperatureC, 0) } else { return 33 }}(),
+		func() int { if exists { return int(gpuState.UtilizationGpu) } else { return 0 }}(),
+		func() int { if exists { return int(gpuState.MemUsed / 1048576) } else { return 0 }}(), // Convert bytes to MB
+		func() int { if exists { return int(gpuState.MemTotal / 1048576) } else { return 8192 }}(), // Convert bytes to MB
+		func() int { if exists { return int(gpuState.Temp) } else { return 50 }}(),
+		func() int { if exists { return int(gpuState.PowerDrawW) } else { return 100 }}(),
+		func() float64 { if exists && gpuState.MemTotal > 0 { return float64(gpuState.MemUsed) / float64(gpuState.MemTotal) * 100 } else { return 0 }}(),
+		func() int { if exists { return max(83 - int(gpuState.Temp), 0) } else { return 33 }}(),
 		avgUtilization,
 		utilizationSpread,
-		func() float64 { if avgUtilization > 0 { return float64(func() int { if exists { return gpuState.UtilizationGpu } else { return 0 }}()) / float64(avgUtilization) } else { return 1.0 }}(),
+		func() float64 { if avgUtilization > 0 { return float64(func() int { if exists { return int(gpuState.UtilizationGpu) } else { return 0 }}()) / float64(avgUtilization) } else { return 1.0 }}(),
 		totalGpus,
 		1)
 
@@ -1779,7 +1779,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:14601")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:15646")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
