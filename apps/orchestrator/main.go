@@ -199,6 +199,97 @@ func mockCarbonIntensity() float64 {
 }
 
 // storeJobPerformanceData stores comprehensive job performance data for AI training
+// Helper function for max
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// Calculate dynamic performance score based on load balancing effectiveness
+func calculateLoadBalancingScore(gpuState GpuState, exists bool, avgUtilization, utilizationSpread, totalGpus, duration int) float64 {
+	baseScore := 70.0 // Base performance score
+
+	if !exists {
+		return baseScore // Fallback if no GPU state
+	}
+
+	// Reward good load balancing decisions
+	loadBalancingBonus := 0.0
+
+	// Penalty for choosing overloaded GPU when others are available
+	if gpuState.UtilizationGpu > avgUtilization+20 {
+		loadBalancingBonus -= 25.0 // Heavy penalty for bad load balancing
+	} else if gpuState.UtilizationGpu > avgUtilization+10 {
+		loadBalancingBonus -= 15.0 // Moderate penalty
+	} else if gpuState.UtilizationGpu < avgUtilization-10 {
+		loadBalancingBonus += 20.0 // Reward for using underutilized GPU
+	}
+
+	// Reward even distribution
+	if utilizationSpread < 20 {
+		loadBalancingBonus += 15.0 // Good load balancing
+	} else if utilizationSpread < 30 {
+		loadBalancingBonus += 10.0 // Acceptable load balancing
+	} else if utilizationSpread > 50 {
+		loadBalancingBonus -= 20.0 // Very poor load balancing
+	}
+
+	// Thermal efficiency bonus
+	if gpuState.TemperatureC < 60 {
+		loadBalancingBonus += 10.0
+	} else if gpuState.TemperatureC > 75 {
+		loadBalancingBonus -= 15.0
+	}
+
+	// Memory efficiency consideration
+	memoryUtil := float64(gpuState.MemoryUsedMb) / float64(gpuState.MemoryTotalMb) * 100
+	if memoryUtil < 70 {
+		loadBalancingBonus += 5.0
+	} else if memoryUtil > 90 {
+		loadBalancingBonus -= 10.0
+	}
+
+	// Duration factor - longer jobs need better load balancing
+	if duration > 180 && gpuState.UtilizationGpu > avgUtilization+15 {
+		loadBalancingBonus -= 10.0 // Extra penalty for long jobs on busy GPUs
+	}
+
+	finalScore := baseScore + loadBalancingBonus
+
+	// Clamp to 0-100 range
+	if finalScore < 0 {
+		finalScore = 0
+	} else if finalScore > 100 {
+		finalScore = 100
+	}
+
+	return finalScore
+}
+
+// Calculate resource efficiency based on load balancing context
+func calculateResourceEfficiency(gpuState GpuState, exists bool, utilizationSpread int) float64 {
+	baseEfficiency := 0.6 // Base efficiency
+
+	if !exists {
+		return baseEfficiency
+	}
+
+	// Efficiency improves with better load balancing
+	if utilizationSpread < 20 {
+		return 0.95 // Excellent load balancing
+	} else if utilizationSpread < 30 {
+		return 0.85 // Good load balancing
+	} else if utilizationSpread < 40 {
+		return 0.75 // Fair load balancing
+	} else if utilizationSpread < 60 {
+		return 0.60 // Poor load balancing
+	} else {
+		return 0.40 // Very poor load balancing
+	}
+}
+
 func storeJobPerformanceData(status JobStatus) error {
 	if dbConn == nil {
 		return fmt.Errorf("database connection not available")
@@ -344,24 +435,89 @@ func storeJobPerformanceData(status JobStatus) error {
 		startTimeStr = fmt.Sprintf(`"%s"`, startTime.Format(time.RFC3339))
 	}
 
+	// Get GPU state at decision time for enhanced training features
+	clusterStateMux.RLock()
+	gpuState, exists := clusterState[status.GpuID]
+
+	// Calculate load balancing context
+	totalGpus := len(clusterState)
+	totalUtilization := 0
+	maxUtilization := 0
+	minUtilization := 100
+
+	for _, state := range clusterState {
+		totalUtilization += state.UtilizationGpu
+		if state.UtilizationGpu > maxUtilization {
+			maxUtilization = state.UtilizationGpu
+		}
+		if state.UtilizationGpu < minUtilization {
+			minUtilization = state.UtilizationGpu
+		}
+	}
+	clusterStateMux.RUnlock()
+
+	avgUtilization := totalUtilization / max(totalGpus, 1)
+	utilizationSpread := maxUtilization - minUtilization
+
+	// Enhanced features with GPU state and load balancing context
 	featuresJSON := fmt.Sprintf(`{
 		"gpu_id": "%s",
 		"job_type": "%s",
 		"start_time": %s,
-		"system_load": 1
-	}`, status.GpuID, jobType, startTimeStr)
+		"gpu_utilization": %d,
+		"gpu_memory_used": %d,
+		"gpu_memory_total": %d,
+		"gpu_temperature": %d,
+		"gpu_power_draw": %d,
+		"memory_utilization_pct": %.2f,
+		"thermal_headroom": %d,
+		"cluster_avg_utilization": %d,
+		"utilization_spread": %d,
+		"relative_load": %.2f,
+		"total_gpus": %d,
+		"system_load": %d
+	}`,
+		status.GpuID,
+		jobType,
+		startTimeStr,
+		func() int { if exists { return gpuState.UtilizationGpu } else { return 0 }}(),
+		func() int { if exists { return gpuState.MemoryUsedMb } else { return 0 }}(),
+		func() int { if exists { return gpuState.MemoryTotalMb } else { return 8192 }}(),
+		func() int { if exists { return gpuState.TemperatureC } else { return 50 }}(),
+		func() int { if exists { return gpuState.PowerDrawW } else { return 100 }}(),
+		func() float64 { if exists && gpuState.MemoryTotalMb > 0 { return float64(gpuState.MemoryUsedMb) / float64(gpuState.MemoryTotalMb) * 100 } else { return 0 }}(),
+		func() int { if exists { return max(83 - gpuState.TemperatureC, 0) } else { return 33 }}(),
+		avgUtilization,
+		utilizationSpread,
+		func() float64 { if avgUtilization > 0 { return float64(func() int { if exists { return gpuState.UtilizationGpu } else { return 0 }}()) / float64(avgUtilization) } else { return 1.0 }}(),
+		totalGpus,
+		1)
 
 	durationVal := 300 // default duration
 	if durationSeconds != nil {
 		durationVal = *durationSeconds
 	}
 
+	// Calculate dynamic performance score based on load balancing effectiveness
+	dynamicPerformanceScore := calculateLoadBalancingScore(gpuState, exists, avgUtilization, utilizationSpread, totalGpus, durationVal)
+	dynamicResourceEfficiency := calculateResourceEfficiency(gpuState, exists, utilizationSpread)
+
 	labelsJSON := fmt.Sprintf(`{
-		"performance_score": %f,
-		"resource_efficiency": %f,
+		"performance_score": %.2f,
+		"resource_efficiency": %.2f,
 		"completion_status": "%s",
-		"duration_seconds": %d
-	}`, *performanceScore, *resourceEfficiency, status.Status, durationVal)
+		"duration_seconds": %d,
+		"load_balancing_score": %.2f,
+		"utilization_spread": %d,
+		"was_optimal_choice": %t
+	}`,
+		dynamicPerformanceScore,
+		dynamicResourceEfficiency,
+		status.Status,
+		durationVal,
+		dynamicPerformanceScore,
+		utilizationSpread,
+		utilizationSpread < 30) // Good load balancing if spread < 30%
 
 	_, err = dbPool.Exec(context.Background(),
 		`INSERT INTO training_data (
@@ -1623,7 +1779,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:10968")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:14601")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
