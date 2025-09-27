@@ -331,6 +331,45 @@ def calculate_derived_features(candidate: GpuCandidate, job_requirements: Option
 
     return features
 
+def select_best_gpu_with_load_balancing(gpu_evaluations, candidates):
+    """Select best GPU with intelligent load balancing for equal scores"""
+    # Get max score
+    max_score = max(eval_data['performance_score'] for _, eval_data in gpu_evaluations)
+
+    # Find all GPUs with the max score (within 1% tolerance)
+    top_gpus = [(gpu_id, eval_data) for gpu_id, eval_data in gpu_evaluations
+                if abs(eval_data['performance_score'] - max_score) <= 1.0]
+
+    if len(top_gpus) == 1:
+        # Only one best GPU, return it
+        return top_gpus[0]
+
+    print(f"🔄 Load balancing: {len(top_gpus)} GPUs tied at {max_score:.1f}% score")
+
+    # Multiple GPUs tied - use load balancing criteria
+    load_balancing_scores = []
+
+    for gpu_id, eval_data in top_gpus:
+        # Find the candidate object
+        candidate = next(c for c in candidates if c.gpu_id == gpu_id)
+
+        # Calculate load balancing score (lower is better)
+        load_score = (
+            candidate.utilization_gpu * 2.0 +  # Heavily weight current utilization
+            candidate.utilization_memory_controller * 1.5 +
+            (candidate.gpu_mem_used / candidate.gpu_mem_total) * 100 * 1.0 +
+            candidate.gpu_temp * 0.5  # Lightly weight temperature
+        )
+
+        load_balancing_scores.append((gpu_id, eval_data, load_score))
+        print(f"  {gpu_id}: utilization={candidate.utilization_gpu}%, memory={candidate.gpu_mem_used}MB, temp={candidate.gpu_temp}°C → load_score={load_score:.1f}")
+
+    # Select GPU with lowest load score (least loaded)
+    best_gpu_id, best_eval, best_load_score = min(load_balancing_scores, key=lambda x: x[2])
+    print(f"🎯 Selected {best_gpu_id} (lowest load score: {best_load_score:.1f})")
+
+    return best_gpu_id, best_eval
+
 def evaluate_gpu_candidate(candidate: GpuCandidate, job_type: str, job_requirements: Optional[JobRequirements], model, scaler):
     """Enhanced GPU evaluation with multi-criteria scoring"""
 
@@ -600,8 +639,8 @@ def predict(request: PredictionRequest) -> PredictionResponse:
             "derived_features": evaluation['derived_features']
         })
 
-    # Select best GPU
-    best_gpu_id, best_eval = max(gpu_evaluations, key=lambda x: x[1]['performance_score'])
+    # Select best GPU with load balancing for equal scores
+    best_gpu_id, best_eval = select_best_gpu_with_load_balancing(gpu_evaluations, request.candidates)
 
     # Generate selection reasons
     reasons = []
