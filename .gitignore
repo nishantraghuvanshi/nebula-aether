@@ -51,3 +51,5 @@ apps/ai-core/logs/
 # Process ID files
 .orchestrator.pid
 .dashboard.pid
+
+apps/orchestrator/orchestrator.log

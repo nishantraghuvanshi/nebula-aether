@@ -44,7 +44,7 @@ class TrainingPipeline:
         self.models = {}  # current active models
         self.model_versions = {}  # version history
         self.training_config = {
-            'retrain_interval_hours': 6,  # Retrain every 6 hours
+            'retrain_interval_hours': 0.25,  # Retrain every 15 minutes
             'min_samples_for_training': 50,  # Minimum samples needed
             'ab_test_percentage': 20,  # 20% traffic for A/B testing
             'performance_threshold': 0.85,  # Model must achieve 85% accuracy
@@ -451,7 +451,7 @@ async def main():
         'port': 5432,
         'database': 'aether',
         'user': 'aether',
-        'password': 'aether123'
+        'password': 'aether'
     }
 
     pipeline = TrainingPipeline(db_config)

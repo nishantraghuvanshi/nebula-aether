@@ -109,14 +109,14 @@ type JobStatus struct {
 // Represents the current state of a GPU, which we'll send to the AI
 type GpuState struct {
 	// Core telemetry
-	GpuName                     string `json:"gpu_name"`
-	Temp                        uint32 `json:"gpu_temp"`
-	MemUsed                     uint64 `json:"gpu_mem_used"`
-	MemTotal                    uint64 `json:"gpu_mem_total"`
-	UtilizationGpu              uint32 `json:"utilization_gpu"`
-	UtilizationMemoryController uint32 `json:"utilization_memory_controller"`
-	PowerDrawW                  uint32 `json:"power_draw_w"`
-	ThrottlingReasons           string `json:"throttling_reasons"`
+	GpuName                     string    `json:"gpu_name"`
+	Temp                        uint32    `json:"gpu_temp"`
+	MemUsed                     uint64    `json:"gpu_mem_used"`
+	MemTotal                    uint64    `json:"gpu_mem_total"`
+	UtilizationGpu              uint32    `json:"utilization_gpu"`
+	UtilizationMemoryController uint32    `json:"utilization_memory_controller"`
+	PowerDrawW                  uint32    `json:"power_draw_w"`
+	ThrottlingReasons           string    `json:"throttling_reasons"`
 
 	// Clock speeds
 	ClockGpuMhz uint32 `json:"clock_gpu_mhz"`
@@ -124,6 +124,9 @@ type GpuState struct {
 
 	// Performance state
 	PerformanceState string `json:"performance_state"`
+
+	// Telemetry tracking (not sent to dashboard)
+	LastTelemetryUpdate time.Time `json:"-"`
 }
 
 // Enhanced GPU Candidate with all telemetry features
@@ -799,6 +802,77 @@ func calculateGpuResourceUsage(gpuID string, gpuState GpuState) (currentMemory, 
 	return currentMemory, projectedMemory, currentCompute, projectedCompute
 }
 
+// sanitizeStaleGpuData resets GPU utilization to 0% if telemetry is older than 5 minutes
+// This prevents AI scheduling from using stale high utilization data when agents aren't running
+func sanitizeStaleGpuData(gpuState GpuState) GpuState {
+	staleTelemetryThreshold := 5 * time.Minute
+
+	if time.Since(gpuState.LastTelemetryUpdate) > staleTelemetryThreshold {
+		log.Printf("⚠️ Stale telemetry detected for GPU (age: %v), resetting utilization to 0%%",
+			time.Since(gpuState.LastTelemetryUpdate))
+
+		// Reset utilization to idle state for stale data
+		gpuState.UtilizationGpu = 0
+		gpuState.UtilizationMemoryController = 0
+		gpuState.PowerDrawW = 50 // Idle power consumption
+		gpuState.ThrottlingReasons = ""
+	}
+
+	return gpuState
+}
+
+// sanitizeStaleResourceTracking clears pending/running jobs for GPUs with stale telemetry
+// Called once for all GPUs before AI prediction to avoid resource conflicts from stale data
+func sanitizeStaleResourceTracking(clusterState map[string]GpuState) {
+	staleTelemetryThreshold := 5 * time.Minute
+
+	resourceMux.Lock()
+	defer resourceMux.Unlock()
+
+	for gpuID, state := range clusterState {
+		if time.Since(state.LastTelemetryUpdate) > staleTelemetryThreshold {
+			// Clear pending and running job tracking for stale GPUs
+			if _, exists := pendingJobsByGpu[gpuID]; exists {
+				log.Printf("🧹 Clearing %d pending jobs from stale GPU %s", len(pendingJobsByGpu[gpuID]), gpuID)
+				delete(pendingJobsByGpu, gpuID)
+			}
+			if _, exists := runningJobsByGpu[gpuID]; exists {
+				log.Printf("🧹 Clearing %d running jobs from stale GPU %s", len(runningJobsByGpu[gpuID]), gpuID)
+				delete(runningJobsByGpu, gpuID)
+			}
+		}
+	}
+}
+
+// forceCleanIdleGpuResources clears resource tracking for GPUs that show 0% utilization
+// This is a temporary fix to handle phantom resource tracking after system restarts
+func forceCleanIdleGpuResources(clusterState map[string]GpuState) {
+	resourceMux.Lock()
+	defer resourceMux.Unlock()
+
+	for gpuID, state := range clusterState {
+		// If GPU shows 0% utilization, clear all resource tracking
+		if state.UtilizationGpu == 0 {
+			pendingCleared := 0
+			runningCleared := 0
+
+			if pending, exists := pendingJobsByGpu[gpuID]; exists {
+				pendingCleared = len(pending)
+				delete(pendingJobsByGpu, gpuID)
+			}
+			if running, exists := runningJobsByGpu[gpuID]; exists {
+				runningCleared = len(running)
+				delete(runningJobsByGpu, gpuID)
+			}
+
+			if pendingCleared > 0 || runningCleared > 0 {
+				log.Printf("🧹 Force cleared phantom resources for idle GPU %s: %d pending, %d running jobs",
+					gpuID, pendingCleared, runningCleared)
+			}
+		}
+	}
+}
+
 // reserveGpuResources reserves resources when assigning a job to a GPU
 func reserveGpuResources(gpuID string, job Job) {
 	resourceMux.Lock()
@@ -1379,9 +1453,16 @@ func handlePoll(w http.ResponseWriter, r *http.Request) {
 	clusterStateMux.RLock()
 	currentClusterState := make(map[string]GpuState, len(clusterState))
 	for id, state := range clusterState {
-		currentClusterState[id] = state
+		// Sanitize stale telemetry data before AI prediction
+		currentClusterState[id] = sanitizeStaleGpuData(state)
 	}
 	clusterStateMux.RUnlock()
+
+	// Clear resource tracking for stale GPUs to prevent resource conflicts
+	sanitizeStaleResourceTracking(currentClusterState)
+
+	// DEBUG: Force clear resource tracking for idle GPUs (temporary fix)
+	forceCleanIdleGpuResources(currentClusterState)
 
 	// Ensure the requesting GPU is in our cluster state
 	_, gpuExists := currentClusterState[gpuID]
@@ -1542,7 +1623,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:17696")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:17612")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
@@ -1622,6 +1703,9 @@ func main() {
 
 			// Performance state
 			PerformanceState: telemetry.PerformanceState,
+
+			// Telemetry tracking
+			LastTelemetryUpdate: time.Now(),
 		}
 		clusterStateMux.Unlock()
 

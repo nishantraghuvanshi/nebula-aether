@@ -1,3 +1,323 @@
-2025/09/27 01:48:46 📂 Loading job definitions from: ../../demo-jobs/job-definitions.json
-2025/09/27 01:48:46 📋 Loaded 10 job definitions
-2025/09/27 01:48:46 Error connecting to NATS: nats: no servers available for connection
+2025/09/27 04:20:43 📋 Enhanced logging system initialized
+2025/09/27 04:20:43 📂 Loading job definitions from: ../../demo-jobs/job-definitions.json
+2025/09/27 04:20:43 📋 Loaded 10 job definitions
+2025/09/27 04:20:43 Connected to NATS.
+2025/09/27 04:20:43 Connected to TimescaleDB with connection pool (10 max connections).
+2025/09/27 04:20:43 Orchestrator started. Now processing jobs.
+2025/09/27 04:20:43 API server listening on :8080
+2025/09/27 04:20:45 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:20:46 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:20:47 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:20:47 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:20:49 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:20:50 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:20:51 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:20:52 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:20:53 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:20:53 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:20:55 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:20:56 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:20:57 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:20:58 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:20:59 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:20:59 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:21:01 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:01 📥 Received job submission: {ID:test-neural-training}
+2025/09/27 04:21:01 🔍 Looking up job definition for ID: test-neural-training
+2025/09/27 04:21:01 📋 Available job definitions: [neural-network-training matrix-multiply-heavy image-inference-batch video-encoding-benchmark ray-tracing-benchmark protein-folding-simulation llm-finetuning-simulation monte-carlo-simulation memory-stress-test simple-cpu-test]
+2025/09/27 04:21:01 ❌ Job definition not found: test-neural-training
+2025/09/27 04:21:01 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:21:03 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=23°C, Mem=305/16380MB
+2025/09/27 04:21:04 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:21:05 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:05 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:21:06 📥 Received job submission: {ID:neural-network-training}
+2025/09/27 04:21:06 🔍 Looking up job definition for ID: neural-network-training
+2025/09/27 04:21:06 📋 Available job definitions: [neural-network-training matrix-multiply-heavy image-inference-batch video-encoding-benchmark ray-tracing-benchmark protein-folding-simulation llm-finetuning-simulation monte-carlo-simulation memory-stress-test simple-cpu-test]
+2025/09/27 04:21:06 ✅ Found job definition: {ID:neural-network-training Type:training Name:Neural Network Training Description:Train neural network on synthetic data - Mac compatible Script:mnist_training.py Args:[--epochs 5 --batch-size 256 --batches-per-epoch 50] MinMemoryMB:1024 MaxDurationSec:300 Priority:normal ExpectedGpuUtil:70}
+2025/09/27 04:21:06 📥 Added job to queue: neural-network-training (training) - Neural Network Training
+2025/09/27 04:21:07 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:08 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:21:09 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:10 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:21:10 🤖 Using AI to evaluate job neural-network-training for GPU 33bbf321bc69:gpu-0
+2025/09/27 04:21:10 🤖 Using AI to evaluate job neural-network-training for GPU b1d7fdf419da:gpu-0
+2025/09/27 04:21:10 🔮 GPU 33bbf321bc69:gpu-0 resource projection: Current: 305MB/0%, Projected: 305MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:10 🔮 GPU b1d7fdf419da:gpu-0 resource projection: Current: 422MB/0%, Projected: 422MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:10 🔮 GPU 33bbf321bc69:gpu-0 resource projection: Current: 305MB/0%, Projected: 305MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:10 🔮 GPU b1d7fdf419da:gpu-0 resource projection: Current: 422MB/0%, Projected: 422MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:10 🤖 AI Prediction Results:
+2025/09/27 04:21:10    Selected GPU: b1d7fdf419da:gpu-0
+2025/09/27 04:21:10    Confidence: 14.6%
+2025/09/27 04:21:10    Predicted Performance: 14.6%
+2025/09/27 04:21:10    Thermal Risk: 0.0%
+2025/09/27 04:21:10    Memory Risk: 0.0%
+2025/09/27 04:21:10    📋 Scheduling Decision: assign_now (wait: 0s)
+2025/09/27 04:21:10    📋 Scheduling Reason: ✅ Resources available: 15958MB free, 100% compute free, 55°C thermal headroom
+2025/09/27 04:21:10    Rejected 33bbf321bc69:gpu-0: 14.6% performance score
+2025/09/27 04:21:10    Selected b1d7fdf419da:gpu-0: 14.6% performance score
+2025/09/27 04:21:10      ✓ Good thermal conditions (53°C headroom)
+2025/09/27 04:21:10      ✓ Good memory availability (97.4% free)
+2025/09/27 04:21:10    🧠 Scheduling: ✅ Resources available: 15958MB free, 100% compute free, 55°C thermal headroom
+2025/09/27 04:21:10 🚫 AI recommends GPU b1d7fdf419da:gpu-0 over 33bbf321bc69:gpu-0 for job neural-network-training. Job stays in queue.
+2025/09/27 04:21:10 🤖 AI Prediction Results:
+2025/09/27 04:21:10    Selected GPU: b1d7fdf419da:gpu-0
+2025/09/27 04:21:10    Confidence: 14.6%
+2025/09/27 04:21:10    Predicted Performance: 14.6%
+2025/09/27 04:21:10    Thermal Risk: 0.0%
+2025/09/27 04:21:10    Memory Risk: 0.0%
+2025/09/27 04:21:10    📋 Scheduling Decision: assign_now (wait: 0s)
+2025/09/27 04:21:10    📋 Scheduling Reason: ✅ Resources available: 15958MB free, 100% compute free, 55°C thermal headroom
+2025/09/27 04:21:10    Rejected 33bbf321bc69:gpu-0: 14.6% performance score
+2025/09/27 04:21:10    Selected b1d7fdf419da:gpu-0: 14.6% performance score
+2025/09/27 04:21:10      ✓ Good thermal conditions (53°C headroom)
+2025/09/27 04:21:10      ✓ Good memory availability (97.4% free)
+2025/09/27 04:21:10    🧠 Scheduling: ✅ Resources available: 15958MB free, 100% compute free, 55°C thermal headroom
+2025/09/27 04:21:10 ✅ AI confirms GPU b1d7fdf419da:gpu-0 is optimal for job neural-network-training and ready for immediate assignment
+2025/09/27 04:21:10 🔒 Reserved resources on b1d7fdf419da:gpu-0 for job neural-network-training: 1024MB memory, 70% GPU util
+2025/09/27 04:21:10 📊 Post-assignment resources for b1d7fdf419da:gpu-0: 422MB/16380MB memory (8.8% projected), 0% compute (70.0% projected)
+2025/09/27 04:21:10 📤 Polling agent b1d7fdf419da:gpu-0 assigned job: neural-network-training (resources reserved)
+2025/09/27 04:21:10 📊 Job status update: neural-network-training - started (Starting job execution: mnist_training.py)
+2025/09/27 04:21:10 📊 Job status update: neural-network-training - running (Job is running...)
+2025/09/27 04:21:10 🏃 Moved job neural-network-training from pending to running on b1d7fdf419da:gpu-0
+2025/09/27 04:21:11 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:11 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:21:13 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:13 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=422/16380MB
+2025/09/27 04:21:15 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:15 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=30°C, Mem=425/16380MB
+2025/09/27 04:21:17 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:18 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=32°C, Mem=632/16380MB
+2025/09/27 04:21:19 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:19 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=32°C, Mem=632/16380MB
+2025/09/27 04:21:21 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:22 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=33°C, Mem=632/16380MB
+2025/09/27 04:21:23 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:24 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=2%, Temp=33°C, Mem=632/16380MB
+2025/09/27 04:21:25 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:25 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=33°C, Mem=632/16380MB
+2025/09/27 04:21:27 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:28 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=33°C, Mem=632/16380MB
+2025/09/27 04:21:29 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:29 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=34°C, Mem=632/16380MB
+2025/09/27 04:21:31 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:32 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=33°C, Mem=630/16380MB
+2025/09/27 04:21:33 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:33 📊 Job status update: neural-network-training - completed (Job completed successfully (exit code: 0))
+2025/09/27 04:21:33 🔓 Released resources on b1d7fdf419da:gpu-0 for completed job neural-network-training
+2025/09/27 04:21:33 📊 Post-completion resources for b1d7fdf419da:gpu-0: %!f(int=) pending jobs, %!f(int=) running jobs, 15750MB available memory
+2025/09/27 04:21:33 💾 Stored performance data for job neural-network-training
+2025/09/27 04:21:33 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=33°C, Mem=422/16380MB
+2025/09/27 04:21:35 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:36 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=32°C, Mem=422/16380MB
+2025/09/27 04:21:37 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:38 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=32°C, Mem=422/16380MB
+2025/09/27 04:21:39 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:39 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=32°C, Mem=422/16380MB
+2025/09/27 04:21:41 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:42 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=32°C, Mem=422/16380MB
+2025/09/27 04:21:43 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:43 📥 Received job submission: {ID:neural-network-training}
+2025/09/27 04:21:43 🔍 Looking up job definition for ID: neural-network-training
+2025/09/27 04:21:43 📋 Available job definitions: [matrix-multiply-heavy image-inference-batch video-encoding-benchmark ray-tracing-benchmark protein-folding-simulation llm-finetuning-simulation monte-carlo-simulation memory-stress-test simple-cpu-test neural-network-training]
+2025/09/27 04:21:43 ✅ Found job definition: {ID:neural-network-training Type:training Name:Neural Network Training Description:Train neural network on synthetic data - Mac compatible Script:mnist_training.py Args:[--epochs 5 --batch-size 256 --batches-per-epoch 50] MinMemoryMB:1024 MaxDurationSec:300 Priority:normal ExpectedGpuUtil:70}
+2025/09/27 04:21:43 📥 Added job to queue: neural-network-training (training) - Neural Network Training
+2025/09/27 04:21:43 📥 Received job submission: {ID:monte-carlo-simulation}
+2025/09/27 04:21:43 🔍 Looking up job definition for ID: monte-carlo-simulation
+2025/09/27 04:21:43 📋 Available job definitions: [image-inference-batch video-encoding-benchmark ray-tracing-benchmark protein-folding-simulation llm-finetuning-simulation monte-carlo-simulation memory-stress-test simple-cpu-test neural-network-training matrix-multiply-heavy]
+2025/09/27 04:21:43 ✅ Found job definition: {ID:monte-carlo-simulation Type:simulation Name:Monte Carlo Pi Estimation Description:Task-based parallel computation with configurable accuracy target Script:monte_carlo.py Args:[--samples-per-round 150000000 --target-accuracy 99.95 --complexity 8 --max-rounds 15 --min-runtime 30] MinMemoryMB:512 MaxDurationSec:300 Priority:normal ExpectedGpuUtil:80}
+2025/09/27 04:21:43 📥 Added job to queue: monte-carlo-simulation (simulation) - Monte Carlo Pi Estimation
+2025/09/27 04:21:44 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=32°C, Mem=422/16380MB
+2025/09/27 04:21:44 📥 Received job submission: {ID:matrix-multiply-heavy}
+2025/09/27 04:21:44 🔍 Looking up job definition for ID: matrix-multiply-heavy
+2025/09/27 04:21:44 📋 Available job definitions: [matrix-multiply-heavy image-inference-batch video-encoding-benchmark ray-tracing-benchmark protein-folding-simulation llm-finetuning-simulation monte-carlo-simulation memory-stress-test simple-cpu-test neural-network-training]
+2025/09/27 04:21:44 ✅ Found job definition: {ID:matrix-multiply-heavy Type:compute Name:Matrix Multiplication Benchmark Description:Large matrix operations - pure compute stress test Script:matrix_benchmark.py Args:[--size 4096 --iterations 500] MinMemoryMB:4096 MaxDurationSec:300 Priority:high ExpectedGpuUtil:95}
+2025/09/27 04:21:44 📥 Added job to queue: matrix-multiply-heavy (compute) - Matrix Multiplication Benchmark
+2025/09/27 04:21:45 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:46 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=32°C, Mem=422/16380MB
+2025/09/27 04:21:47 🤖 Using AI to evaluate job neural-network-training for GPU 33bbf321bc69:gpu-0
+2025/09/27 04:21:47 🔮 GPU 33bbf321bc69:gpu-0 resource projection: Current: 305MB/0%, Projected: 305MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:47 🤖 Using AI to evaluate job neural-network-training for GPU b1d7fdf419da:gpu-0
+2025/09/27 04:21:47 🔮 GPU b1d7fdf419da:gpu-0 resource projection: Current: 422MB/0%, Projected: 422MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:47 🔮 GPU 33bbf321bc69:gpu-0 resource projection: Current: 305MB/0%, Projected: 305MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:47 🔮 GPU b1d7fdf419da:gpu-0 resource projection: Current: 422MB/0%, Projected: 422MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:47 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:47 🤖 AI Prediction Results:
+2025/09/27 04:21:47    Selected GPU: 33bbf321bc69:gpu-0
+2025/09/27 04:21:47    Confidence: 14.6%
+2025/09/27 04:21:47    Predicted Performance: 14.6%
+2025/09/27 04:21:47    Thermal Risk: 0.0%
+2025/09/27 04:21:47    Memory Risk: 0.0%
+2025/09/27 04:21:47    📋 Scheduling Decision: assign_now (wait: 0s)
+2025/09/27 04:21:47    📋 Scheduling Reason: ✅ Resources available: 16075MB free, 100% compute free, 61°C thermal headroom
+2025/09/27 04:21:47    Selected 33bbf321bc69:gpu-0: 14.6% performance score
+2025/09/27 04:21:47      ✓ Good thermal conditions (59°C headroom)
+2025/09/27 04:21:47      ✓ Good memory availability (98.1% free)
+2025/09/27 04:21:47    Rejected b1d7fdf419da:gpu-0: 14.6% performance score
+2025/09/27 04:21:47    🧠 Scheduling: ✅ Resources available: 16075MB free, 100% compute free, 61°C thermal headroom
+2025/09/27 04:21:47 🚫 AI recommends GPU 33bbf321bc69:gpu-0 over b1d7fdf419da:gpu-0 for job neural-network-training. Job stays in queue.
+2025/09/27 04:21:47 🤖 AI Prediction Results:
+2025/09/27 04:21:47    Selected GPU: 33bbf321bc69:gpu-0
+2025/09/27 04:21:47    Confidence: 14.6%
+2025/09/27 04:21:47    Predicted Performance: 14.6%
+2025/09/27 04:21:47    Thermal Risk: 0.0%
+2025/09/27 04:21:47    Memory Risk: 0.0%
+2025/09/27 04:21:47    📋 Scheduling Decision: assign_now (wait: 0s)
+2025/09/27 04:21:47    📋 Scheduling Reason: ✅ Resources available: 16075MB free, 100% compute free, 61°C thermal headroom
+2025/09/27 04:21:47    Selected 33bbf321bc69:gpu-0: 14.6% performance score
+2025/09/27 04:21:47      ✓ Good thermal conditions (59°C headroom)
+2025/09/27 04:21:47      ✓ Good memory availability (98.1% free)
+2025/09/27 04:21:47    Rejected b1d7fdf419da:gpu-0: 14.6% performance score
+2025/09/27 04:21:47    🧠 Scheduling: ✅ Resources available: 16075MB free, 100% compute free, 61°C thermal headroom
+2025/09/27 04:21:47 ✅ AI confirms GPU 33bbf321bc69:gpu-0 is optimal for job neural-network-training and ready for immediate assignment
+2025/09/27 04:21:47 🔒 Reserved resources on 33bbf321bc69:gpu-0 for job neural-network-training: 1024MB memory, 70% GPU util
+2025/09/27 04:21:47 📊 Post-assignment resources for 33bbf321bc69:gpu-0: 305MB/16380MB memory (8.1% projected), 0% compute (70.0% projected)
+2025/09/27 04:21:47 📤 Polling agent 33bbf321bc69:gpu-0 assigned job: neural-network-training (resources reserved)
+2025/09/27 04:21:47 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=31°C, Mem=422/16380MB
+2025/09/27 04:21:48 🧹 Moved job neural-network-training from active to completed
+2025/09/27 04:21:49 📊 Job status update: neural-network-training - started (Starting job execution: mnist_training.py)
+2025/09/27 04:21:49 📊 Job status update: neural-network-training - running (Job is running...)
+2025/09/27 04:21:49 🏃 Moved job neural-network-training from pending to running on 33bbf321bc69:gpu-0
+2025/09/27 04:21:49 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:49 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=31°C, Mem=422/16380MB
+2025/09/27 04:21:50 🤖 Using AI to evaluate job monte-carlo-simulation for GPU b1d7fdf419da:gpu-0
+2025/09/27 04:21:50 🔮 GPU 33bbf321bc69:gpu-0 resource projection: Current: 305MB/0%, Projected: 817MB/49% (P:%!f(int=) R:%!f(int=1))
+2025/09/27 04:21:50 🔮 GPU b1d7fdf419da:gpu-0 resource projection: Current: 422MB/0%, Projected: 422MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:50 🤖 AI Prediction Results:
+2025/09/27 04:21:50    Selected GPU: 33bbf321bc69:gpu-0
+2025/09/27 04:21:50    Confidence: 0.0%
+2025/09/27 04:21:50    Predicted Performance: 0.0%
+2025/09/27 04:21:50    Thermal Risk: 100.0%
+2025/09/27 04:21:50    Memory Risk: 100.0%
+2025/09/27 04:21:50    📋 Scheduling Decision: queue_short (wait: 180s)
+2025/09/27 04:21:50    📋 Scheduling Reason: ⚡ Compute conflict: Current 49% + expected 80% exceeds safe limit. Wait for resources.
+2025/09/27 04:21:50    Selected 33bbf321bc69:gpu-0: 0.0% performance score
+2025/09/27 04:21:50    Rejected b1d7fdf419da:gpu-0: 0.0% performance score
+2025/09/27 04:21:50    🧠 Scheduling: ⚡ Compute conflict: Current 49% + expected 80% exceeds safe limit. Wait for resources.
+2025/09/27 04:21:50 📋 AI recommends queuing job monte-carlo-simulation: ⚡ Compute conflict: Current 49% + expected 80% exceeds safe limit. Wait for resources. (wait: 180s)
+2025/09/27 04:21:51 🤖 Using AI to evaluate job monte-carlo-simulation for GPU 33bbf321bc69:gpu-0
+2025/09/27 04:21:51 🔮 GPU 33bbf321bc69:gpu-0 resource projection: Current: 305MB/0%, Projected: 817MB/49% (P:%!f(int=) R:%!f(int=1))
+2025/09/27 04:21:51 🔮 GPU b1d7fdf419da:gpu-0 resource projection: Current: 422MB/0%, Projected: 422MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:51 🤖 AI Prediction Results:
+2025/09/27 04:21:51    Selected GPU: 33bbf321bc69:gpu-0
+2025/09/27 04:21:51    Confidence: 0.0%
+2025/09/27 04:21:51    Predicted Performance: 0.0%
+2025/09/27 04:21:51    Thermal Risk: 100.0%
+2025/09/27 04:21:51    Memory Risk: 100.0%
+2025/09/27 04:21:51    📋 Scheduling Decision: queue_short (wait: 180s)
+2025/09/27 04:21:51    📋 Scheduling Reason: ⚡ Compute conflict: Current 49% + expected 80% exceeds safe limit. Wait for resources.
+2025/09/27 04:21:51    Selected 33bbf321bc69:gpu-0: 0.0% performance score
+2025/09/27 04:21:51    Rejected b1d7fdf419da:gpu-0: 0.0% performance score
+2025/09/27 04:21:51    🧠 Scheduling: ⚡ Compute conflict: Current 49% + expected 80% exceeds safe limit. Wait for resources.
+2025/09/27 04:21:51 📋 AI recommends queuing job monte-carlo-simulation: ⚡ Compute conflict: Current 49% + expected 80% exceeds safe limit. Wait for resources. (wait: 180s)
+2025/09/27 04:21:51 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:21:52 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=31°C, Mem=422/16380MB
+2025/09/27 04:21:52 🤖 Using AI to evaluate job monte-carlo-simulation for GPU 33bbf321bc69:gpu-0
+2025/09/27 04:21:52 🔮 GPU 33bbf321bc69:gpu-0 resource projection: Current: 305MB/0%, Projected: 817MB/49% (P:%!f(int=) R:%!f(int=1))
+2025/09/27 04:21:52 🔮 GPU b1d7fdf419da:gpu-0 resource projection: Current: 422MB/0%, Projected: 422MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:52 🤖 Using AI to evaluate job monte-carlo-simulation for GPU b1d7fdf419da:gpu-0
+2025/09/27 04:21:52 🔮 GPU b1d7fdf419da:gpu-0 resource projection: Current: 422MB/0%, Projected: 422MB/0% (P:%!f(int=) R:%!f(int=))
+2025/09/27 04:21:52 🔮 GPU 33bbf321bc69:gpu-0 resource projection: Current: 305MB/0%, Projected: 817MB/49% (P:%!f(int=) R:%!f(int=1))
+2025/09/27 04:21:52 🤖 AI Prediction Results:
+2025/09/27 04:21:52    Selected GPU: 33bbf321bc69:gpu-0
+2025/09/27 04:21:52    Confidence: 0.0%
+2025/09/27 04:21:52    Predicted Performance: 0.0%
+2025/09/27 04:21:52    Thermal Risk: 100.0%
+2025/09/27 04:21:52    Memory Risk: 100.0%
+2025/09/27 04:21:52    📋 Scheduling Decision: queue_short (wait: 180s)
+2025/09/27 04:21:52    📋 Scheduling Reason: ⚡ Compute conflict: Current 49% + expected 80% exceeds safe limit. Wait for resources.
+2025/09/27 04:21:52    Selected 33bbf321bc69:gpu-0: 0.0% performance score
+2025/09/27 04:21:52    Rejected b1d7fdf419da:gpu-0: 0.0% performance score
+2025/09/27 04:21:52    🧠 Scheduling: ⚡ Compute conflict: Current 49% + expected 80% exceeds safe limit. Wait for resources.
+2025/09/27 04:21:52 📋 AI recommends queuing job monte-carlo-simulation: ⚡ Compute conflict: Current 49% + expected 80% exceeds safe limit. Wait for resources. (wait: 180s)
+2025/09/27 04:21:52 🤖 AI Prediction Results:
+2025/09/27 04:21:52    Selected GPU: b1d7fdf419da:gpu-0
+2025/09/27 04:21:52    Confidence: 0.0%
+2025/09/27 04:21:52    Predicted Performance: 0.0%
+2025/09/27 04:21:52    Thermal Risk: 100.0%
+2025/09/27 04:21:52    Memory Risk: 100.0%
+2025/09/27 04:21:52    📋 Scheduling Decision: assign_now (wait: 0s)
+2025/09/27 04:21:52    📋 Scheduling Reason: ✅ Resources available: 15958MB free, 100% compute free, 54°C thermal headroom
+2025/09/27 04:21:52    Selected b1d7fdf419da:gpu-0: 0.0% performance score
+2025/09/27 04:21:52    Rejected 33bbf321bc69:gpu-0: 0.0% performance score
+2025/09/27 04:21:52    🧠 Scheduling: ✅ Resources available: 15958MB free, 100% compute free, 54°C thermal headroom
+2025/09/27 04:21:52 ✅ AI confirms GPU b1d7fdf419da:gpu-0 is optimal for job monte-carlo-simulation and ready for immediate assignment
+2025/09/27 04:21:52 🔒 Reserved resources on b1d7fdf419da:gpu-0 for job monte-carlo-simulation: 512MB memory, 80% GPU util
+2025/09/27 04:21:52 📊 Post-assignment resources for b1d7fdf419da:gpu-0: 422MB/16380MB memory (5.7% projected), 0% compute (80.0% projected)
+2025/09/27 04:21:52 📤 Polling agent b1d7fdf419da:gpu-0 assigned job: monte-carlo-simulation (resources reserved)
+2025/09/27 04:21:53 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=416/16380MB
+2025/09/27 04:21:53 📊 Job status update: monte-carlo-simulation - started (Starting job execution: monte_carlo.py)
+2025/09/27 04:21:53 📊 Job status update: monte-carlo-simulation - running (Job is running...)
+2025/09/27 04:21:53 🏃 Moved job monte-carlo-simulation from pending to running on b1d7fdf419da:gpu-0
+2025/09/27 04:21:54 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=31°C, Mem=422/16380MB
+2025/09/27 04:21:55 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=2%, Temp=25°C, Mem=512/16380MB
+2025/09/27 04:21:55 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=23%, Temp=33°C, Mem=1502/16380MB
+2025/09/27 04:21:57 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=25°C, Mem=512/16380MB
+2025/09/27 04:21:57 ⚠️ GPU fresh-gpu:gpu-0 not found in cluster state, allowing job assignment
+2025/09/27 04:21:57 🔒 Reserved resources on fresh-gpu:gpu-0 for job matrix-multiply-heavy: 4096MB memory, 95% GPU util
+2025/09/27 04:21:57 📤 Polling agent fresh-gpu:gpu-0 assigned job: matrix-multiply-heavy (resources reserved)
+2025/09/27 04:21:58 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=69%, Temp=39°C, Mem=1502/16380MB
+2025/09/27 04:21:59 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=26°C, Mem=512/16380MB
+2025/09/27 04:21:59 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=65%, Temp=39°C, Mem=1502/16380MB
+2025/09/27 04:22:01 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=26°C, Mem=512/16380MB
+2025/09/27 04:22:01 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=65%, Temp=40°C, Mem=1502/16380MB
+2025/09/27 04:22:03 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=26°C, Mem=512/16380MB
+2025/09/27 04:22:04 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=65%, Temp=41°C, Mem=1502/16380MB
+2025/09/27 04:22:05 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=2%, Temp=26°C, Mem=512/16380MB
+2025/09/27 04:22:05 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=69%, Temp=41°C, Mem=1502/16380MB
+2025/09/27 04:22:07 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=3%, Temp=26°C, Mem=512/16380MB
+2025/09/27 04:22:08 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=66%, Temp=42°C, Mem=1502/16380MB
+2025/09/27 04:22:08 📊 Job status update: neural-network-training - completed (Job completed successfully (exit code: 0))
+2025/09/27 04:22:08 🔓 Released resources on 33bbf321bc69:gpu-0 for completed job neural-network-training
+2025/09/27 04:22:08 📊 Post-completion resources for 33bbf321bc69:gpu-0: %!f(int=) pending jobs, %!f(int=) running jobs, 15868MB available memory
+2025/09/27 04:22:08 💾 Stored performance data for job neural-network-training
+2025/09/27 04:22:09 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=26°C, Mem=305/16380MB
+2025/09/27 04:22:09 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=65%, Temp=42°C, Mem=1502/16380MB
+2025/09/27 04:22:11 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=25°C, Mem=305/16380MB
+2025/09/27 04:22:12 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=68%, Temp=43°C, Mem=1502/16380MB
+2025/09/27 04:22:13 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=25°C, Mem=305/16380MB
+2025/09/27 04:22:14 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=65%, Temp=43°C, Mem=1502/16380MB
+2025/09/27 04:22:15 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=25°C, Mem=305/16380MB
+2025/09/27 04:22:15 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=66%, Temp=43°C, Mem=1502/16380MB
+2025/09/27 04:22:17 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:17 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=67%, Temp=44°C, Mem=1502/16380MB
+2025/09/27 04:22:19 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:19 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=65%, Temp=44°C, Mem=1502/16380MB
+2025/09/27 04:22:21 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:21 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=65%, Temp=44°C, Mem=1502/16380MB
+2025/09/27 04:22:23 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:23 🧹 Moved job neural-network-training from active to completed
+2025/09/27 04:22:23 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=65%, Temp=45°C, Mem=1502/16380MB
+2025/09/27 04:22:25 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:26 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=42°C, Mem=526/16380MB
+2025/09/27 04:22:26 📊 Job status update: monte-carlo-simulation - completed (Job completed successfully (exit code: 0))
+2025/09/27 04:22:26 🔓 Released resources on b1d7fdf419da:gpu-0 for completed job monte-carlo-simulation
+2025/09/27 04:22:26 📊 Post-completion resources for b1d7fdf419da:gpu-0: %!f(int=) pending jobs, %!f(int=) running jobs, 15854MB available memory
+2025/09/27 04:22:26 💾 Stored performance data for job monte-carlo-simulation
+2025/09/27 04:22:27 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:28 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=41°C, Mem=422/16380MB
+2025/09/27 04:22:29 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:30 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=39°C, Mem=422/16380MB
+2025/09/27 04:22:31 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:31 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=39°C, Mem=422/16380MB
+2025/09/27 04:22:33 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:33 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=38°C, Mem=422/16380MB
+2025/09/27 04:22:35 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:36 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=38°C, Mem=422/16380MB
+2025/09/27 04:22:37 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:38 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=38°C, Mem=422/16380MB
+2025/09/27 04:22:39 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:40 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=37°C, Mem=422/16380MB
+2025/09/27 04:22:41 🧹 Moved job monte-carlo-simulation from active to completed
+2025/09/27 04:22:41 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:42 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=37°C, Mem=422/16380MB
+2025/09/27 04:22:43 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:44 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=37°C, Mem=422/16380MB
+2025/09/27 04:22:45 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:46 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=37°C, Mem=422/16380MB
+2025/09/27 04:22:47 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:48 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=37°C, Mem=422/16380MB
+2025/09/27 04:22:49 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+2025/09/27 04:22:50 📊 Telemetry logged for b1d7fdf419da:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=37°C, Mem=422/16380MB
+2025/09/27 04:22:51 📊 Telemetry logged for 33bbf321bc69:gpu-0 (NVIDIA RTX 2000 Ada Generation): Util=0%, Temp=24°C, Mem=305/16380MB
+signal: terminated

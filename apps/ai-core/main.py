@@ -446,7 +446,11 @@ def make_scheduling_decision(best_candidate: GpuCandidate, job_requirements: Opt
     memory_conflict = memory_available_mb < (required_memory * 1.2)  # 20% safety margin
 
     # 2. Compute conflict detection
-    compute_conflict = (gpu_utilization + expected_util) > 85  # 85% max utilization
+    # Allow single jobs to use up to 100% of idle GPUs, only restrict when already busy
+    if gpu_utilization < 10:  # Essentially idle GPU
+        compute_conflict = expected_util > 100  # Only block if job needs >100%
+    else:  # GPU already has work
+        compute_conflict = (gpu_utilization + expected_util) > 85  # 85% max for multiple jobs
 
     # 3. Thermal conflict detection
     thermal_conflict = best_candidate.gpu_temp > 75 or "THERMAL" in best_candidate.throttling_reasons.upper()
@@ -456,9 +460,9 @@ def make_scheduling_decision(best_candidate: GpuCandidate, job_requirements: Opt
 
     # DECISION MATRIX
 
-    # Safe to assign immediately
+    # Safe to assign immediately - relaxed conditions for idle GPUs
     if (not memory_conflict and not compute_conflict and not thermal_conflict and
-        gpu_utilization < 20 and memory_utilization < 60):
+        gpu_utilization < 30 and memory_utilization < 80):
         return {
             "scheduling_decision": "assign_now",
             "estimated_wait_time": 0,
@@ -887,7 +891,7 @@ async def start_training_pipeline():
             'port': int(os.getenv('DB_PORT', '5432')),
             'database': os.getenv('DB_NAME', 'aether'),
             'user': os.getenv('DB_USER', 'aether'),
-            'password': os.getenv('DB_PASSWORD', 'aether123')
+            'password': os.getenv('DB_PASSWORD', 'aether')
         }
 
         # Initialize pipeline
