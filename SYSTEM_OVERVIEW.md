@@ -253,6 +253,173 @@ nebula-aether/
 3. **Resource Reservation System**: Atomic job assignment with resource tracking
 4. **A/B Testing Pipeline**: Continuous model improvement with 20% testing traffic
 
+## 🧠 Six Specialized AI Models Architecture
+
+### **Model Specialization & Training Philosophy**
+
+Nebula Aether employs **6 specialized XGBoost regression models**, each trained on different execution patterns and optimized for distinct workload characteristics:
+
+#### **1. `training_model` - Long-duration ML workloads**
+- **Training Data**: Neural network training, LLM fine-tuning execution patterns
+- **Optimization Focus**: Sustained performance over extended periods (5-10+ minutes)
+- **Key Priorities**: Memory efficiency, thermal stability, avoiding GPU exhaustion
+- **Risk Tolerance**: Conservative thermal management, conservative memory allocation
+- **Job Types**: `neural-network-training`, `llm-finetuning-simulation`
+
+#### **2. `inference_model` - Latency-sensitive serving**
+- **Training Data**: Batch inference, real-time model serving workloads
+- **Optimization Focus**: Quick burst performance, minimal latency
+- **Key Priorities**: Fast GPU assignment, minimizing queue wait times
+- **Risk Tolerance**: Aggressive memory allocation, high queue sensitivity
+- **Job Types**: `image-inference-batch`, real-time inference workloads
+
+#### **3. `compute_model` - Maximum performance extraction**
+- **Training Data**: Matrix operations, video encoding, cryptocurrency mining
+- **Optimization Focus**: Raw computational throughput at peak utilization
+- **Key Priorities**: High utilization tolerance, power efficiency at peak loads
+- **Risk Tolerance**: Aggressive thermal tolerance, aggressive utilization acceptance
+- **Job Types**: `matrix-multiply-heavy`, `video-encoding-benchmark`, `mining`, `encoding`
+
+#### **4. `general_model` - Balanced versatility (fallback)**
+- **Training Data**: Simulations, rendering, scientific computing, research workloads
+- **Optimization Focus**: Adaptability across diverse workload patterns
+- **Key Priorities**: Robust performance across mixed job types
+- **Risk Tolerance**: Balanced across all dimensions
+- **Job Types**: `monte-carlo-simulation`, `ray-tracing-benchmark`, `protein-folding-simulation`
+
+#### **5. `memory_model` - Memory-intensive operations**
+- **Training Data**: Memory stress tests, large dataset processing
+- **Optimization Focus**: Memory bandwidth and allocation efficiency
+- **Key Priorities**: GPU memory management, avoiding OOM conditions
+- **Risk Tolerance**: Critical memory requirements, low utilization tolerance
+- **Job Types**: `memory-stress-test`, large dataset processing
+
+#### **6. `anomaly_detector` - System health monitoring**
+- **Training Data**: Unusual patterns, system failures, performance anomalies
+- **Optimization Focus**: Early warning detection, system stability
+- **Key Priorities**: Risk prediction, preventing system failures
+- **Risk Tolerance**: Conservative across all metrics (stability focus)
+- **Job Types**: Continuous monitoring, outlier detection
+
+### **Feature Engineering Pipeline (22+ Features)**
+
+Each model processes a comprehensive feature vector combining raw telemetry with derived intelligence:
+
+#### **Core Telemetry Features (13 fields)**
+```
+- utilization_gpu              # Current GPU utilization %
+- utilization_memory_controller # Memory controller utilization %
+- temperature_c                # Current temperature °C
+- power_draw_w                 # Current power consumption watts
+- memory_used_mb, memory_total_mb # Memory usage statistics
+- clock_gpu_mhz, clock_mem_mhz # Current clock speeds
+- performance_state            # P-state (P0-P12)
+- throttling_reasons           # Active throttling conditions
+- gpu_name, gpu_id            # Hardware identification
+```
+
+#### **Derived Intelligence Features (9+ fields)**
+```
+- memory_utilization_pct = (memory_used / memory_total) * 100
+- thermal_headroom = max(83 - temperature, 0)  # °C until thermal limit
+- power_per_util = power_draw / max(utilization_gpu, 1)
+- gpu_clock_ratio = clock_gpu / 2000.0  # Normalized to base clock
+- mem_clock_ratio = clock_mem / 6000.0  # Normalized to memory clock
+- perf_state_numeric = int(performance_state[1:])  # P-state as number
+- is_throttling = 1 if active_throttling else 0
+- memory_sufficient = 1 if available_memory >= required else 0
+- priority_weight = {'low': 0.5, 'normal': 1.0, 'high': 1.5}[priority]
+```
+
+### **Scheduling Decision Matrix Differences**
+
+Each model makes **different scheduling decisions** for identical GPU states:
+
+**Example Scenario**: GPU at 60% utilization, 70°C, 6GB/8GB memory used
+
+| Model | Decision | Reasoning |
+|-------|----------|-----------|
+| `training_model` | `queue_short` | "Wait for memory to free up - need sustained allocation" |
+| `inference_model` | `assign_now` | "Can burst into available resources quickly" |
+| `compute_model` | `assign_now` | "Can effectively utilize remaining 40% capacity" |
+| `general_model` | `queue_short` | "Conservative balanced approach for unknown workload" |
+| `memory_model` | `queue_long` | "Insufficient memory available - critical constraint" |
+| `anomaly_detector` | `queue_short` | "Thermal approaching concern threshold" |
+
+### **Performance Score Calculation Differences**
+
+Each model uses **specialized algorithms** to calculate 0-100 performance scores:
+
+```python
+# Conceptual scoring differences (actual ML models are more complex)
+
+training_model_score = (
+    base_performance *
+    memory_efficiency_multiplier *
+    thermal_stability_factor *
+    sustained_performance_capability
+)
+# Heavily penalizes: High temperature, low memory, thermal throttling
+# Rewards: Cool GPUs, ample memory, stable clocks
+
+inference_model_score = (
+    latency_factor *
+    availability_multiplier *
+    burst_capacity_factor *
+    queue_position_bonus
+)
+# Heavily penalizes: Queue delays, memory fragmentation, busy GPUs
+# Rewards: Idle GPUs, fast clocks, immediate availability
+
+compute_model_score = (
+    raw_compute_power *
+    utilization_tolerance *
+    power_efficiency *
+    peak_performance_state
+)
+# Accepts: Higher temperatures, power draw, existing utilization
+# Rewards: Maximum compute capability, high clock speeds
+```
+
+### **Continuous Learning & A/B Testing**
+
+#### **Independent Model Evolution**
+- **Version Management**: Each model evolves independently (`training_model_v1730234567`)
+- **Specialized Metrics**: Domain-specific success criteria per model type
+- **A/B Testing**: 20% traffic tests new models, 80% uses proven models
+- **Auto-Promotion**: Models achieving 85%+ accuracy become active
+
+#### **Training Pipeline (Every 15 Minutes)**
+1. **Data Collection**: Query last 7 days of job performance data
+2. **Model Training**: XGBoost regressor with specialized feature weighting
+3. **Validation**: Domain-specific accuracy scoring
+4. **Version Creation**: Timestamp-based model versioning
+5. **A/B Deployment**: Safe testing with automatic rollback
+
+### **Real-World Impact Examples**
+
+#### **AI Training Workload** (`training_model`)
+- **Scenario**: Fine-tuning large language model
+- **Decision**: "Queue until cool GPU with 8GB+ memory available"
+- **Result**: Avoids thermal throttling that could corrupt training
+
+#### **Real-time Inference** (`inference_model`)
+- **Scenario**: Live image classification API
+- **Decision**: "Assign immediately to any available GPU"
+- **Result**: Minimizes latency even at cost of efficiency
+
+#### **Scientific Computing** (`compute_model`)
+- **Scenario**: Molecular dynamics simulation
+- **Decision**: "Assign to highest-performance GPU regardless of current load"
+- **Result**: Maximizes computational throughput for accuracy
+
+#### **Large Dataset Processing** (`memory_model`)
+- **Scenario**: Processing 50GB dataset
+- **Decision**: "Queue long until 12GB+ contiguous memory available"
+- **Result**: Prevents out-of-memory failures
+
+This **multi-model architecture** enables specialized, intelligent decisions rather than one-size-fits-all scheduling, resulting in significantly better performance optimization for each workload category.
+
 ### **Comprehensive Logging System**
 1. **Job Flow Tracking**: Complete lifecycle from submission to completion
 2. **AI Decision Logging**: Detailed GPU selection and scheduling reasoning

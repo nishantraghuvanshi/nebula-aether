@@ -41,10 +41,16 @@ class AutoJobSubmitter:
             "memory-stress-test": {"weight": 1, "category": "memory", "duration": "2-3min"},
         }
 
-        # Submission rate configuration
-        self.base_interval = 45  # Base seconds between jobs
-        self.min_interval = 20   # Minimum interval when system is idle
-        self.max_interval = 120  # Maximum interval when system is busy
+        # Aggressive submission rate configuration for training data collection
+        self.base_interval = 8   # Base seconds between jobs (much faster)
+        self.min_interval = 2    # Minimum interval when system is idle (rapid fire)
+        self.max_interval = 15   # Maximum interval when system is busy (still frequent)
+
+        # Burst mode configuration
+        self.burst_mode = True
+        self.burst_probability = 0.3  # 30% chance of burst mode
+        self.burst_jobs = 3  # Submit 3 jobs rapidly in burst
+        self.burst_interval = 1  # 1 second between burst jobs
 
         # Statistics
         self.stats = {
@@ -73,7 +79,7 @@ class AutoJobSubmitter:
                 timeout=10
             )
 
-            if response.status_code == 200:
+            if response.status_code in [200, 201]:
                 result = response.json()
                 print(f"✅ Submitted {job_type} - {result.get('status', 'unknown')}")
                 self.stats["jobs_successful"] += 1
@@ -107,16 +113,19 @@ class AutoJobSubmitter:
         load_info = self.get_system_load()
         queue_size = load_info.get("queue_size", 0)
 
-        # Adjust interval based on queue size
+        # Much more aggressive scaling for training data variety
         if queue_size == 0:
-            # System is idle, submit more frequently
-            interval = self.min_interval + random.uniform(0, 10)
-        elif queue_size < 3:
-            # Light load, normal rate
-            interval = self.base_interval + random.uniform(-10, 10)
+            # System is idle, rapid submission for queue buildup
+            interval = self.min_interval + random.uniform(0, 2)
+        elif queue_size < 5:
+            # Light load, frequent submission to test scheduling
+            interval = self.base_interval + random.uniform(-2, 3)
+        elif queue_size < 10:
+            # Medium load, maintain pressure
+            interval = self.base_interval + random.uniform(0, 5)
         else:
-            # Heavy load, slow down
-            interval = self.max_interval + random.uniform(-20, 20)
+            # Heavy load, slight slowdown but keep pressure
+            interval = self.max_interval + random.uniform(-3, 5)
 
         return max(self.min_interval, min(self.max_interval, interval))
 
@@ -143,6 +152,7 @@ class AutoJobSubmitter:
         print(f"🚀 Starting Automated Job Submission for Nebula Aether Training")
         print(f"📡 Orchestrator: {self.orchestrator_url}")
         print(f"⏱️  Base interval: {self.base_interval}s (range: {self.min_interval}-{self.max_interval}s)")
+        print(f"💥 Burst mode: {self.burst_mode} (probability: {self.burst_probability*100:.0f}%)")
         print(f"🎲 Job types: {len(self.job_types)} types available")
 
         if duration_hours:
@@ -152,7 +162,7 @@ class AutoJobSubmitter:
             print(f"♾️  Will run indefinitely (Ctrl+C to stop)")
             end_time = None
 
-        print(f"\n🔄 Starting job submission loop...\n")
+        print(f"\n🔥 Starting AGGRESSIVE job submission for training data variety...\n")
 
         try:
             while True:
@@ -161,16 +171,27 @@ class AutoJobSubmitter:
                     print(f"\n⏰ Reached time limit of {duration_hours} hours")
                     break
 
-                # Select and submit a job
-                job_type = self.get_weighted_job_type()
-                self.stats["jobs_submitted"] += 1
-                self.stats["last_submission"] = datetime.now()
+                # Check for burst mode
+                if self.burst_mode and random.random() < self.burst_probability:
+                    print(f"💥 BURST MODE: Submitting {self.burst_jobs} jobs rapidly!")
+                    for i in range(self.burst_jobs):
+                        job_type = self.get_weighted_job_type()
+                        self.stats["jobs_submitted"] += 1
+                        self.stats["last_submission"] = datetime.now()
+                        print(f"[{datetime.now().strftime('%H:%M:%S')}] 💥 Burst job #{self.stats['jobs_submitted']}: {job_type}")
+                        self.submit_job(job_type)
+                        if i < self.burst_jobs - 1:  # Don't sleep after last burst job
+                            time.sleep(self.burst_interval)
+                else:
+                    # Normal single job submission
+                    job_type = self.get_weighted_job_type()
+                    self.stats["jobs_submitted"] += 1
+                    self.stats["last_submission"] = datetime.now()
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Submitting job #{self.stats['jobs_submitted']}: {job_type}")
+                    self.submit_job(job_type)
 
-                print(f"[{datetime.now().strftime('%H:%M:%S')}] Submitting job #{self.stats['jobs_submitted']}: {job_type}")
-                self.submit_job(job_type)
-
-                # Print stats every 10 jobs
-                if self.stats["jobs_submitted"] % 10 == 0:
+                # Print stats every 15 jobs (more frequent due to higher submission rate)
+                if self.stats["jobs_submitted"] % 15 == 0:
                     self.print_stats()
 
                 # Calculate and wait for next submission
