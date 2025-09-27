@@ -835,7 +835,7 @@ async fn run_mock_mode() {
         os_info
     );
 
-    let nats_url = "0.tcp.in.ngrok.io:13500";
+    let nats_url = "0.tcp.in.ngrok.io:18214";
     match async_nats::connect(nats_url).await {
         Ok(client) => {
             println!("Connected to NATS server at {}.", nats_url);
@@ -855,7 +855,7 @@ async fn run_mock_mode() {
             let poll_client = command_client.clone();
             tokio::spawn(async move {
                 let http_client = reqwest::Client::new();
-                let orchestrator_url = "https://9c524ab5ad5a.ngrok-free.app";
+                let orchestrator_url = "https://d7b6f3610382.ngrok-free.app";
                 // Generate unique GPU ID based on hostname
                 let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                     std::process::Command::new("hostname")
@@ -936,7 +936,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Connect to NATS server
-    let nats_url = "0.tcp.in.ngrok.io:13500";
+    let nats_url = "0.tcp.in.ngrok.io:18214";
     let client = async_nats::connect(nats_url).await?;
     println!("Connected to NATS server at {}.", nats_url);
 
@@ -979,7 +979,7 @@ async fn try_nvml_mode() -> Result<(), Box<dyn std::error::Error>> {
         let jobs_for_commands = active_jobs.clone();
         tokio::spawn(async move {
             let http_client = reqwest::Client::new();
-            let orchestrator_url = "https://9c524ab5ad5a.ngrok-free.app";
+            let orchestrator_url = "https://d7b6f3610382.ngrok-free.app";
             // Generate unique GPU ID based on hostname + GPU index
             let hostname = std::env::var("HOSTNAME").unwrap_or_else(|_| {
                 std::process::Command::new("hostname")

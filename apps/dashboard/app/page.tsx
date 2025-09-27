@@ -771,7 +771,7 @@ export default function Dashboard() {
               const utilization = gpu.utilization_gpu || 0;
               const temp = gpu.gpu_temp || gpu.temperature_c || 0;
               const memUsed = gpu.gpu_mem_used || gpu.memory_used_mb || 0;
-              const memTotal = gpu.memory_total_mb || 24564;
+              const memTotal = gpu.gpu_mem_total || gpu.memory_total_mb || 16380;
               const power = gpu.power_draw_w || 0;
               const clock = gpu.clock_gpu_mhz || 0;
               const memClock = gpu.clock_mem_mhz || 0;
@@ -885,16 +885,17 @@ export default function Dashboard() {
                   {state.anomalies[gpuId] && (
                     <div style={{
                       position: 'absolute',
-                      top: '0.5rem',
-                      right: '0.5rem',
-                      padding: '0.2rem 0.4rem',
+                      top: '0.3rem',
+                      right: '0.3rem',
+                      padding: '0.1rem 0.3rem',
                       backgroundColor: '#dc3545',
                       color: 'white',
-                      borderRadius: '3px',
-                      fontSize: '0.7rem',
-                      fontWeight: 'bold'
+                      borderRadius: '2px',
+                      fontSize: '0.6rem',
+                      fontWeight: 'bold',
+                      opacity: 0.9
                     }}>
-                      🚨 ANOMALY
+                      ⚠️
                     </div>
                   )}
                 </div>

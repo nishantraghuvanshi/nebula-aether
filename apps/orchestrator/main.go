@@ -192,10 +192,85 @@ type DashboardUpdate struct {
 	CompletedJobs   []JobStatus          `json:"completed_jobs"`
 }
 
-// mockCarbonIntensity returns a placeholder carbon intensity value
-func mockCarbonIntensity() float64 {
-	// Simple oscillating mock between 100-500
-	return 100 + float64(time.Now().Unix()%400)
+// calculateCarbonIntensity calculates realistic carbon intensity based on grid conditions and GPU power consumption
+func calculateCarbonIntensity(clusterState map[string]GpuState) float64 {
+	// Grid carbon intensity factors (gCO2e/kWh) - varies by time to simulate renewable energy availability
+	hour := time.Now().Hour()
+	var gridCarbonFactor float64
+
+	// Simulate renewable energy patterns: lower during day (solar), variable at night
+	if hour >= 6 && hour <= 18 {
+		// Daytime - solar energy reduces grid carbon intensity
+		baseDay := 220.0 // Lower base during day
+		solarVariation := 80.0 * (1.0 - float64(hour-6)/12.0) // Peak solar at noon
+		gridCarbonFactor = baseDay + solarVariation
+	} else {
+		// Nighttime - higher carbon intensity, more variable
+		baseNight := 380.0 // Higher base at night
+		windVariation := 120.0 * (0.5 + 0.5*float64(time.Now().Unix()%3600)/3600.0) // Wind variability
+		gridCarbonFactor = baseNight + windVariation
+	}
+
+	// Data center Power Usage Effectiveness (PUE) - modern efficient data centers
+	pue := 1.15 // Good PUE for modern facilities
+
+	// Calculate total GPU power consumption and utilization efficiency
+	totalPowerW := 0.0
+	totalComputeUnits := 0.0
+	activeGpuCount := 0
+
+	for _, gpu := range clusterState {
+		if gpu.PowerDrawW > 0 {
+			powerW := float64(gpu.PowerDrawW)
+			totalPowerW += powerW
+
+			// Compute efficiency factor: more efficient when GPU is well utilized
+			utilization := float64(gpu.UtilizationGpu) / 100.0
+
+			// Efficiency curve: peak efficiency around 70-80% utilization
+			var efficiency float64
+			if utilization < 0.1 {
+				efficiency = 0.2 // Very inefficient when idle but powered
+			} else if utilization < 0.5 {
+				efficiency = 0.4 + (utilization * 0.8) // Scaling up
+			} else if utilization <= 0.8 {
+				efficiency = 0.9 + (utilization * 0.1) // Peak efficiency range
+			} else {
+				efficiency = 1.0 - ((utilization - 0.8) * 0.2) // Slight decrease at very high utilization
+			}
+
+			// Weight by power to get effective compute units
+			effectiveCompute := powerW * efficiency
+			totalComputeUnits += effectiveCompute
+			activeGpuCount++
+		}
+	}
+
+	if activeGpuCount == 0 || totalComputeUnits == 0 {
+		// No active GPUs, return baseline data center carbon intensity
+		return gridCarbonFactor * pue * 0.1 // Minimal baseline load
+	}
+
+	// Convert power from watts to kilowatts
+	totalPowerKW := totalPowerW / 1000.0
+
+	// Calculate carbon intensity: gCO2e per effective compute unit
+	// Formula: (Grid Carbon Factor × PUE × Power) / Effective Compute Performance
+	carbonIntensity := (gridCarbonFactor * pue * totalPowerKW) / (totalComputeUnits / 1000.0)
+
+	// Add infrastructure overhead (cooling, networking, storage) - typically 20-30% of GPU power
+	infrastructureOverhead := 1.25
+
+	finalCarbonIntensity := carbonIntensity * infrastructureOverhead
+
+	// Clamp to reasonable range (50-800 gCO2e/kWh)
+	if finalCarbonIntensity < 50 {
+		finalCarbonIntensity = 50
+	} else if finalCarbonIntensity > 800 {
+		finalCarbonIntensity = 800
+	}
+
+	return finalCarbonIntensity
 }
 
 // storeJobPerformanceData stores comprehensive job performance data for AI training
@@ -597,14 +672,18 @@ func getUint32Ptr(metrics *PerformanceMetrics, field string) *uint32 {
 	return nil
 }
 
-// checkAllAnomalies flags GPUs with simple heuristics
+// checkAllAnomalies flags GPUs with less sensitive heuristics for critical issues only
 func checkAllAnomalies(state map[string]GpuState) map[string]bool {
 	out := make(map[string]bool, len(state))
 	for id, s := range state {
-		// Example heuristic: high temp or throttling string not empty
-		isHot := s.Temp >= 85
-		throttling := s.ThrottlingReasons != "" && s.ThrottlingReasons != "None" && s.ThrottlingReasons != "[]"
-		out[id] = isHot || throttling
+		// More realistic thresholds: critical temp (95°C) or actual throttling events
+		isCriticallyHot := s.Temp >= 95 // GPUs can safely run up to 90-95°C
+		hasActiveThrottling := s.ThrottlingReasons != "" && s.ThrottlingReasons != "None" && s.ThrottlingReasons != "[]" && s.ThrottlingReasons != "NotSupported"
+
+		// Also check for memory pressure (>95% usage)
+		memoryPressure := s.MemTotal > 0 && float64(s.MemUsed)/float64(s.MemTotal) > 0.95
+
+		out[id] = isCriticallyHot || hasActiveThrottling || memoryPressure
 	}
 	return out
 }
@@ -1406,7 +1485,7 @@ func graphqlHandler(w http.ResponseWriter, r *http.Request) {
 
 		update := DashboardUpdate{
 			ClusterState:    snapshot,
-			CarbonIntensity: mockCarbonIntensity(),
+			CarbonIntensity: calculateCarbonIntensity(snapshot),
 			Anomalies:       checkAllAnomalies(snapshot),
 			JobStatus:       jobStatusSnapshot,
 			JobQueue:        jobQueueSnapshot,
@@ -1779,7 +1858,7 @@ func main() {
 	}
 
 	// Connect to NATS
-	nc, err := nats.Connect("0.tcp.in.ngrok.io:13500")
+	nc, err := nats.Connect("0.tcp.in.ngrok.io:18214")
 	if err != nil {
 		log.Fatalf("Error connecting to NATS: %v", err)
 	}
